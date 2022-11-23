@@ -73,9 +73,11 @@ simulation_report.tac_tempo(datetime.now(),'Initialisation')
 dict_algorithm['i_PFDEM'] = 0
 while not User.Criteria_StopSimulation(dict_algorithm):
 
+    #prepare iteration
     simulation_report.tic_tempo(datetime.now())
     dict_algorithm['i_PFDEM'] = dict_algorithm['i_PFDEM'] + 1
     simulation_report.write_and_print(f"\nITERATION {dict_algorithm['i_PFDEM']} / {dict_algorithm['n_t_PFDEM']}\n\n",f"\nITERATION {dict_algorithm['i_PFDEM']} / {dict_algorithm['n_t_PFDEM']}\n")
+    os.mkdir('Ouput/Ite_'+str(dict_algorithm['i_PFDEM']))
 
     #move grain
     Grain.Compute_overlap_2_grains(dict_sample)
@@ -134,10 +136,10 @@ while not User.Criteria_StopSimulation(dict_algorithm):
 
     #look for the new grains shape
     for grain in dict_sample['L_g']:
-        grain.PFtoDEM_Multi('Output/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
+        grain.PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
         grain.geometric_study(dict_sample)
     #look for the new solute shape
-    Owntools.solute_PFtoDEM_Multi('Output/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
+    Owntools.solute_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
 
     #plot
     Owntools.Plot_config(dict_sample)
