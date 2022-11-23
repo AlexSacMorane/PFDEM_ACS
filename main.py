@@ -57,7 +57,7 @@ if dict_algorithm['SaveData']:
     shutil.copy('User.py','../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
 
 #create the two grains
-User.Add_2grains(dict_sample,dict_material)
+User.Add_2grains(dict_material,dict_sample)
 #create the solute
 User.Add_solute(dict_sample)
 

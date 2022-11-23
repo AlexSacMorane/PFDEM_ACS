@@ -22,8 +22,17 @@ import Grain
 #-------------------------------------------------------------------------------
 
 def All_parameters():
-    #this function is called in main.py to have all the parameters needed in the simulation
+    '''
+    This function is called in main.py to have all the parameters needed in the simulation.
 
+        Input :
+            Nothing
+        Output :
+            an algorithm dictionnary (a dictionnary)
+            a material dictionnary (a dictionnary)
+            a sample dictionnary (a dictionnary)
+            a sollicitation dictionnary (a dictionnary)
+    '''
     #---------------------------------------------------------------------------
     #Sample parameters
 
@@ -116,8 +125,16 @@ def All_parameters():
 
 #-------------------------------------------------------------------------------
 
-def Add_2grains(dict_sample,dict_material):
+def Add_2grains(dict_material,dict_sample):
+    '''
+    Generate two grains in the sample.
 
+        Input :
+            a material dictionnary (a dictionnary)
+            a sample dictionnary (a dictionnary)
+        Output :
+            Nothing but the sample dictionnary gets a new grains configuration (a list)
+    '''
     #grain 1
     radius = 10
     center = np.array([np.mean(dict_sample['x_L'])-radius,np.mean(dict_sample['y_L'])])
@@ -134,19 +151,33 @@ def Add_2grains(dict_sample,dict_material):
 #-------------------------------------------------------------------------------
 
 def Add_solute(dict_sample):
+    '''
+    Generate solute in the sample.
 
+        Input :
+            a sample dictionnary (a dictionnary)
+        Output :
+            Nothing but the sample dictionnary gets a new solute configuration (a n_y x n_x numpy array)
+    '''
     #solute
     solute_M = np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L'])))
 
     #add element in dict
     dict_sample['solute_M'] = solute_M
 
-
 #-------------------------------------------------------------------------------
 
 def Criteria_StopSimulation(dict_algorithm):
-    #Criteria to stop simulation (PF and DEM)
+    '''
+    Define a stop criteria for the PFDEM simulation.
 
+    The simulation stops if the number of iterations reaches a maximum value.
+
+        Input :
+            an algorithm dictionnary (a dictionnary)
+        Output :
+            The result depends on the fact if the stop criteria is reached or not (a bool)
+    '''
     Criteria_Verified = False
     if dict_algorithm['i_PFDEM'] >= dict_algorithm['n_t_PFDEM']:
         Criteria_Verified = True

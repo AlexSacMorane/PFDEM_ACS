@@ -30,16 +30,29 @@ import Report
 #-------------------------------------------------------------------------------
 
 class TestExample(unittest.TestCase):
-
+    '''
+    This is a template to write new tests.
+    '''
     def test_example(self):
+        '''
+        This is a template to write new tests.
+
+            Output :
+                The result is always True (a bool)
+        '''
         self.assertTrue(True)
 
 #-------------------------------------------------------------------------------
 
 class TestReport(unittest.TestCase):
-#test functions from Report.py
-
+'''Test functions from Report.py.'''
     def test_Report(self):
+        '''
+        Try to generate a report.txt file.
+
+            Output :
+                The result depends on the fact if the file is well generated or not (a bool)
+        '''
         #try to create a report.txt file
         simulation_report = Report.Report('Report',datetime.now())
         #check if the .txt has been created
@@ -49,9 +62,14 @@ class TestReport(unittest.TestCase):
 #-------------------------------------------------------------------------------
 
 class TestUser(unittest.TestCase):
-#test functions from User.py
-
+'''Test functions from User.py.'''
     def test_All_parameters(self):
+        '''
+        Try to acquire data from the function User.All_parameters().
+
+            Output :
+                The result depends on the fact if data are well acquired or not (a bool)
+        '''
         #try to acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #check if all data are dictionnaries
@@ -60,16 +78,28 @@ class TestUser(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_Add_2grains(self):
+        '''
+        Try to generate two grains with the function User.Add_2grains().
+
+            Output :
+                The result depends on the fact if grains are well generated or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #try to create 2 grains
-        User.Add_2grains(dict_sample,dict_material)
+        User.Add_2grains(dict_material,dict_sample)
         #check if there are 2 grains
         self.assertTrue(len(dict_sample['L_g'])==2,'The function User.Add_2grains does not create 2 grains!')
 
     #---------------------------------------------------------------------------
 
     def test_Add_solute(self):
+        '''
+        Try to generate a solute with the function User.Add_solute().
+
+            Output :
+                The result depends on the fact if solute is well generated or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #try to create 2 grains
@@ -80,15 +110,30 @@ class TestUser(unittest.TestCase):
 #-------------------------------------------------------------------------------
 
 class TestOwntools(unittest.TestCase):
-#test functions from Owntools.py
-
+'''Test functions from Owntools.py.'''
     def test_is_PF_ACS_base_here(self):
+        '''
+        Verify if the template PF_ACS_base.i is in the directory.
+
+        This file is used to generated MOOSE simulation input file.
+
+            Output :
+                The result depends on the fact if the file is here or not (a bool)
+        '''
         #Check if the file PF_ACS_base.i is in the directory
         self.assertTrue(Path('PF_ACS_base.i').is_file(),"The file PF_CH_AC_base.i should exists!")
 
     #---------------------------------------------------------------------------
 
     def test_Create_i(self):
+        '''
+        Try to create a MOOSE simulation input file with Owntools.Create_i().
+
+        This file is created from the template PF_ACS_base.i.
+
+            Output :
+                The result depends on the fact if the file is well created or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         dict_algorithm['i_PFDEM'] = 0
@@ -101,6 +146,14 @@ class TestOwntools(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_index_to_str(self):
+        '''
+        Try to convert an integer into a string with Owntools.index_to_str().
+
+        The string is composed by three elements.
+
+            Output :
+                The result depends on the fact if the conversions are well done or not (a bool)
+        '''
         #check if the function works well in different configurations
         self.assertTrue(Owntools.index_to_str(7)=='007','The conversion index_to_str() seems to do not for 00x...')
         self.assertTrue(Owntools.index_to_str(26)=='026','The conversion index_to_str() seems to do not for 0xx...')
@@ -109,10 +162,16 @@ class TestOwntools(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_Plot_config(self):
+        '''
+        Try to plot a sample configuration with Owntools.Plot_config().
+
+            Output :
+                The result depends on the fact if the .png file is well created or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #create the two grains
-        User.Add_2grains(dict_sample,dict_material)
+        User.Add_2grains(dict_material,dict_sample)
         #create a folder
         if Path('Debug').exists():
             shutil.rmtree('Debug')
@@ -126,6 +185,14 @@ class TestOwntools(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_Cosine_Profile(self):
+        '''
+        Try to compute a phase variable with Owntools.Cosine_Profile().
+
+        Three cases are considered : inside the grain, at the interface, outside the grain.
+
+            Output :
+                The result depends on the fact if the phase variable is well computed or not (a bool)
+        '''
         #check if the function works well in different configurations
         self.assertTrue(Owntools.Cosine_Profile(1,0,0.5)==1,'The Owntools.Cosine_Profile() seems to do not for a point inside the grain...')
         self.assertTrue(Owntools.Cosine_Profile(1,1,0.5)==0.5*(1 + math.cos(math.pi/2)),'The Owntools.Cosine_Profile() seems to do not for a point inside the interface...')
@@ -134,11 +201,20 @@ class TestOwntools(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_Write_eta_txt(self):
+        '''
+        Try to create file needed for MOOSE simulation with Owntools.Write_eta_txt().
+
+        This file is about etai variables.
+        A sample with two grains is assumed.
+
+            Output :
+                The result depends on the fact if the file is well created or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         dict_algorithm['i_PFDEM'] = 0
         #create the two grains
-        User.Add_2grains(dict_sample,dict_material)
+        User.Add_2grains(dict_material,dict_sample)
         #create a folder
         if Path('Data').exists():
             shutil.rmtree('Data')
@@ -153,6 +229,14 @@ class TestOwntools(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_Write_solute_txt(self):
+        '''
+        Try to create file needed for MOOSE simulation with Owntools.Write_solute_txt().
+
+        This file is about c variable.
+
+            Output :
+                The result depends on the fact if the file is well created or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         dict_algorithm['i_PFDEM'] = 0
@@ -171,11 +255,19 @@ class TestOwntools(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_Write_ep_txt(self):
+        '''
+        Try to create file needed for MOOSE simulation with Owntools.Write_ep_txt().
+
+        This file is about the dissolution field due to mechanical loading.
+
+            Output :
+                The result depends on the fact if the file is well created or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         dict_algorithm['i_PFDEM'] = 0
         #create the two grains
-        User.Add_2grains(dict_sample,dict_material)
+        User.Add_2grains(dict_material,dict_sample)
         #create a folder
         if Path('Data').exists():
             shutil.rmtree('Data')
@@ -189,11 +281,19 @@ class TestOwntools(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_Write_kc_txt(self):
+        '''
+        Try to create file needed for MOOSE simulation with Owntools.Write_kc_txt().
+
+        This file is about the diffusion of the solute.
+
+            Output :
+                The result depends on the fact if the file is well created or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         dict_algorithm['i_PFDEM'] = 0
         #create the two grains
-        User.Add_2grains(dict_sample,dict_material)
+        User.Add_2grains(dict_material,dict_sample)
         #create a folder
         if Path('Data').exists():
             shutil.rmtree('Data')
@@ -207,9 +307,17 @@ class TestOwntools(unittest.TestCase):
 #-------------------------------------------------------------------------------
 
 class TestGrain(unittest.TestCase):
-#test functions from Grain.py
-
+'''Test functions from Grain.py.'''
     def test_geometric_study(self):
+        '''
+        Try to study the grain geometry with Grain.geometric_study().
+
+        As Monte Carlo is used, some noise can occur. It is advised to test multiple times.
+
+            Output :
+                The result depends on the fact if the center is well located or not (a bool)
+                The result depends on the fact if the surface is well assumed or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #Create one grain
@@ -227,6 +335,14 @@ class TestGrain(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_P_is_inside(self):
+        '''
+        Try to determine if a point is inside a grain geometry with Grain.P_is_inside().
+
+        Two cases are considered : the point is inside, the point is outside.
+
+            Output :
+                The result depends on the fact if points are well located or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #Create one grain
@@ -238,6 +354,14 @@ class TestGrain(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_move_grain_rebuild(self):
+        '''
+        Try to move a grain by deconstruction and rebuild with Grain.move_grain_rebuild().
+
+        As Monte Carlo is used, some noise can occur. It is advised to test multiple times.
+
+            Output :
+                The result depends on the fact if the grain is well moved or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #Create one grain
@@ -256,6 +380,14 @@ class TestGrain(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_move_grain_interpolation(self):
+        '''
+        Try to move a grain by interpolation with Grain.move_grain_interpolation().
+
+        As Monte Carlo is used, some noise can occur. It is advised to test multiple times.
+
+            Output :
+                The result depends on the fact if the grain is well moved or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #Create one grain
@@ -274,6 +406,14 @@ class TestGrain(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_Compute_overlap_2_grains(self):
+        '''
+        Try to compute the overlap between two grains with Grain.Compute_overlap_2_grains().
+
+        Two cases are considered : 2 grains in contact, 2 grains not in contact.
+
+            Output :
+                The result depends on the fact if the overlap are well computed or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         dict_sample['grain_discretisation'] = 20
@@ -295,10 +435,16 @@ class TestGrain(unittest.TestCase):
     #---------------------------------------------------------------------------
 
     def test_Apply_overlap_target(self):
+        '''
+        Try to apply the overlap between two grains with Grain.Apply_overlap_target().
+
+            Output :
+                The result depends on the fact if the overlap are well applied or not (a bool)
+        '''
         #Acquire data
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #Create two grain
-        User.Add_2grains(dict_sample,dict_material)
+        User.Add_2grains(dict_material,dict_sample)
         #Compute the initial overlap
         Grain.Compute_overlap_2_grains(dict_sample)
         #try to apply a target overlap

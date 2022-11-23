@@ -22,10 +22,16 @@ class Report:
 #-------------------------------------------------------------------------------
 
     def __init__(self, Name, Datetime):
-        #defining a report
-        #a report is described by a name (a string)
-        #                         a start time (Datetime class)
+        '''
+        Defining a report.
 
+            Input :
+                itself (a report)
+                a name (a string)
+                a start time (a datetime class)
+            Output :
+                Nothing but a file is generated (a file)
+        '''
         if type(Name) == str:
             if Name[-4:] != '.txt':
                 Name = Name + '.txt'
@@ -51,7 +57,15 @@ class Report:
 #-------------------------------------------------------------------------------
 
     def write(self, Text):
-        #write Text (a string) in the report
+        '''
+        Write Text (a string) in the report.
+
+            Input :
+                itself (a report)
+                a text (a string)
+            Output :
+                Nothing but the report is updated (a file)
+        '''
 
         file_to_write = open(self.name,'a')
         file_to_write.write(Text)
@@ -60,8 +74,16 @@ class Report:
 #-------------------------------------------------------------------------------
 
     def write_and_print(self, Text_to_write, Text_to_print):
-        #write Text_to_write (a string) in the report and print Text_to_print (a string)
+        '''
+        Write Text_to_write (a string) in the report and print Text_to_print (a string)
 
+            Input :
+                itself (a report)
+                    itself (a report)
+                two texts (a string)
+            Output :
+                Nothing but the report is updated (a file) and something is printed (an user interface)
+        '''
         file_to_write = open(self.name,'a')
         file_to_write.write(Text_to_write)
         file_to_write.close()
@@ -70,15 +92,33 @@ class Report:
 #-------------------------------------------------------------------------------
 
     def tic_tempo(self, Datetime):
-        #save a temporary start time.
-        #work with tac_tempo to compute a time cost for a simulation step
+        '''
+        Save a temporary start time.
 
+        Work with tac_tempo() to compute a time cost for a simulation step.
+
+            Input :
+                itself (a report)
+                a start time (a datetime class)
+            Output :
+                Nothing but the report gets an updated attribut (a datetime class)
+        '''
         self.datetimestart_tempo = str(Datetime)
 
 #-------------------------------------------------------------------------------
 
     def tac_tempo(self, Datetime, Step_name):
-        #work with tic_tempo to compute a time cost for a simulation step
+        '''
+        Save a temporary start time.
+
+        Work with tic_tempo() to compute a time cost for a simulation step.
+
+            Input :
+                itself (a report)
+                a stop time (a datetime class)
+            Output :
+                Nothing but the report gets an updated attribut (a datetime class) and the report is updated (a file)
+        '''
 
         self.datetimeend_tempo = str(Datetime)
 
@@ -105,8 +145,15 @@ class Report:
 #-------------------------------------------------------------------------------
 
     def end(self, Datetime):
-     #work with init to compute the total time cost of the simulation
+     '''
+     Work with init() to compute the total time cost of the simulation.
 
+         Input :
+             itself (a report)
+             a stop time (a datetime class)
+         Output :
+             Nothing but the file is updated (a file)
+     '''
      self.datetimeend = str(Datetime)
 
      dyear = int(self.datetimeend[:4])-int(self.datetimestart[:4])
