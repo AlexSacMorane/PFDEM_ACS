@@ -27,7 +27,18 @@ class Grain:
     #---------------------------------------------------------------------------
 
     def __init__(self,id,radius,center,dict_material,dict_sample):
+        '''
+        Defining a disk grain
 
+            Input :
+                an id (an integer)
+                a radius (a float)
+                a center (a 2 x 1 numpy array)
+                a material dictionnary (a dictionnary)
+                a sample dictionnary (a dictionnary)
+            Output :
+                a grain (a grain)
+        '''
         self.id = id
         self.center = center
         L_r = []
@@ -57,7 +68,18 @@ class Grain:
     #---------------------------------------------------------------------------
 
     def build_etai_M(self,dict_material,dict_sample):
+        '''
+        Build the phase field for one grain.
 
+        A cosine profile is assumed (see https://mooseframework.inl.gov/source/ics/SmoothCircleIC.html).
+
+            Input :
+                itself (a grain)
+                a material dictionnary (a dictionnary)
+                a sample dictionnary (a dictionnary)
+            Output :
+                Nothing but the grain gets a new attribute (a n_y x n_x numpy array)
+        '''
         #initilization
         self.etai_M = np.array(np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L']))))
 
@@ -100,12 +122,32 @@ class Grain:
     #---------------------------------------------------------------------------
 
     def geometric_study(self,dict_sample):
-      #Searching limits
-      #Not best method but first approach
-      #We iterate on y constant, we look for a value under and over 0.5
-      #If both conditions are verified, there is a limit at this y
-      #Same with iteration on x constant
+      '''
+      Searching limits of the grain
 
+      Not best method but first approach
+      We iterate on y constant, we look for a value under and over 0.5
+      If both conditions are verified, there is a limit at this y
+      Same with iteration on x constant
+
+      Once the border of the grain is defined, a Monte Carlo method is used to computed some geometrical properties.
+
+        Input :
+            itself (a grain)
+            a sample dictionnary (a dictionnary)
+        Output :
+            Nothing but the grain gets new attributes
+                r_min : the minimum radius of the grain (a float)
+                r_max : the maximum radius of the grain (a float)
+                r_mean : the mean radius of the grain (a float)
+                l_r : a list of radius of the grain, work with l_theta_r (a list)
+                l_theta_r : a list of angle to see the distribution of the radius of the grain, work with l_r (a list)
+                surface : the surface of the grain (a float)
+                center : the coordinate of the grain center (a 2 x 1 numpy array)
+                l_border_x : the list of the coordinate x of the grain vertices (a list)
+                l_border_y : the list of the coordinate y of the grain vertices (a list)
+                l_border : the list of the coordinate [x,y] of the grain vertices (a list)
+      '''
       #-------------------------------------------------------------------------
       #load data needed
       n = dict_sample['grain_discretisation']
@@ -273,10 +315,17 @@ class Grain:
     #-------------------------------------------------------------------------------
 
     def P_is_inside(self,P):
-      #Franklin 1994, see Alonso-Marroquin 2009
-      #determine if a point P is inside of a grain
-      #slide on y constant
+      '''Determine if a point P is inside of a grain
 
+      Make a slide on constant y. Every time a border is crossed, the point switches between in and out.
+      see Franklin 1994, see Alonso-Marroquin 2009
+
+          Input :
+              itself (a grain)
+              a point (a 2 x 1 numpy array)
+          Output :
+              True or False, depending on the fact that the point is inside the grain or not (a bool)
+      '''
       counter = 0
       for i_p_border in range(len(self.l_border)-1):
           #consider only points if the coordinates frame the y-coordinate of the point
@@ -292,8 +341,18 @@ class Grain:
     #---------------------------------------------------------------------------
 
     def PFtoDEM_Multi(self,FileToRead,dict_algorithm,dict_sample):
+        '''
+        Read file from MOOSE simulation to reconstruct the phase field of the grain.
 
-        #---------------------------------------------------------------------------
+            Input :
+                itself (a grain)
+                the name of the file to read (a string)
+                an algorithm dictionnary (a dictionnary)
+                a sample dictionnary (a dictionnary)
+            Output :
+                Nothing but the grain gets an updated attribute (a n_y x n_x numpy array)
+        '''
+        #--------------------------------------------------------------------------
         #Global parameters
         #---------------------------------------------------------------------------
 
@@ -373,7 +432,20 @@ class Grain:
     #---------------------------------------------------------------------------
 
     def move_grain_rebuild(self,displacement,dict_material,dict_sample):
+        '''
+        Move the grain by updating the phase field of the grain.
 
+        The grain is deconstructed and then rebuilt. The mass conservation can not well verified.
+        It is advised to work with move_grain_interpolation().
+
+            Input :
+                itself (a grain)
+                the displacement asked (a 2 x 1 numpy array)
+                a material dictionnary (a dictionnary)
+                a sample dictionnary (a dictionnary)
+            Output :
+                Nothing but the grain gets an updated attribute (a n_y x n_x numpy array)
+        '''
         self.center = self.center + displacement
         for i in range(len(self.l_border)):
             self.l_border[i] = self.l_border[i] + displacement
@@ -383,8 +455,19 @@ class Grain:
 
     #---------------------------------------------------------------------------
 
-    def move_grain_interpolation(self,displacement,dict_material,dict_sample):
+    def move_grain_interpolation(self,displacement,dict_sample):
+        '''
+        Move the grain by updating the phase field of the grain.
 
+        An interpolation on the phase field is done. The mass conservation is better than with move_grain_rebuild().
+
+            Input :
+                itself (a grain)
+                the displacement asked (a 2 x 1 numpy array)
+                a sample dictionnary (a dictionnary)
+            Output :
+                Nothing but the grain gets an updated attribute (a n_y x n_x numpy array)
+        '''
         self.center = self.center + displacement
         for i in range(len(self.l_border)):
             self.l_border[i] = self.l_border[i] + displacement
@@ -428,7 +511,16 @@ class Grain:
 #-------------------------------------------------------------------------------
 
 def Compute_overlap_2_grains(dict_sample):
+    '''
+    Compute the current overlap between two grains.
 
+    It is assumed the sample is composed  by only 2 grains.
+
+        Input :
+            a sample dictionnary (a dictionnary)
+        Output :
+            Nothing but the sample dictionnary gets an updated value (a float)
+    '''
     #2 grains
     g1 = dict_sample['L_g'][0]
     g2 = dict_sample['L_g'][1]
@@ -443,10 +535,21 @@ def Compute_overlap_2_grains(dict_sample):
 #-------------------------------------------------------------------------------
 
 def Apply_overlap_target(dict_material,dict_sample,dict_sollicitation):
+    '''
+    Move two grains to verify an asked overlap.
 
+    It is assumed the sample is composed  by only 2 grains.
+
+        Input :
+            a material dictionnary (a dictionnary)
+            a sample dictionnary (a dictionnary)
+            a sollicitation dictionnary (a dictionnary)
+        Output :
+            Nothing but the sample dictionnary gets updated values (a grain)
+    '''
     #compute the difference between real overlap and target value
     delta_overlap = dict_sollicitation['overlap_target'] - dict_sample['overlap']
 
     #move grains to apply target overlap
-    dict_sample['L_g'][0].move_grain_interpolation(np.array([ delta_overlap/2,0]),dict_material,dict_sample)
-    dict_sample['L_g'][1].move_grain_interpolation(np.array([-delta_overlap/2,0]),dict_material,dict_sample)
+    dict_sample['L_g'][0].move_grain_interpolation(np.array([ delta_overlap/2,0]),dict_sample)
+    dict_sample['L_g'][1].move_grain_interpolation(np.array([-delta_overlap/2,0]),dict_sample)
