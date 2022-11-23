@@ -49,11 +49,11 @@ def Create_i(dict_algorithm,dict_sample,dict_material):
       line = line[:-1] + "'"+str(dict_material['M'])+' '+str(dict_material['kappa_eta'])+"'\n"
     elif j == 136:
       line = line[:-1] + ' ' + str(dict_material['Energy_barrier'])+"'\n"
-    elif j == 156 or j == 160 or j == 164 or j == 168 or j == 172:
+    elif j == 166 or j == 170 or j == 174 or j == 178 or j == 182:
       line = line[:-1] + str(dict_algorithm['i_PFDEM']) + '.txt\n'
-    elif j == 202:
+    elif j == 212:
       line = line[:-1] + ' ' + str(dict_algorithm['dt_PF']*dict_algorithm['n_t_PF']) +'\n'
-    elif j == 206:
+    elif j == 216:
       line = line[:-1] + ' ' + str(dict_algorithm['dt_PF']) +'\n'
     file_to_write.write(line)
 

@@ -127,7 +127,7 @@
     prop_names = ep
     prop_values = ep_txt
   [../]
-  [./free_energy]
+  [./free_energy_etai]
   type = DerivativeParsedMaterial
   block = 0
   f_name = F
@@ -138,13 +138,23 @@
   enable_jit = true
   derivative_order = 2
   [../]
-  [./total_free_energy]
+  [./Ed_mec]
+  type = DerivativeParsedMaterial
+  block = 0
+  f_name = Ed_mec
+  args = 'eta1 eta2'
+  material_property_names = 'ep'
+  function = 'ep*3*eta1^2-ep*2*eta1^3+ep*3*eta2^2-ep*2*eta2^3'
+  enable_jit = true
+  derivative_order = 2
+  [../]
+  [./free_energy_and_ed]
     type = DerivativeParsedMaterial
     block = 0
     f_name = F_total
     args = 'eta1 eta2'
-    material_property_names = 'ep F(eta1,eta2)'
-    function = 'F+ep*3*eta1^2-ep*2*eta1^3+ep*3*eta2^2-ep*2*eta2^3'
+    material_property_names = 'Ed_mec(eta1,eta2) F(eta1,eta2)'
+    function = 'F+Ed_mec'
     enable_jit = true
     derivative_order = 2
   [../]
