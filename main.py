@@ -77,7 +77,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     simulation_report.tic_tempo(datetime.now())
     dict_algorithm['i_PFDEM'] = dict_algorithm['i_PFDEM'] + 1
     simulation_report.write_and_print(f"\nITERATION {dict_algorithm['i_PFDEM']} / {dict_algorithm['n_t_PFDEM']}\n\n",f"\nITERATION {dict_algorithm['i_PFDEM']} / {dict_algorithm['n_t_PFDEM']}\n")
-    os.mkdir('Ouput/Ite_'+str(dict_algorithm['i_PFDEM']))
+    os.mkdir('Output/Ite_'+str(dict_algorithm['i_PFDEM']))
 
     #move grain
     Grain.Compute_overlap_2_grains(dict_sample)
