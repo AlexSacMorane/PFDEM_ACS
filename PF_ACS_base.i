@@ -163,7 +163,7 @@
     f_name = F_total
     args = 'eta1 eta2'
     material_property_names = 'F(eta1,eta2) Ed_mec(eta1,eta2) Ed_pre(eta1,eta2)'
-    function = 'F+Ed_mec+Ed_pre'
+    function = 'F+Ed_mec-Ed_pre'
     enable_jit = true
     derivative_order = 2
   [../]
