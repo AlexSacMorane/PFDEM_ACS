@@ -82,9 +82,9 @@ class TestUser(unittest.TestCase):
 class TestOwntools(unittest.TestCase):
 #test functions from Owntools.py
 
-    def test_is_PF_CH_AC_base_here(self):
-        #Check if the file PF_CH_AC_base.i is in the directory
-        self.assertTrue(Path('PF_CH_AC_base.i').is_file(),"The file PF_CH_AC_base.i should exists!")
+    def test_is_PF_ACS_base_here(self):
+        #Check if the file PF_ACS_base.i is in the directory
+        self.assertTrue(Path('PF_ACS_base.i').is_file(),"The file PF_CH_AC_base.i should exists!")
 
     #---------------------------------------------------------------------------
 

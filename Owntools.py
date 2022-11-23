@@ -26,7 +26,7 @@ def Create_i(dict_algorithm,dict_sample,dict_material):
 
   # create .i
   file_to_write = open(dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'.i','w')
-  file_to_read = open('PF_CH_AC_base.i','r')
+  file_to_read = open('PF_ACS_base.i','r')
   lines = file_to_read.readlines()
   file_to_read.close()
 
