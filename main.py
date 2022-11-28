@@ -169,7 +169,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     #---------------------------------------------------------------------------
 
     if dict_algorithm['SaveData']:
-        Owntools.save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
+        Owntools.save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
         shutil.copy('Debug/Report.txt','../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
 
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: from pf to dem")
@@ -182,7 +182,7 @@ simulation_report.end(datetime.now())
 
 #final save
 if dict_algorithm['SaveData']:
-    Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
+    Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
     name_actual_folder = os.path.dirname(os.path.realpath(__file__))
     shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
     os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')

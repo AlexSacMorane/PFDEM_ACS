@@ -72,7 +72,7 @@ def All_parameters():
     #Find a simulation ame
     template = 'PF_AC_PS' #template of the name of the simulation
     SaveData = True #Save data or not
-    foldername = 'Data_2G_CHAC' #name of the folder where data are saved
+    foldername = 'Data_2G_ACS' #name of the folder where data are saved
     if SaveData :
         i_run = 1
         folderpath = Path('../'+foldername+'/'+template+'_'+str(i_run))

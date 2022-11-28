@@ -558,7 +558,7 @@ def solute_PFtoDEM_Multi(FileToRead,dict_algorithm,dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation):
+def save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker):
     '''
     Save dictionnaries at the end of each PFDEM interations.
 
@@ -567,6 +567,7 @@ def save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitat
             a material dictionnary (a dictionnary)
             a sample dictionnary (a dictionnary)
             a sollicitation dictionnary (a dictionnary)
+            a tracker dictionnary (a dictionnary)
         Output :
             Nothing but a save file is generated (a file)
     '''
@@ -576,12 +577,13 @@ def save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitat
     dict_save['material'] = dict_material
     dict_save['sample'] = dict_sample
     dict_save['sollicitation'] = dict_sollicitation
+    dict_save['tracker'] = dict_tracker
     pickle.dump(dict_save,outfile)
     outfile.close()
 
 #-------------------------------------------------------------------------------
 
-def save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation):
+def save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker):
     '''
     Save dictionnaries at the end of the simulation.
 
@@ -590,6 +592,7 @@ def save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitat
             a material dictionnary (a dictionnary)
             a sample dictionnary (a dictionnary)
             a sollicitation dictionnary (a dictionnary)
+            a tracker dictionnary (a dictionnary)
         Output :
             Nothing but a save file is generated (a file)
     '''
@@ -600,5 +603,6 @@ def save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitat
     dict_save['material'] = dict_material
     dict_save['sample'] = dict_sample
     dict_save['sollicitation'] = dict_sollicitation
+    dict_save['tracker'] = dict_tracker
     pickle.dump(dict_save,outfile)
     outfile.close()
