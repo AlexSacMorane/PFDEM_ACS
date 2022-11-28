@@ -58,13 +58,15 @@ if dict_algorithm['SaveData']:
 
 #create the two grains
 User.Add_2grains(dict_material,dict_sample)
+#Compute initial sum_eta
+Owntools.Compute_sum_eta(dict_sample)
 #Compute the surface of the contact initially
 User.Add_S0(dict_sample, dict_sollicitation)
 #create the solute
 User.Add_solute(dict_sample)
 
 #plot
-Owntools.Plot_config(dict_sample)
+Owntools.Plot_config(dict_algorithm, dict_sample)
 
 simulation_report.tac_tempo(datetime.now(),'Initialisation')
 
@@ -73,8 +75,10 @@ simulation_report.tac_tempo(datetime.now(),'Initialisation')
 #-------------------------------------------------------------------------------
 
 dict_tracker = {
-'L_displacement' : [],
+'L_displacement' : [0],
 'L_sum_solute' : [0],
+'L_sum_eta' : [dict_sample['sum_eta']],
+'L_sum_total' : [dict_sample['sum_eta']],
 }
 
 #-------------------------------------------------------------------------------
@@ -98,7 +102,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     Owntools.Compute_S_int(dict_sample)
 
     #plot
-    Owntools.Plot_config(dict_sample)
+    Owntools.Plot_config(dict_algorithm, dict_sample)
 
     #write data
     Owntools.Write_eta_txt(dict_algorithm, dict_sample)
@@ -111,25 +115,6 @@ while not User.Criteria_StopSimulation(dict_algorithm):
 
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: preparation of the pf simulation")
     simulation_report.tic_tempo(datetime.now())
-
-    #---------------------------------------------------------------------------
-    #postprocess
-    #---------------------------------------------------------------------------
-
-    #compute the mass of each grain
-    for grain in dict_sample['L_g']:
-        sum_eta = 0
-        for l in range(len(dict_sample['y_L'])):
-            for c in range(len(dict_sample['x_L'])):
-                sum_eta = sum_eta + grain.etai_M[l][c]
-        simulation_report.write(f"Grain {grain.id} -> sum of etai = {sum_eta}\n")
-
-    #compute the mass of the solute
-    sum_c = 0
-    for l in range(len(dict_sample['y_L'])):
-        for c in range(len(dict_sample['x_L'])):
-            sum_c = sum_c + dict_sample['solute_M'][l][c]
-    simulation_report.write(f"Solute -> sum of etai = {sum_c}\n")
 
     #---------------------------------------------------------------------------
     #PF simulation
@@ -156,32 +141,25 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     Owntools.solute_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
 
     #plot
-    Owntools.Plot_config(dict_sample)
+    Owntools.Plot_config(dict_algorithm, dict_sample)
 
     #---------------------------------------------------------------------------
     #postprocess
     #---------------------------------------------------------------------------
 
-    #compute the mass of each grain
-    for grain in dict_sample['L_g']:
-        sum_eta = 0
-        for l in range(len(dict_sample['y_L'])):
-            for c in range(len(dict_sample['x_L'])):
-                sum_eta = sum_eta + grain.etai_M[l][c]
-        simulation_report.write(f"Grain {grain.id} -> sum of etai = {sum_eta}\n")
+    #compute the mass of grain
+    Owntools.Compute_sum_eta(dict_sample)
 
     #compute the mass of the solute
-    sum_c = 0
-    for l in range(len(dict_sample['y_L'])):
-        for c in range(len(dict_sample['x_L'])):
-            sum_c = sum_c + dict_sample['solute_M'][l][c]
-    simulation_report.write(f"Solute -> sum of etai = {sum_c}\n")
+    Owntools.Compute_sum_c(dict_sample)
 
     #---------------------------------------------------------------------------
     #tracker
     #---------------------------------------------------------------------------
 
-    dict_tracker['L_sum_solute'].append(sum_c)
+    dict_tracker['L_sum_solute'].append(dict_sample['sum_c'])
+    dict_tracker['L_sum_etai'].append(dict_sample['sum_eta'])
+    dict_tracker['L_sum_total'].append(dict_sample['sum_c']+dict_sample['sum_eta'])
 
     #Plot trackers
     Owntools.Plot_trackers(dict_tracker)

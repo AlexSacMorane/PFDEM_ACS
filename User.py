@@ -58,15 +58,19 @@ def All_parameters():
     #---------------------------------------------------------------------------
     #Algorithm parameters
 
-    template = 'PF_AC_PS' #template of the name of the simulation
     np_proc = 4 #number of processor used
-
-    n_t_PFDEM = 5 #number of cycle PF-DEM
+    n_t_PFDEM = 20 #number of cycle PF-DEM
 
     #Time step for phase field
     dt_PF = 0.2
     n_t_PF = 15
 
+    #Visual parameters
+    c_min = 0
+    c_max = 0.2
+
+    #Find a simulation ame
+    template = 'PF_AC_PS' #template of the name of the simulation
     SaveData = False #Save data or not
     foldername = 'Data_2G_CHAC' #name of the folder where data are saved
     if SaveData :
@@ -80,6 +84,8 @@ def All_parameters():
         namefile = template
 
     dict_algorithm = {
+    'c_min' : c_min,
+    'c_max' : c_max,
     'np_proc' : np_proc,
     'SaveData' : SaveData,
     'namefile' : namefile,

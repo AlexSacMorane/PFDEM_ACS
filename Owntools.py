@@ -160,7 +160,46 @@ def Compute_S_int(dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Plot_config(dict_sample):
+def Compute_sum_c(dict_sample):
+    '''
+    Compute the quantity of the solute.
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for the intersection surface (a float)
+    '''
+    sum_c = 0
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+            sum_c = sum_c + dict_sample['solute_M'][l][c]
+
+    #update element in dict
+    dict_sample['sum_c'] = sum_c
+
+#-------------------------------------------------------------------------------
+
+def Compute_sum_eta(dict_sample):
+    '''
+    Compute the quantity of the grain.
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for the intersection surface (a float)
+    '''
+    sum_eta = 0
+    for grain in dict_sample['L_g']:
+        for l in range(len(dict_sample['y_L'])):
+            for c in range(len(dict_sample['x_L'])):
+                sum_eta = sum_eta + grain.etai_M[l][c]
+
+    #update element in dict
+    dict_sample['sum_eta'] = sum_eta
+
+#-------------------------------------------------------------------------------
+
+def Plot_config(dict_algorithm, dict_sample):
     '''
     Plot the sample configuration.
 
@@ -181,7 +220,7 @@ def Plot_config(dict_sample):
     #plot
     plt.figure(1,figsize=(16,9))
     #solute
-    im = plt.imshow(dict_sample['solute_M'],interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])])
+    im = plt.imshow(dict_sample['solute_M'],interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])], vmin = dict_algorithm['c_min'], vmax = dict_algorithm['c_max'])
     plt.colorbar(im)
     #etai
     for i in range(len(dict_sample['L_g'])):
@@ -210,9 +249,14 @@ def Plot_trackers(dict_tracker):
 
     plt.subplot(211)
     plt.plot(dict_tracker['L_displacement'])
+    plt.title('Displacement doen at each iteration')
 
     plt.subplot(212)
-    plt.plot(dict_tracker['L_sum_solute'])
+    plt.plot(dict_tracker['L_sum_etai'],label='etai')
+    plt.plot(dict_tracker['L_sum_solute'],label='c')
+    plt.plot(dict_tracker['L_sum_total'],label='etai + c')
+    plt.title('Sum of etai and c')
+    plt.legend()
 
     plt.savefig(name)
     plt.close(1)
