@@ -251,12 +251,17 @@ def Plot_trackers(dict_tracker):
     plt.plot(dict_tracker['L_displacement'])
     plt.title('Displacement doen at each iteration')
 
-    plt.subplot(212)
-    plt.plot(dict_tracker['L_sum_eta'],label='etai')
-    plt.plot(dict_tracker['L_sum_solute'],label='c')
-    plt.plot(dict_tracker['L_sum_total'],label='etai + c')
+    plt.subplot(234)
+    plt.plot(dict_tracker['L_sum_eta'])
+    plt.title('Sum of etai')
+
+    plt.subplot(235)
+    plt.plot(dict_tracker['L_sum_solute'])
+    plt.title('Sum of c')
+
+    plt.subplot(236)
+    plt.plot(dict_tracker['L_sum_total'])
     plt.title('Sum of etai and c')
-    plt.legend()
 
     plt.savefig(name)
     plt.close(1)
