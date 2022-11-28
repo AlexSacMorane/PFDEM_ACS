@@ -158,7 +158,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     #---------------------------------------------------------------------------
 
     dict_tracker['L_sum_solute'].append(dict_sample['sum_c'])
-    dict_tracker['L_sum_etai'].append(dict_sample['sum_eta'])
+    dict_tracker['L_sum_eta'].append(dict_sample['sum_eta'])
     dict_tracker['L_sum_total'].append(dict_sample['sum_c']+dict_sample['sum_eta'])
 
     #Plot trackers
