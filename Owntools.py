@@ -180,6 +180,10 @@ def Plot_config(dict_sample):
 
     #plot
     plt.figure(1,figsize=(16,9))
+    #solute
+    im = plt.imshow(dict_sample['solute_M'],interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])])
+    plt.colorbar(im)
+    #etai
     for i in range(len(dict_sample['L_g'])):
         plt.plot(dict_sample['L_g'][i].l_border_x,dict_sample['L_g'][i].l_border_y)
     plt.axis('equal')
