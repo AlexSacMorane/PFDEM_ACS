@@ -538,7 +538,7 @@ def Compute_overlap_2_grains(dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Apply_overlap_target(dict_material,dict_sample,dict_sollicitation):
+def Apply_overlap_target(dict_material,dict_sample,dict_sollicitation,dict_tracker):
     '''
     Move two grains to verify an asked overlap.
 
@@ -553,6 +553,9 @@ def Apply_overlap_target(dict_material,dict_sample,dict_sollicitation):
     '''
     #compute the difference between real overlap and target value
     delta_overlap = dict_sollicitation['overlap_target'] - dict_sample['overlap']
+
+    #save in tracker
+    dict_tracker['L_displacement'].append(delta_overlap)
 
     #move grains to apply target overlap
     dict_sample['L_g'][0].move_grain_interpolation(np.array([ delta_overlap/2,0]),dict_sample)

@@ -69,6 +69,15 @@ Owntools.Plot_config(dict_sample)
 simulation_report.tac_tempo(datetime.now(),'Initialisation')
 
 #-------------------------------------------------------------------------------
+#trackers
+#-------------------------------------------------------------------------------
+
+dict_tracker = {
+'L_displacement' : [],
+'L_sum_solute' : [0],
+}
+
+#-------------------------------------------------------------------------------
 #main
 #-------------------------------------------------------------------------------
 
@@ -83,7 +92,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
 
     #move grain
     Grain.Compute_overlap_2_grains(dict_sample)
-    Grain.Apply_overlap_target(dict_material,dict_sample,dict_sollicitation)
+    Grain.Apply_overlap_target(dict_material,dict_sample,dict_sollicitation,dict_tracker)
 
     #compute the intersection surface
     Owntools.Compute_S_int(dict_sample)
@@ -167,6 +176,12 @@ while not User.Criteria_StopSimulation(dict_algorithm):
         for c in range(len(dict_sample['x_L'])):
             sum_c = sum_c + dict_sample['solute_M'][l][c]
     simulation_report.write(f"Solute -> sum of etai = {sum_c}\n")
+
+    #---------------------------------------------------------------------------
+    #tracker
+    #---------------------------------------------------------------------------
+
+    dict_tracker['L_sum_solute'].append(sum_c)
 
     #---------------------------------------------------------------------------
     #tempo save
