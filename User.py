@@ -119,7 +119,7 @@ def All_parameters():
     'M' : Mobility,
     'kappa_eta' : kappa_eta,
     'kappa_c' : kappa_c,
-    'Energy_barrier' : Energy_barrier
+    'Energy_barrier' : Energy_barrier,
     'Y' : Y,
     'nu' : nu
     }
@@ -178,7 +178,7 @@ def Add_S0(dict_sample, dict_sollicitation):
 
     #add element in dictionnary
     dict_sample['S_int_0'] = S1 + S2
-    
+
 #-------------------------------------------------------------------------------
 
 def Add_solute(dict_sample):
