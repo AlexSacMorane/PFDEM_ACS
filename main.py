@@ -183,6 +183,9 @@ while not User.Criteria_StopSimulation(dict_algorithm):
 
     dict_tracker['L_sum_solute'].append(sum_c)
 
+    #Plot trackers
+    Owntools.Plot_trackers(dict_tracker)
+
     #---------------------------------------------------------------------------
     #tempo save
     #---------------------------------------------------------------------------

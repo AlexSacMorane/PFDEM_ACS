@@ -193,6 +193,32 @@ def Plot_config(dict_sample):
 
 #-------------------------------------------------------------------------------
 
+def Plot_trackers(dict_tracker):
+    '''
+    Plot the trackers.
+
+        Input :
+            a tracker dictionnary (a dict)
+        Output :
+            Nothing but a .png file is generated (a file)
+    '''
+
+    name = 'Debug/Trackers.png'
+
+    #plot
+    plt.figure(1,figsize=(16,9))
+
+    plt.subplot(211)
+    plt.plot(dict_tracker['L_displacement'])
+
+    plt.subplot(212)
+    plt.plot(dict_tracker['L_sum_solute'])
+
+    plt.savefig(name)
+    plt.close(1)
+
+#-------------------------------------------------------------------------------
+
 def Cosine_Profile(R,r,w):
     '''
     Compute the phase field variable at some point.
