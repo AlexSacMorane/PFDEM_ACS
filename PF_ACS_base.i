@@ -134,7 +134,7 @@
   args = 'eta1 eta2'
   constant_names = 'h'
   constant_expressions = '
-  function = 'h*((-1-eta1)^2*eta1^2*(1-eta1)^2+(-1-eta2)^2*eta2^2*(1-eta2)^2)'
+  function = 'h*(eta1^2*(1-eta1)^2+eta2^2*(1-eta2)^2)'
   enable_jit = true
   derivative_order = 2
   [../]

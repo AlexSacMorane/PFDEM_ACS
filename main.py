@@ -58,6 +58,8 @@ if dict_algorithm['SaveData']:
 
 #create the two grains
 User.Add_2grains(dict_material,dict_sample)
+#Compute the surface of the contact initially
+User.Add_S0(dict_sample, dict_sollicitation)
 #create the solute
 User.Add_solute(dict_sample)
 
@@ -82,6 +84,9 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     #move grain
     Grain.Compute_overlap_2_grains(dict_sample)
     Grain.Apply_overlap_target(dict_material,dict_sample,dict_sollicitation)
+
+    #compute the intersection surface
+    Owntools.Compute_S_int(dict_sample)
 
     #plot
     Owntools.Plot_config(dict_sample)

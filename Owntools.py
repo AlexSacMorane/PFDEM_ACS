@@ -122,6 +122,43 @@ def Sort_Files(dict_algorithm):
 
 #-------------------------------------------------------------------------------
 
+def Compute_S_int(dict_sample):
+    '''
+    Searching Surface,
+    #Monte Carlo Method
+    #A box is defined, we take a random point and we look if it is inside or outside the grain
+    #Properties are the statistic times the box properties
+
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for the intersection surface (a float)
+    '''
+    #Defining the limit
+    box_min_x = min(dict_sample['L_g'][1].l_border_x)
+    box_max_x = max(dict_sample['L_g'][0].l_border_x)
+    box_min_y = min(dict_sample['L_g'][0].l_border_y)
+    box_max_y = max(dict_sample['L_g'][0].l_border_y)
+
+    #Compute the intersection surface
+    N_MonteCarlo = 5000 #The larger it is, the more accurate it is
+    sigma = 1
+    M_Mass = 0
+
+    for i in range(N_MonteCarlo):
+        P = np.array([random.uniform(box_min_x,box_max_x),random.uniform(box_min_y,box_max_y)])
+        if dict_sample['L_g'][0].P_is_inside(P) and dict_sample['L_g'][1].P_is_inside(P):
+            M_Mass = M_Mass + sigma
+
+    Mass = (box_max_x-box_min_x)*(box_max_y-box_min_y)/N_MonteCarlo*M_Mass
+    Surface = Mass/sigma
+
+    #Update element in dictionnary
+    dict_sample['S_int'] = Surface
+
+#-------------------------------------------------------------------------------
+
 def Plot_config(dict_sample):
     '''
     Plot the sample configuration.
@@ -275,26 +312,11 @@ def Write_ep_txt(dict_algorithm, dict_sample):
             an sample dictionnary (a dict)
         Output :
             Nothing but a .txt file is generated (a file)
-        '''
-        Write a .txt file needed for MOOSE simulation.
-
-        The variables etai are transmitted to the MOOSE simulation.
-        It is assumed the sample is composed by only two grains.
-
-            Input :
-                an algorithm dictionnary (a dict)
-                an sample dictionnary (a dict)
-            Output :
-                Nothing but a .txt file is generated (a file)
-        '''
-
-        Input :
-            an algorithm dictionnary (a dict)
-            an sample dictionnary (a dict)
-        Output :
-            Nothing but a .txt file is generated (a file)
     '''
+    #compute the variable e_mec
+    e_mec = 0.2*dict_sample['S_int_0']/dict_sample['S_int']
 
+    #write data
     file_to_write = open('Data/ep_'+str(dict_algorithm['i_PFDEM'])+'.txt','w')
     file_to_write.write('AXIS X\n')
     line = ''
@@ -313,7 +335,7 @@ def Write_ep_txt(dict_algorithm, dict_sample):
     file_to_write.write('DATA\n')
     for l in range(len(dict_sample['y_L'])):
         for c in range(len(dict_sample['x_L'])):
-            file_to_write.write(str(0.1/0.8*min(dict_sample['L_g'][0].etai_M[-1-l][c],dict_sample['L_g'][1].etai_M[-1-l][c]))+'\n')
+            file_to_write.write(str(e_mec*min(dict_sample['L_g'][0].etai_M[-1-l][c],dict_sample['L_g'][1].etai_M[-1-l][c]))+'\n')
 
     file_to_write.close()
 

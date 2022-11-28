@@ -57,11 +57,15 @@ class Grain:
         L_border_x.append(L_border_x[0])
         L_border_y.append(L_border_y[0])
         #save description
+        self.r_mean = radius
         self.l_r = L_r
         self.l_theta_r = L_theta_r
         self.l_border = L_border
         self.l_border_x = L_border_x
         self.l_border_y = L_border_y
+
+        self.y = dict_material['Y']
+        self.nu = dict_material['nu']
 
         self.build_etai_M(dict_material,dict_sample)
 
