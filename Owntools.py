@@ -232,9 +232,9 @@ def Plot_config(dict_algorithm, dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Plot_radius_distribution(dict_algorithm, dict_sample):
+def Plot_init_current_shape(dict_algorithm, dict_sample):
     '''
-    Plot the radius distribution for the grain 1.
+    Plot the comparison between initial and current shape for the grain 1.
 
         Input :
             a sample dictionnary (a dict)
@@ -256,7 +256,7 @@ def Plot_radius_distribution(dict_algorithm, dict_sample):
     plt.figure(1,figsize=(16,9))
     plt.plot(L_border_x_init,L_border_y_init,'k',label='Initial')
     plt.plot(L_border_x,L_border_y,label='Current')
-    plt.savefig('Debug/Radius_Distribtuion_'+str(dict_algorithm['i_PFDEM'])+'.png')
+    plt.savefig('Debug/Init_Current_Shape_'+str(dict_algorithm['i_PFDEM'])+'.png')
     plt.close(1)
 
 #-------------------------------------------------------------------------------

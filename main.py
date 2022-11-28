@@ -142,6 +142,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
 
     #plot
     Owntools.Plot_config(dict_algorithm, dict_sample)
+    Owntools.Plot_init_current_shape(dict_algorithm, dict_sample)
 
     #---------------------------------------------------------------------------
     #postprocess
