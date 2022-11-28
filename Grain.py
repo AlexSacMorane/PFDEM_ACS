@@ -63,6 +63,10 @@ class Grain:
         self.l_border = L_border
         self.l_border_x = L_border_x
         self.l_border_y = L_border_y
+        #save initial
+        self.center_init = center
+        self.l_border_x_init = L_border_x
+        self.l_border_y_init = L_border_y
 
         self.y = dict_material['Y']
         self.nu = dict_material['nu']

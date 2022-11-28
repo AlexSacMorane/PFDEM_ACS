@@ -232,6 +232,35 @@ def Plot_config(dict_algorithm, dict_sample):
 
 #-------------------------------------------------------------------------------
 
+def Plot_radius_distribution(dict_algorithm, dict_sample):
+    '''
+    Plot the radius distribution for the grain 1.
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but a .png file is generated (a file)
+    '''
+    #prepare plot
+    L_border_x_init = []
+    L_border_y_init = []
+    for i in range(len(dict_sample['L_g'][0].l_border_x_init)):
+        L_border_x_init.append(dict_sample['L_g'][0].l_border_x_init[i] - dict_sample['L_g'][0].center_init[0])
+        L_border_y_init.append(dict_sample['L_g'][0].l_border_y_init[i] - dict_sample['L_g'][0].center_init[1])
+    L_border_x = []
+    L_border_y = []
+    for i in range(len(dict_sample['L_g'][0].l_border_x)):
+        L_border_x.append(dict_sample['L_g'][0].l_border_x[i] - dict_sample['L_g'][0].center[0])
+        L_border_y.append(dict_sample['L_g'][0].l_border_y[i] - dict_sample['L_g'][0].center[1])
+    #plot
+    plt.figure(1,figsize=(16,9))
+    plt.plot(L_border_x_init,L_border_y_init,'k',label='Initial')
+    plt.plot(L_border_x,L_border_y,label='Current')
+    plt.savefig('Debug/Radius_Distribtuion_'+str(dict_algorithm['i_PFDEM'])+'.png')
+    plt.close(1)
+
+#-------------------------------------------------------------------------------
+
 def Plot_trackers(dict_tracker):
     '''
     Plot the trackers.
@@ -241,9 +270,6 @@ def Plot_trackers(dict_tracker):
         Output :
             Nothing but a .png file is generated (a file)
     '''
-
-    name = 'Debug/Trackers.png'
-
     #plot
     plt.figure(1,figsize=(16,9))
 
@@ -263,7 +289,7 @@ def Plot_trackers(dict_tracker):
     plt.plot(dict_tracker['L_sum_total'])
     plt.title('Sum of etai and c')
 
-    plt.savefig(name)
+    plt.savefig('Debug/Trackers.png')
     plt.close(1)
 
 #-------------------------------------------------------------------------------
