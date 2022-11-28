@@ -71,7 +71,7 @@ def All_parameters():
 
     #Find a simulation ame
     template = 'PF_AC_PS' #template of the name of the simulation
-    SaveData = False #Save data or not
+    SaveData = True #Save data or not
     foldername = 'Data_2G_CHAC' #name of the folder where data are saved
     if SaveData :
         i_run = 1
