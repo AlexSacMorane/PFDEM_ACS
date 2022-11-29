@@ -377,12 +377,21 @@ class Grain:
       center_circumscribing = (self.l_border[ij_farthest[0]]+self.l_border[ij_farthest[1]])/2
       radius_circumscribing = MaxDistance/2
       Circumscribing_Found = True
+      Max_outside_distance = radius_circumscribing
       for i_p in range(len(self.l_border)-1):
           if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > radius_circumscribing and i_p not in ij_farthest: #vertex outside the trial circle
             Circumscribing_Found = False
+            if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > Max_outside_distance:
+                k_outside_farthest = i_p
+                Max_outside_distance = np.linalg.norm(self.l_border[i_p]-center_circumscribing)
       #see paper for the other case
       if not Circumscribing_Found:
-          raise ValueError('The algorithm is not accurate for this case, it must be more developped...')
+          L_ijk_circumscribing = [ij_farthest[0],ij_farthest[1],k_outside_farthest]
+          center_circumscribing, radius_circumscribing = FindCircleFromThreePoints(P1,P2,P3)
+
+          raise ValueError('StopDebug')
+
+
 
       #look for length and width
       length = MaxDistance
@@ -648,3 +657,108 @@ def Apply_overlap_target(dict_material,dict_sample,dict_sollicitation,dict_track
     #move grains to apply target overlap
     dict_sample['L_g'][0].move_grain_interpolation(np.array([ delta_overlap/2,0]),dict_sample)
     dict_sample['L_g'][1].move_grain_interpolation(np.array([-delta_overlap/2,0]),dict_sample)
+
+#-------------------------------------------------------------------------------
+
+def FindCircleFromThreePoints(P1,P2,P3):
+    '''
+    Compute the circumscribing circle of a triangle defined by three points.
+
+    https://www.geeksforgeeks.org/program-find-circumcenter-triangle-2/
+
+        Input :
+            three points (a 2 x 1 numpy array)
+        Output :
+            a center (a 2 x 1 numpy array)
+            a radius (a float)
+    '''
+    # Line P1P2 is represented as ax + by = c and line P2P3 is represented as ex + fy = g
+    a, b, c = lineFromPoints(P1, P2)
+    e, f, g = lineFromPoints(P2, P3)
+
+    # Converting lines P1P2 and P2P3 to perpendicular bisectors.
+    #After this, L : ax + by = c and M : ex + fy = g
+    a, b, c = perpendicularBisectorFromLine(P, Q, a, b, c)
+    e, f, g = perpendicularBisectorFromLine(Q, R, e, f, g)
+
+    # The point of intersection of L and M gives the circumcenter
+    circumcenter = lineLineIntersection(a, b, c, e, f, g)
+
+    if circumcenter == False:
+        raise ValueError('The given points do not form a triangle and are collinear...')
+    else :
+        #compute the radius
+        print(np.linalg.norm(P1-circumcenter))
+        print(np.linalg.norm(P2-circumcenter))
+        print(np.linalg.norm(P2-circumcenter))
+        radius = 0
+
+    return circumcenter, radius
+
+#-------------------------------------------------------------------------------
+
+def lineFromPoints(P, Q):
+    '''
+    Function to find the line given two points
+
+    Used in FindCircleFromThreePoints().
+    The equation is c = ax + by.
+    https://www.geeksforgeeks.org/program-find-circumcenter-triangle-2/
+
+        Input :
+            two points (a 2 x 1 numpy array)
+        Output :
+            three characteristic of the line (three floats)
+    '''
+    a = Q[1] - P[1]
+    b = P[0] - Q[0]
+    c = a * (P[0]) + b * (P[1])
+    return a, b, c
+
+#-------------------------------------------------------------------------------
+
+def perpendicularBisectorFromLine(P, Q, a, b, c):
+    '''
+    Function which converts the input line to its perpendicular bisector.
+
+    Used in FindCircleFromThreePoints().
+    The equation is c = ax + by.
+    https://www.geeksforgeeks.org/program-find-circumcenter-triangle-2/
+
+        Input :
+            two points (a 2 x 1 numpy array)
+            three characteristic of the line (three floats)
+        Output :
+            three characteristic of the perpendicular bisector (three floats)
+    '''
+    mid_point = [(P[0] + Q[0])//2, (P[1] + Q[1])//2]
+    # c = -bx + ay
+    c = -b * (mid_point[0]) + a * (mid_point[1])
+    temp = a
+    a = -b
+    b = temp
+    return a, b, c
+
+#-------------------------------------------------------------------------------
+
+def lineLineIntersection(a1, b1, c1, a2, b2, c2):
+    '''
+    Returns the intersection point of two lines.
+
+    Used in FindCircleFromThreePoints().
+    https://www.geeksforgeeks.org/program-find-circumcenter-triangle-2/
+
+        Input :
+            six characteristics of the line 1 and 2 (six floats)
+        Output :
+            the intersection point (a 2 x 1 numpy array)
+    '''
+    determinant = a1 * b2 - a2 * b1
+    if (determinant == 0):
+        # The lines are parallel. This is simplified
+        # by returning a pair of (10.0)**19
+        return False
+    else:
+        x = (b2 * c1 - b1 * c2)//determinant
+        y = (a1 * c2 - a2 * c1)//determinant
+        return np.array([x, y])

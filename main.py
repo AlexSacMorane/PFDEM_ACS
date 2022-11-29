@@ -63,6 +63,7 @@ Owntools.Compute_sum_eta(dict_sample)
 #Compute the surface of the contact initially
 User.Add_S0(dict_sample, dict_sollicitation)
 #Compute the sphericity initially for the first grain
+dict_sample['L_g'][0].geometric_study(dict_sample)
 dict_sample['L_g'][0].Compute_sphericity()
 #create the solute
 User.Add_solute(dict_sample)
