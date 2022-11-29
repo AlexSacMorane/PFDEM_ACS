@@ -378,7 +378,7 @@ class Grain:
       radius_circumscribing = MaxDistance/2
       Circumscribing_Found = True
       for i_p in range(len(self.l_border)-1):
-          if np.linalg.norm(slef.l_border[i_p]-center_circumscribing) > radius_circumscribing and i_p not in ij_farthest: #vertex outside the trial circle
+          if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > radius_circumscribing and i_p not in ij_farthest: #vertex outside the trial circle
             Circumscribing_Found = False
       #see paper for the other case
       if not Circumscribing_Found:
