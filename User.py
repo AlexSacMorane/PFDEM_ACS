@@ -69,6 +69,9 @@ def All_parameters():
     c_min = 0
     c_max = 0.2
 
+    #Margin for sphericity study
+    sphericity_margin = 0.05
+
     #Find a simulation ame
     template = 'PF_AC_PS' #template of the name of the simulation
     SaveData = True #Save data or not
@@ -86,6 +89,7 @@ def All_parameters():
     dict_algorithm = {
     'c_min' : c_min,
     'c_max' : c_max,
+    'sphericity_margin' : sphericity_margin
     'np_proc' : np_proc,
     'SaveData' : SaveData,
     'namefile' : namefile,

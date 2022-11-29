@@ -348,7 +348,7 @@ class Grain:
 
     #-------------------------------------------------------------------------------
 
-    def Compute_sphericity(self):
+    def Compute_sphericity(self, dict_algorithm):
       '''Compute sphericity of the particle with five parameters.
 
       The parameters used are the area, the diameter, the circle ratio, the perimeter and the width to length ratio sphericity.
@@ -356,6 +356,7 @@ class Grain:
 
           Input :
               itself (a grain)
+              an algorithm dictionnary (a dict)
           Output :
               Nothing, but the grain gets updated attributes (five floats)
       '''
@@ -379,8 +380,8 @@ class Grain:
       Circumscribing_Found = True
       Max_outside_distance = radius_circumscribing
       for i_p in range(len(self.l_border)-1):
-          #there is 1% margin here because of the numerical approximation
-          if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > 1.01*radius_circumscribing and i_p not in ij_farthest: #vertex outside the trial circle
+          #there is a margin here because of the numerical approximation
+          if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > (1+dict_algorithm['sphericity_margin'])*radius_circumscribing and i_p not in ij_farthest: #vertex outside the trial circle
             Circumscribing_Found = False
             if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > Max_outside_distance:
                 k_outside_farthest = i_p
@@ -392,7 +393,7 @@ class Grain:
           Circumscribing_Found = True
           for i_p in range(len(self.l_border)-1):
               #there is 1% margin here because of the numerical approximation
-              if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > 1.01*radius_circumscribing and i_p not in L_ijk_circumscribing: #vertex outside the circle computed
+              if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > (1+dict_algorithm['sphericity_margin'])*radius_circumscribing and i_p not in L_ijk_circumscribing: #vertex outside the circle computed
                 Circumscribing_Found = False
           #see article for other case
           if not Circumscribing_Found:
