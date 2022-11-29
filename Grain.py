@@ -384,12 +384,17 @@ class Grain:
             if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > Max_outside_distance:
                 k_outside_farthest = i_p
                 Max_outside_distance = np.linalg.norm(self.l_border[i_p]-center_circumscribing)
-      #see paper for the other case
+      #The trial guess does not work
       if not Circumscribing_Found:
           L_ijk_circumscribing = [ij_farthest[0],ij_farthest[1],k_outside_farthest]
           center_circumscribing, radius_circumscribing = FindCircleFromThreePoints(self.l_border[L_ijk_circumscribing[0]],self.l_border[L_ijk_circumscribing[1]],self.l_border[L_ijk_circumscribing[2]])
+          Circumscribing_Found = True
+          for i_p in range(len(self.l_border)-1):
+              if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > radius_circumscribing and i_p not in L_ijk_circumscribing: #vertex outside the circle computed
+                Circumscribing_Found = False
 
-          raise ValueError('StopDebug')
+          if not Circumscribing_Found:
+              raise ValueError('Stooooop')
 
 
 
@@ -688,10 +693,7 @@ def FindCircleFromThreePoints(P1,P2,P3):
         raise ValueError('The given points do not form a triangle and are collinear...')
     else :
         #compute the radius
-        print(np.linalg.norm(P1-circumcenter))
-        print(np.linalg.norm(P2-circumcenter))
-        print(np.linalg.norm(P3-circumcenter))
-        radius = 0
+        radius = max([np.linalg.norm(P1-circumcenter), np.linalg.norm(P2-circumcenter), np.linalg.norm(P3-circumcenter)])
 
     return circumcenter, radius
 
