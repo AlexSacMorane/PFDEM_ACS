@@ -387,7 +387,7 @@ class Grain:
       #see paper for the other case
       if not Circumscribing_Found:
           L_ijk_circumscribing = [ij_farthest[0],ij_farthest[1],k_outside_farthest]
-          center_circumscribing, radius_circumscribing = FindCircleFromThreePoints(P1,P2,P3)
+          center_circumscribing, radius_circumscribing = FindCircleFromThreePoints(self.l_border[L_ijk_circumscribing[0]],self.l_border[L_ijk_circumscribing[1]],self.l_border[L_ijk_circumscribing[2]])
 
           raise ValueError('StopDebug')
 
