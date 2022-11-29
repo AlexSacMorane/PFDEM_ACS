@@ -86,7 +86,7 @@ dict_tracker = {
 'L_diameter_sphericity_g0' : [dict_sample['L_g'][0].diameter_sphericity],
 'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_ratio_sphericity],
 'L_perimeter_sphericity_g0' : [dict_sample['L_g'][0].perimeter_sphericity],
-'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_lenght_ratio_sphericity]
+'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_length_ratio_sphericity]
 }
 
 #-------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     dict_tracker['L_diameter_sphericity_g0'].append(dict_sample['L_g'][0].diameter_sphericity)
     dict_tracker['L_circle_ratio_sphericity_g0'].append(dict_sample['L_g'][0].circle_ratio_sphericity)
     dict_tracker['L_perimeter_sphericity_g0'].append(dict_sample['L_g'][0].perimeter_sphericity)
-    dict_tracker['L_width_to_length_ratio_sphericity_g0'].append(dict_sample['L_g'][0].width_to_lenght_ratio_sphericity)
+    dict_tracker['L_width_to_length_ratio_sphericity_g0'].append(dict_sample['L_g'][0].width_to_length_ratio_sphericity)
 
     #Plot trackers
     Owntools.Plot_trackers(dict_tracker)
