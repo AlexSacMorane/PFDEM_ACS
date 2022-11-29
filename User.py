@@ -89,7 +89,7 @@ def All_parameters():
     dict_algorithm = {
     'c_min' : c_min,
     'c_max' : c_max,
-    'sphericity_margin' : sphericity_margin
+    'sphericity_margin' : sphericity_margin,
     'np_proc' : np_proc,
     'SaveData' : SaveData,
     'namefile' : namefile,
