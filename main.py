@@ -84,7 +84,7 @@ dict_tracker = {
 'L_sum_total' : [dict_sample['sum_eta']],
 'L_area_sphericity_g0' : [dict_sample['L_g'][0].area_sphericity],
 'L_diameter_sphericity_g0' : [dict_sample['L_g'][0].diameter_sphericity],
-'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_sphericity],
+'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_ratio_sphericity],
 'L_perimeter_sphericity_g0' : [dict_sample['L_g'][0].perimeter_sphericity],
 'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_lenght_ratio_sphericity]
 }
@@ -174,7 +174,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     dict_tracker['L_sum_total'].append(dict_sample['sum_c']+dict_sample['sum_eta'])
     dict_tracker['L_area_sphericity_g0'].append(dict_sample['L_g'][0].area_sphericity)
     dict_tracker['L_diameter_sphericity_g0'].append(dict_sample['L_g'][0].diameter_sphericity)
-    dict_tracker['L_circle_ratio_sphericity_g0'].append(dict_sample['L_g'][0].circle_sphericity)
+    dict_tracker['L_circle_ratio_sphericity_g0'].append(dict_sample['L_g'][0].circle_ratio_sphericity)
     dict_tracker['L_perimeter_sphericity_g0'].append(dict_sample['L_g'][0].perimeter_sphericity)
     dict_tracker['L_width_to_length_ratio_sphericity_g0'].append(dict_sample['L_g'][0].width_to_lenght_ratio_sphericity)
 
