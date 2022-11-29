@@ -392,6 +392,7 @@ class Grain:
           for i_p in range(len(self.l_border)-1):
               if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > radius_circumscribing and i_p not in L_ijk_circumscribing: #vertex outside the circle computed
                 Circumscribing_Found = False
+                print(radius_circumscribing, np.linalg.norm(self.l_border[i_p]-center_circumscribing))
 
           if not Circumscribing_Found:
               raise ValueError('Stooooop')
