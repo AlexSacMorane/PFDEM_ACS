@@ -678,8 +678,8 @@ def FindCircleFromThreePoints(P1,P2,P3):
 
     # Converting lines P1P2 and P2P3 to perpendicular bisectors.
     #After this, L : ax + by = c and M : ex + fy = g
-    a, b, c = perpendicularBisectorFromLine(P, Q, a, b, c)
-    e, f, g = perpendicularBisectorFromLine(Q, R, e, f, g)
+    a, b, c = perpendicularBisectorFromLine(P1, P2, a, b, c)
+    e, f, g = perpendicularBisectorFromLine(P2, P3, e, f, g)
 
     # The point of intersection of L and M gives the circumcenter
     circumcenter = lineLineIntersection(a, b, c, e, f, g)
