@@ -105,10 +105,14 @@ while not User.Criteria_StopSimulation(dict_algorithm):
 
     #plot
     Owntools.Plot_config(dict_algorithm, dict_sample)
+    Owntools.Plot_init_current_shape(dict_algorithm, dict_sample)
 
     #---------------------------------------------------------------------------
     #postprocess
     #---------------------------------------------------------------------------
+
+    #Compute the sphericity for the first grain
+    dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
 
     #compute the mass of grain
     Owntools.Compute_sum_eta(dict_sample)
@@ -123,6 +127,12 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     dict_tracker['L_sum_solute'].append(dict_sample['sum_c'])
     dict_tracker['L_sum_eta'].append(dict_sample['sum_eta'])
     dict_tracker['L_sum_total'].append(dict_sample['sum_c']+dict_sample['sum_eta'])
+    dict_tracker['L_area_sphericity_g0'].append(dict_sample['L_g'][0].area_sphericity)
+    dict_tracker['L_diameter_sphericity_g0'].append(dict_sample['L_g'][0].diameter_sphericity)
+    dict_tracker['L_circle_ratio_sphericity_g0'].append(dict_sample['L_g'][0].circle_ratio_sphericity)
+    dict_tracker['L_perimeter_sphericity_g0'].append(dict_sample['L_g'][0].perimeter_sphericity)
+    dict_tracker['L_width_to_length_ratio_sphericity_g0'].append(dict_sample['L_g'][0].width_to_length_ratio_sphericity)
+
 
     #Plot trackers
     Owntools.Plot_trackers(dict_tracker)
