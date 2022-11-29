@@ -684,7 +684,7 @@ def FindCircleFromThreePoints(P1,P2,P3):
     # The point of intersection of L and M gives the circumcenter
     circumcenter = lineLineIntersection(a, b, c, e, f, g)
 
-    if circumcenter == False:
+    if circumcenter == np.array([10**9,10**9]):
         raise ValueError('The given points do not form a triangle and are collinear...')
     else :
         #compute the radius
@@ -755,9 +755,8 @@ def lineLineIntersection(a1, b1, c1, a2, b2, c2):
     '''
     determinant = a1 * b2 - a2 * b1
     if (determinant == 0):
-        # The lines are parallel. This is simplified
-        # by returning a pair of (10.0)**19
-        return False
+        # The lines are parallel.
+        return np.array([10**9,10**9])
     else:
         x = (b2 * c1 - b1 * c2)//determinant
         y = (a1 * c2 - a2 * c1)//determinant
