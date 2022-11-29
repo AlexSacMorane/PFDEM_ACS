@@ -64,7 +64,7 @@ Owntools.Compute_sum_eta(dict_sample)
 User.Add_S0(dict_sample, dict_sollicitation)
 #Compute the sphericity initially for the first grain
 dict_sample['L_g'][0].geometric_study(dict_sample)
-dict_sample['L_g'][0].Compute_sphericity()
+dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
 #create the solute
 User.Add_solute(dict_sample)
 
@@ -157,7 +157,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     #---------------------------------------------------------------------------
 
     #Compute the sphericity for the first grain
-    dict_sample['L_g'][0].Compute_sphericity()
+    dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
 
     #compute the mass of grain
     Owntools.Compute_sum_eta(dict_sample)
