@@ -379,7 +379,8 @@ class Grain:
       Circumscribing_Found = True
       Max_outside_distance = radius_circumscribing
       for i_p in range(len(self.l_border)-1):
-          if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > radius_circumscribing and i_p not in ij_farthest: #vertex outside the trial circle
+          #there is 1% margin here because of the numerical approximation
+          if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > 1.01*radius_circumscribing and i_p not in ij_farthest: #vertex outside the trial circle
             Circumscribing_Found = False
             if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > Max_outside_distance:
                 k_outside_farthest = i_p
@@ -390,14 +391,12 @@ class Grain:
           center_circumscribing, radius_circumscribing = FindCircleFromThreePoints(self.l_border[L_ijk_circumscribing[0]],self.l_border[L_ijk_circumscribing[1]],self.l_border[L_ijk_circumscribing[2]])
           Circumscribing_Found = True
           for i_p in range(len(self.l_border)-1):
-              if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > radius_circumscribing and i_p not in L_ijk_circumscribing: #vertex outside the circle computed
+              #there is 1% margin here because of the numerical approximation
+              if np.linalg.norm(self.l_border[i_p]-center_circumscribing) > 1.01*radius_circumscribing and i_p not in L_ijk_circumscribing: #vertex outside the circle computed
                 Circumscribing_Found = False
-                print(radius_circumscribing, np.linalg.norm(self.l_border[i_p]-center_circumscribing))
-
+          #see article for other case
           if not Circumscribing_Found:
-              raise ValueError('Stooooop')
-
-
+              raise ValueError('This algorithm is not developped for this case...')
 
       #look for length and width
       length = MaxDistance
