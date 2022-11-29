@@ -690,7 +690,7 @@ def FindCircleFromThreePoints(P1,P2,P3):
         #compute the radius
         print(np.linalg.norm(P1-circumcenter))
         print(np.linalg.norm(P2-circumcenter))
-        print(np.linalg.norm(P2-circumcenter))
+        print(np.linalg.norm(P3-circumcenter))
         radius = 0
 
     return circumcenter, radius
