@@ -33,27 +33,22 @@ import Report
 simulation_report = Report.Report('Debug/Report_after_crash',datetime.now())
 
 #-------------------------------------------------------------------------------
-#Load data
-#-------------------------------------------------------------------------------
-
-#-------------------------------------------------------------------------------
 #load data
 #-------------------------------------------------------------------------------
 
 toload = open('../Data_2G_ACS/PF_AC_PS_1_save_tempo','rb')
 dict_save = pickle.load(toload,encoding = 'bytes')
 toload.close()
-dict_algorithm = dict_save['algorithm']=
+dict_algorithm = dict_save['algorithm']
 dict_material = dict_save['material']
 dict_sample = dict_save['sample']
-dict_sollicitations = dict_save['sollicitations']
+dict_sollicitation = dict_save['sollicitation']
 dict_tracker = dict_save['tracker']
 
 #-------------------------------------------------------------------------------
 #main
 #-------------------------------------------------------------------------------
 
-dict_algorithm['i_PFDEM'] = 0
 while not User.Criteria_StopSimulation(dict_algorithm):
 
     #prepare iteration
