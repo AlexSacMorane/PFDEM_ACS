@@ -237,6 +237,7 @@ def Plot_init_current_shape(dict_algorithm, dict_sample):
     Plot the comparison between initial and current shape for the grain 1.
 
         Input :
+            an algorithm dictionnary (a dict)
             a sample dictionnary (a dict)
         Output :
             Nothing but a .png file is generated (a file)
@@ -270,12 +271,12 @@ def Plot_trackers(dict_tracker):
         Output :
             Nothing but a .png file is generated (a file)
     '''
-    #plot
+    #plot Displacement and sum of c and etai
     plt.figure(1,figsize=(16,9))
 
     plt.subplot(211)
     plt.plot(dict_tracker['L_displacement'])
-    plt.title('Displacement doen at each iteration')
+    plt.title('Displacement done at each iteration')
 
     plt.subplot(234)
     plt.plot(dict_tracker['L_sum_eta'])
@@ -290,6 +291,21 @@ def Plot_trackers(dict_tracker):
     plt.title('Sum of etai and c')
 
     plt.savefig('Debug/Trackers.png')
+    plt.close(1)
+
+    #---------------------------------------------------------------------------
+    #plot the sphericity of the grain 1
+    plt.figure(1,figsize=(16,9))
+
+    plt.plot(dict_tracker['L_area_sphericity_g0'],label='Area sphericity')
+    plt.plot(dict_tracker['L_diameter_sphericity_g0'],label='Diameter sphericity')
+    plt.plot(dict_tracker['L_circle_ratio_sphericity_g0'],label='Circle sphericity')
+    plt.plot(dict_tracker['L_perimeter_sphericity_g0'],label='Perimeter sphericity')
+    plt.plot(dict_tracker['L_width_to_length_ratio_sphericity_g0'],label='Width to length ratio sphericity')
+    plt.legend()
+    plt.title('2D sphericity of grain 1')
+
+    plt.savefig('Debug/Sphericity_g_1.png')
     plt.close(1)
 
 #-------------------------------------------------------------------------------

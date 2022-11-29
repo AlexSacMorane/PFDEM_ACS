@@ -62,6 +62,8 @@ User.Add_2grains(dict_material,dict_sample)
 Owntools.Compute_sum_eta(dict_sample)
 #Compute the surface of the contact initially
 User.Add_S0(dict_sample, dict_sollicitation)
+#Compute the sphericity initially for the first grain
+dict_sample['L_g'][0].Compute_sphericity()
 #create the solute
 User.Add_solute(dict_sample)
 
@@ -79,6 +81,11 @@ dict_tracker = {
 'L_sum_solute' : [0],
 'L_sum_eta' : [dict_sample['sum_eta']],
 'L_sum_total' : [dict_sample['sum_eta']],
+'L_area_sphericity_g0' : [dict_sample['L_g'][0].area_sphericity],
+'L_diameter_sphericity_g0' : [dict_sample['L_g'][0].diameter_sphericity],
+'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_sphericity],
+'L_perimeter_sphericity_g0' : [dict_sample['L_g'][0].perimeter_sphericity],
+'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_lenght_ratio_sphericity]
 }
 
 #-------------------------------------------------------------------------------
@@ -148,6 +155,9 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     #postprocess
     #---------------------------------------------------------------------------
 
+    #Compute the sphericity for the first grain
+    dict_sample['L_g'][0].Compute_sphericity()
+
     #compute the mass of grain
     Owntools.Compute_sum_eta(dict_sample)
 
@@ -161,6 +171,11 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     dict_tracker['L_sum_solute'].append(dict_sample['sum_c'])
     dict_tracker['L_sum_eta'].append(dict_sample['sum_eta'])
     dict_tracker['L_sum_total'].append(dict_sample['sum_c']+dict_sample['sum_eta'])
+    dict_tracker['L_area_sphericity_g0'].append(dict_sample['L_g'][0].area_sphericity)
+    dict_tracker['L_diameter_sphericity_g0'].append(dict_sample['L_g'][0].diameter_sphericity)
+    dict_tracker['L_circle_ratio_sphericity_g0'].append(dict_sample['L_g'][0].circle_sphericity)
+    dict_tracker['L_perimeter_sphericity_g0'].append(dict_sample['L_g'][0].perimeter_sphericity)
+    dict_tracker['L_width_to_length_ratio_sphericity_g0'].append(dict_sample['L_g'][0].width_to_lenght_ratio_sphericity)
 
     #Plot trackers
     Owntools.Plot_trackers(dict_tracker)

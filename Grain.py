@@ -64,9 +64,9 @@ class Grain:
         self.l_border_x = L_border_x
         self.l_border_y = L_border_y
         #save initial
-        self.center_init = center
-        self.l_border_x_init = L_border_x
-        self.l_border_y_init = L_border_y
+        self.center_init = center.copy()
+        self.l_border_x_init = L_border_x.copy()
+        self.l_border_y_init = L_border_y.copy()
 
         self.y = dict_material['Y']
         self.nu = dict_material['nu']
@@ -345,6 +345,90 @@ class Grain:
         return False
       else :
         return True
+
+    #-------------------------------------------------------------------------------
+
+    def Compute_sphericity(self):
+      '''Compute sphericity of the particle with five parameters.
+
+      The parameters used are the area, the diameter, the circle ratio, the perimeter and the width to length ratio sphericity.
+      See Zheng, J., Hryciw, R.D. (2015) Traditional soil particle sphericity, roundness and surface roughness by computational geometry, Geotechnique, Vol 65
+
+          Input :
+              itself (a grain)
+          Output :
+              Nothing, but the grain gets updated attributes (five floats)
+      '''
+      #Find the minimum circumscribing circle
+      #look for the two farthest and nearest points
+      MaxDistance = 0
+      MinDistance = None
+      for i_p in range(0,len(self.l_border)-2):
+          for j_p in range(i_p+1,len(self.l_border)-1):
+              Distance = np.linalg.norm(self.l_border[i_p]-self.l_border[j_p])
+              if Distance > MaxDistance :
+                  ij_farthest = (i_p,j_p)
+                  MaxDistance = Distance
+              if MinDistance == None or Distance < MinDistance:
+                  ij_nearest = (i_p,j_p)
+                  MinDistance = Distance
+
+      #Trial circle
+      center_circumscribing = (self.l_border[ij_farthest[0]]+self.l_border[ij_farthest[1]])/2
+      radius_circumscribing = MaxDistance/2
+      Circumscribing_Found = True
+      for i_p in range(len(self.l_border)-1):
+          if np.linalg.norm(slef.l_border[i_p]-center_circumscribing) > radius_circumscribing and i_p not in ij_farthest: #vertex outside the trial circle
+            Circumscribing_Found = False
+      #see paper for the other case
+      if not Circumscribing_Found:
+          raise ValueError('The algorithm is not accurate for this case, it must be more developped...')
+
+      #look for length and width
+      length = MaxDistance
+      u_maxDistance = (self.l_border[ij_farthest[0]]-self.l_border[ij_farthest[1]])/np.linalg.norm(self.l_border[ij_farthest[0]]-self.l_border[ij_farthest[1]])
+      v_maxDistance = np.array([u_maxDistance[1], -u_maxDistance[0]])
+      MaxWidth = 0
+      for i_p in range(0,len(self.l_border)-2):
+        for j_p in range(i_p+1,len(self.l_border)-1):
+            Distance = abs(np.dot(self.l_border[i_p]-self.l_border[j_p],v_maxDistance))
+            if Distance > MaxWidth :
+                ij_width = (i_p,j_p)
+                MaxWidth = Distance
+      width = MaxWidth
+
+      #look for maximum inscribed circle
+      center_inscribing = (self.l_border[ij_nearest[0]]+self.l_border[ij_nearest[1]])/2
+      radius_inscribing = MinDistance/2
+
+      #Area Sphericity
+      SurfaceParticle = self.surface
+      SurfaceCircumscribing = math.pi*radius_circumscribing**2
+      AreaSphericity = SurfaceParticle / SurfaceCircumscribing
+      self.area_sphericity = AreaSphericity
+
+      #Diameter Sphericity
+      DiameterSameAreaParticle = 2*math.sqrt(self.surface/math.pi)
+      DiameterCircumscribing = radius_circumscribing*2
+      DiameterSphericity = DiameterSameAreaParticle / DiameterCircumscribing
+      self.diameter_sphericity = DiameterSphericity
+
+      #Circle Ratio Sphericity
+      DiameterInscribing = radius_inscribing*2
+      CircleRatioSphericity = DiameterInscribing / DiameterCircumscribing
+      self.circle_ratio_sphericity = CircleRatioSphericity
+
+      #Perimeter Sphericity
+      PerimeterSameAreaParticle = 2*math.sqrt(self.surface*math.pi)
+      PerimeterParticle = 0
+      for i in range(len(self.l_border)-1):
+          PerimeterParticle = PerimeterParticle + np.linalg.norm(self.l_border[i+1]-self.l_border[i])
+      PerimeterSphericity = PerimeterSameAreaParticle / PerimeterParticle
+      self.perimeter_sphericity = PerimeterSphericity
+
+      #Width to length ratio Spericity
+      WidthToLengthRatioSpericity = width / length
+      self.width_to_length_ratio_sphericity = WidthToLengthRatioSpericity
 
     #---------------------------------------------------------------------------
 
