@@ -476,7 +476,7 @@ def Write_eta_txt(dict_algorithm, dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Write_solute_txt(dict_algorithm, dict_sample):
+def Write_solute_txt(dict_algorithm, dict_sample, dict_sollicitation):
     '''
     Write a .txt file needed for MOOSE simulation.
 
@@ -485,6 +485,7 @@ def Write_solute_txt(dict_algorithm, dict_sample):
         Input :
             an algorithm dictionnary (a dict)
             an sample dictionnary (a dict)
+            an sollicitation dictionnary (a dict)
         Output :
             Nothing but a .txt file is generated (a file)
     '''
@@ -506,7 +507,13 @@ def Write_solute_txt(dict_algorithm, dict_sample):
     file_to_write.write('DATA\n')
     for l in range(len(dict_sample['y_L'])):
         for c in range(len(dict_sample['x_L'])):
-            file_to_write.write(str(dict_sample['solute_M'][-1-l][c])+'\n')
+
+            #at the contact
+            if dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
+                file_to_write.write(str(dict_sample['solute_M'][-1-l][c]+dict_sollicitation['solute_added'])+'\n')
+            #outside or not at the contact
+            else :
+                file_to_write.write(str(dict_sample['solute_M'][-1-l][c])+'\n')
 
     file_to_write.close()
 

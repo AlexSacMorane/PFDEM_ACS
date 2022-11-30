@@ -78,9 +78,9 @@ def All_parameters():
     n_spatial_inscribing = 100
 
     #Find a simulation ame
-    template = 'PS' #template of the name of the simulation
+    template = 'NoMec' #template of the name of the simulation
     SaveData = True #Save data or not
-    foldername = 'Data_2G_ACS' #name of the folder where data are saved
+    foldername = 'Data_2G_ACS_NoMec' #name of the folder where data are saved
     if SaveData :
         i_run = 1
         folderpath = Path('../'+foldername+'/'+template+'_'+str(i_run))
@@ -109,8 +109,11 @@ def All_parameters():
     #External sollicitation parameters
 
     overlap_target = 10
+    #solute added at the contact level
+    solute_added = 0.1
 
     dict_sollicitation = {
+    'solute_added' : solute_added,
     'overlap_target' : overlap_target
     }
 

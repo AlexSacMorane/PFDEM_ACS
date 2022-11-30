@@ -59,9 +59,9 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
 
     #write data
     Owntools.Write_eta_txt(dict_algorithm, dict_sample)
-    Owntools.Write_solute_txt(dict_algorithm, dict_sample)
+    Owntools.Write_solute_txt(dict_algorithm, dict_sample, dict_sollicitation)
     Owntools.Write_kc_txt(dict_algorithm, dict_material, dict_sample)
-    Owntools.Write_ep_txt(dict_algorithm, dict_sample)
+    #Owntools.Write_ep_txt(dict_algorithm, dict_sample)
 
     #create i
     Owntools.Create_i(dict_algorithm,dict_sample,dict_material)
