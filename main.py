@@ -198,6 +198,7 @@ simulation_report.tac_tempo(datetime.now(),'Initialisation')
 
 dict_tracker = {
 'L_displacement' : [0],
+'L_int_displacement' : [0],
 'L_sum_solute' : [0],
 'L_sum_eta' : [dict_sample['sum_eta']],
 'L_sum_total' : [dict_sample['sum_eta']],

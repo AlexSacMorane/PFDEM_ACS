@@ -335,8 +335,8 @@ def Plot_trackers(dict_tracker):
     plt.figure(1,figsize=(16,9))
 
     plt.subplot(211)
-    plt.plot(dict_tracker['L_displacement'])
-    plt.title('Displacement done at each iteration')
+    plt.plot(dict_tracker['L_int_displacement'])
+    plt.title('Total displacement done')
 
     plt.subplot(234)
     plt.plot(dict_tracker['L_sum_eta'])

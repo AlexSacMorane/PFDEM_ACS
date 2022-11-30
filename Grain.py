@@ -678,6 +678,7 @@ def Apply_overlap_target(dict_material,dict_sample,dict_sollicitation,dict_track
 
     #save in tracker
     dict_tracker['L_displacement'].append(delta_overlap)
+    dict_tracker['L_int_displacement'].append(dict_tracker['L_int_displacement'][-1] + delta_overlap)
 
     #move grains to apply target overlap
     dict_sample['L_g'][0].move_grain_interpolation(np.array([ delta_overlap/2,0]),dict_sample)
