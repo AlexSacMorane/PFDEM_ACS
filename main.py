@@ -72,7 +72,7 @@ dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
 User.Add_solute(dict_sample)
 
 #plot
-Owntools.Plot_config(dict_sample)
+Owntools.Plot_config(dict_algorithm, dict_sample)
 
 simulation_report.tac_tempo(datetime.now(),'Initialisation')
 
@@ -113,7 +113,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     Owntools.Compute_S_int(dict_sample)
 
     #plot
-    Owntools.Plot_config(dict_sample)
+    Owntools.Plot_config(dict_algorithm, dict_sample)
 
     #write data
     Owntools.Write_eta_txt(dict_algorithm, dict_sample)
@@ -154,7 +154,7 @@ while not User.Criteria_StopSimulation(dict_algorithm):
     Owntools.Ed_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_000',dict_algorithm,dict_sample)
 
     #plot
-    Owntools.Plot_config(dict_sample)
+    Owntools.Plot_config(dict_algorithm, dict_sample)
     Owntools.Plot_init_current_shape(dict_sample)
     Owntools.Plot_Ed(dict_sample)
 

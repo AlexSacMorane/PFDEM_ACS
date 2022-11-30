@@ -199,7 +199,7 @@ def Compute_sum_eta(dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Plot_config(dict_sample):
+def Plot_config(dict_algorithm, dict_sample):
     '''
     Plot the sample configuration.
 
