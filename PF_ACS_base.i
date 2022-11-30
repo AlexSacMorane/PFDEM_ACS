@@ -148,22 +148,22 @@
   enable_jit = true
   derivative_order = 2
   [../]
-  [./Ed_pre]
-  type = DerivativeParsedMaterial
-  block = 0
-  f_name = Ed_pre
-  args = 'c eta1 eta2'
-  function = 'c*3*eta1^2-c*2*eta1^3+c*3*eta2^2-c*2*eta2^3'
-  enable_jit = true
-  derivative_order = 2
-  [../]
+#  [./Ed_pre]
+#  type = DerivativeParsedMaterial
+#  block = 0
+#  f_name = Ed_pre
+#  args = 'c eta1 eta2'
+#  function = 'c*3*eta1^2-c*2*eta1^3+c*3*eta2^2-c*2*eta2^3'
+#  enable_jit = true
+#  derivative_order = 2
+#  [../]
   [./free_energy_and_ed]
     type = DerivativeParsedMaterial
     block = 0
     f_name = F_total
     args = 'eta1 eta2'
-    material_property_names = 'F(eta1,eta2) Ed_mec(eta1,eta2) Ed_pre(eta1,eta2)'
-    function = 'F+Ed_mec-Ed_pre'
+    material_property_names = 'F(eta1,eta2) Ed_mec(eta1,eta2)'
+    function = 'F+Ed_mec'
     enable_jit = true
     derivative_order = 2
   [../]
