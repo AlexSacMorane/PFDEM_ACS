@@ -45,7 +45,7 @@ class TestExample(unittest.TestCase):
 #-------------------------------------------------------------------------------
 
 class TestReport(unittest.TestCase):
-'''Test functions from Report.py.'''
+    '''Test functions from Report.py.'''
     def test_Report(self):
         '''
         Try to generate a report.txt file.
@@ -62,7 +62,7 @@ class TestReport(unittest.TestCase):
 #-------------------------------------------------------------------------------
 
 class TestUser(unittest.TestCase):
-'''Test functions from User.py.'''
+    '''Test functions from User.py.'''
     def test_All_parameters(self):
         '''
         Try to acquire data from the function User.All_parameters().
@@ -110,7 +110,7 @@ class TestUser(unittest.TestCase):
 #-------------------------------------------------------------------------------
 
 class TestOwntools(unittest.TestCase):
-'''Test functions from Owntools.py.'''
+    '''Test functions from Owntools.py.'''
     def test_is_PF_ACS_base_here(self):
         '''
         Verify if the template PF_ACS_base.i is in the directory.
@@ -307,7 +307,7 @@ class TestOwntools(unittest.TestCase):
 #-------------------------------------------------------------------------------
 
 class TestGrain(unittest.TestCase):
-'''Test functions from Grain.py.'''
+    '''Test functions from Grain.py.'''
     def test_geometric_study(self):
         '''
         Try to study the grain geometry with Grain.geometric_study().
