@@ -377,6 +377,7 @@ def make_mp4(template_name,name_video):
 
         Input :
             the template of the pictures used (a string)
+            the name of the video (a string)
         Output :
             a movie file (a .mp4)
     '''
