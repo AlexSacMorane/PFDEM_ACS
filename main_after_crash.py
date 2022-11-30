@@ -36,7 +36,7 @@ simulation_report = Report.Report('Debug/Report_after_crash',datetime.now())
 #load data
 #-------------------------------------------------------------------------------
 
-toload = open('../Data_2G_ACS/PF_AC_PS_1_save_tempo','rb')
+toload = open('../Data_2G_ACS/PS_1_save_tempo','rb')
 dict_save = pickle.load(toload,encoding = 'bytes')
 toload.close()
 dict_algorithm = dict_save['algorithm']
@@ -102,10 +102,13 @@ while not User.Criteria_StopSimulation(dict_algorithm):
         grain.geometric_study(dict_sample)
     #look for the new solute shape
     Owntools.solute_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
+    #look for the initial external energy sources
+    Owntools.Ed_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_000',dict_algorithm,dict_sample)
 
     #plot
     Owntools.Plot_config(dict_algorithm, dict_sample)
     Owntools.Plot_init_current_shape(dict_algorithm, dict_sample)
+    Owntools.Plot_Ed(dict_sample)
 
     #---------------------------------------------------------------------------
     #postprocess
