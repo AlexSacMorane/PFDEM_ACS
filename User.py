@@ -53,9 +53,9 @@ def All_parameters():
     'x_L' : x_L,
     'y_L' : y_L,
     'grain_discretisation' : grain_discretisation,
-    'Emec_M' : np.array(np.zeros((y_L,x_L))),
-    'Eche_M' : np.array(np.zeros((y_L,x_L))),
-    'Ed_M' : np.array(np.zeros((y_L,x_L)))
+    'Emec_M' : np.array(np.zeros((len(y_L),len(x_L)))),
+    'Eche_M' : np.array(np.zeros((len(y_L),len(x_L)))),
+    'Ed_M' : np.array(np.zeros((len(y_L),len(x_L))))
     }
 
     #---------------------------------------------------------------------------
