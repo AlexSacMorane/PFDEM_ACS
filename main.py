@@ -24,100 +24,6 @@ import User
 import Report
 
 #-------------------------------------------------------------------------------
-#Plan simulation
-#-------------------------------------------------------------------------------
-
-if Path('Input').exists():
-    shutil.rmtree('Input')
-os.mkdir('Input')
-if Path('Output').exists():
-    shutil.rmtree('Output')
-os.mkdir('Output')
-if Path('Data').exists():
-    shutil.rmtree('Data')
-os.mkdir('Data')
-if Path('Debug').exists():
-    shutil.rmtree('Debug')
-os.mkdir('Debug')
-os.mkdir('Debug/Configuration')
-os.mkdir('Debug/Ed')
-os.mkdir('Debug/Comparison_Init_Current')
-
-#-------------------------------------------------------------------------------
-#Create a simulation
-#-------------------------------------------------------------------------------
-
-#create a simulation report
-simulation_report = Report.Report('Debug/Report',datetime.now())
-simulation_report.tic_tempo(datetime.now())
-
-#general parameters
-dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
-if dict_algorithm['SaveData']:
-    if not Path('../'+dict_algorithm['foldername']).exists():
-        os.mkdir('../'+dict_algorithm['foldername'])
-    #tempo save of the user file
-    shutil.copy('User.py','../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
-
-#create the two grains
-User.Add_2grains(dict_material,dict_sample)
-#Compute initial sum_eta
-Owntools.Compute_sum_eta(dict_sample)
-#Compute the surface of the contact initially
-User.Add_S0(dict_sample, dict_sollicitation)
-#Compute the sphericity initially for the first grain
-dict_sample['L_g'][0].geometric_study(dict_sample)
-dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
-#create the solute
-User.Add_solute(dict_sample)
-
-#plot
-Owntools.Plot_config(dict_algorithm, dict_sample)
-
-simulation_report.tac_tempo(datetime.now(),'Initialisation')
-
-#-------------------------------------------------------------------------------
-#trackers
-#-------------------------------------------------------------------------------
-
-dict_tracker = {
-'L_displacement' : [0],
-'L_sum_solute' : [0],
-'L_sum_eta' : [dict_sample['sum_eta']],
-'L_sum_total' : [dict_sample['sum_eta']],
-'L_area_sphericity_g0' : [dict_sample['L_g'][0].area_sphericity],
-'L_diameter_sphericity_g0' : [dict_sample['L_g'][0].diameter_sphericity],
-'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_ratio_sphericity],
-'L_perimeter_sphericity_g0' : [dict_sample['L_g'][0].perimeter_sphericity],
-'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_length_ratio_sphericity]
-}
-
-#-------------------------------------------------------------------------------
-#main
-#-------------------------------------------------------------------------------
-
-dict_algorithm['i_PFDEM'] = 0
-while not User.Criteria_StopSimulation(dict_algorithm):
-
-    iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
-
-#-------------------------------------------------------------------------------
-#close simulation
-#-------------------------------------------------------------------------------
-
-simulation_report.end(datetime.now())
-
-#final save
-if dict_algorithm['SaveData']:
-    Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
-    name_actual_folder = os.path.dirname(os.path.realpath(__file__))
-    shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
-    os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
-    os.remove('../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
-
-#-------------------------------------------------------------------------------
-#Functions
-#-------------------------------------------------------------------------------
 
 def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
     '''
@@ -232,3 +138,95 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
         shutil.copy('Debug/Report.txt','../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
 
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: from pf to dem")
+
+#-------------------------------------------------------------------------------
+#Plan simulation
+#-------------------------------------------------------------------------------
+
+if Path('Input').exists():
+    shutil.rmtree('Input')
+os.mkdir('Input')
+if Path('Output').exists():
+    shutil.rmtree('Output')
+os.mkdir('Output')
+if Path('Data').exists():
+    shutil.rmtree('Data')
+os.mkdir('Data')
+if Path('Debug').exists():
+    shutil.rmtree('Debug')
+os.mkdir('Debug')
+os.mkdir('Debug/Configuration')
+os.mkdir('Debug/Ed')
+os.mkdir('Debug/Comparison_Init_Current')
+
+#-------------------------------------------------------------------------------
+#Create a simulation
+#-------------------------------------------------------------------------------
+
+#create a simulation report
+simulation_report = Report.Report('Debug/Report',datetime.now())
+simulation_report.tic_tempo(datetime.now())
+
+#general parameters
+dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
+if dict_algorithm['SaveData']:
+    if not Path('../'+dict_algorithm['foldername']).exists():
+        os.mkdir('../'+dict_algorithm['foldername'])
+    #tempo save of the user file
+    shutil.copy('User.py','../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
+
+#create the two grains
+User.Add_2grains(dict_material,dict_sample)
+#Compute initial sum_eta
+Owntools.Compute_sum_eta(dict_sample)
+#Compute the surface of the contact initially
+User.Add_S0(dict_sample, dict_sollicitation)
+#Compute the sphericity initially for the first grain
+dict_sample['L_g'][0].geometric_study(dict_sample)
+dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
+#create the solute
+User.Add_solute(dict_sample)
+
+#plot
+Owntools.Plot_config(dict_algorithm, dict_sample)
+
+simulation_report.tac_tempo(datetime.now(),'Initialisation')
+
+#-------------------------------------------------------------------------------
+#trackers
+#-------------------------------------------------------------------------------
+
+dict_tracker = {
+'L_displacement' : [0],
+'L_sum_solute' : [0],
+'L_sum_eta' : [dict_sample['sum_eta']],
+'L_sum_total' : [dict_sample['sum_eta']],
+'L_area_sphericity_g0' : [dict_sample['L_g'][0].area_sphericity],
+'L_diameter_sphericity_g0' : [dict_sample['L_g'][0].diameter_sphericity],
+'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_ratio_sphericity],
+'L_perimeter_sphericity_g0' : [dict_sample['L_g'][0].perimeter_sphericity],
+'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_length_ratio_sphericity]
+}
+
+#-------------------------------------------------------------------------------
+#main
+#-------------------------------------------------------------------------------
+
+dict_algorithm['i_PFDEM'] = 0
+while not User.Criteria_StopSimulation(dict_algorithm):
+
+    iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+
+#-------------------------------------------------------------------------------
+#close simulation
+#-------------------------------------------------------------------------------
+
+simulation_report.end(datetime.now())
+
+#final save
+if dict_algorithm['SaveData']:
+    Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
+    name_actual_folder = os.path.dirname(os.path.realpath(__file__))
+    shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
+    os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
+    os.remove('../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
