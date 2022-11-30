@@ -99,6 +99,42 @@ dict_tracker = {
 dict_algorithm['i_PFDEM'] = 0
 while not User.Criteria_StopSimulation(dict_algorithm):
 
+    iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+
+#-------------------------------------------------------------------------------
+#close simulation
+#-------------------------------------------------------------------------------
+
+simulation_report.end(datetime.now())
+
+#final save
+if dict_algorithm['SaveData']:
+    Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
+    name_actual_folder = os.path.dirname(os.path.realpath(__file__))
+    shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
+    os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
+    os.remove('../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
+
+#-------------------------------------------------------------------------------
+#Functions
+#-------------------------------------------------------------------------------
+
+def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
+    '''
+    Description of one PDEM iteration.
+
+    The iteration is composed by a DEM step (to obtain a steady state configuration) and a PF step (to obtain dissolution and precipitation).
+
+        Input :
+            an algorithm dictionnary (a dict)
+            a material dictionnary (a dict)
+            a sample dictionnary (a dict)
+            a sollicitation dictionnary (a dict)
+            a tracker dictionnary (a dict)
+            a simulation report (a Report)
+        Output :
+            Nothing but the dictionnaies and the report are updated
+    '''
     #prepare iteration
     simulation_report.tic_tempo(datetime.now())
     dict_algorithm['i_PFDEM'] = dict_algorithm['i_PFDEM'] + 1
@@ -196,17 +232,3 @@ while not User.Criteria_StopSimulation(dict_algorithm):
         shutil.copy('Debug/Report.txt','../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
 
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: from pf to dem")
-
-#-------------------------------------------------------------------------------
-#close simulation
-#-------------------------------------------------------------------------------
-
-simulation_report.end(datetime.now())
-
-#final save
-if dict_algorithm['SaveData']:
-    Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
-    name_actual_folder = os.path.dirname(os.path.realpath(__file__))
-    shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
-    os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
-    os.remove('../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')

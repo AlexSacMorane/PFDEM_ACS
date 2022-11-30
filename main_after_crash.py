@@ -24,19 +24,20 @@ import Grain
 import Owntools
 import User
 import Report
+import main
 
 #-------------------------------------------------------------------------------
-#Plan the simulation
+#User
 #-------------------------------------------------------------------------------
 
-#create a simulation report
-simulation_report = Report.Report('Debug/Report_after_crash',datetime.now())
+name_to_load = '../Data_2G_ACS/PS_1_save_tempo'
+name_report = 'Debug/Report_after_crash'
 
 #-------------------------------------------------------------------------------
 #load data
 #-------------------------------------------------------------------------------
 
-toload = open('../Data_2G_ACS/PS_1_save_tempo','rb')
+toload = open(name_to_load,'rb')
 dict_save = pickle.load(toload,encoding = 'bytes')
 toload.close()
 dict_algorithm = dict_save['algorithm']
@@ -46,109 +47,23 @@ dict_sollicitation = dict_save['sollicitation']
 dict_tracker = dict_save['tracker']
 
 #-------------------------------------------------------------------------------
+#Plan the simulation
+#-------------------------------------------------------------------------------
+
+#create a simulation report
+simulation_report = Report.Report(name_report,datetime.now())
+
+#delete last folder
+if Path('Output/Ite_'+str(dict_algorithm['i_PFDEM']+1)).exists():
+    shutil.rmtree('Output/Ite_'+str(dict_algorithm['i_PFDEM']+1))
+
+#-------------------------------------------------------------------------------
 #main
 #-------------------------------------------------------------------------------
 
 while not User.Criteria_StopSimulation(dict_algorithm):
 
-    #prepare iteration
-    simulation_report.tic_tempo(datetime.now())
-    dict_algorithm['i_PFDEM'] = dict_algorithm['i_PFDEM'] + 1
-    simulation_report.write_and_print(f"\nITERATION {dict_algorithm['i_PFDEM']} / {dict_algorithm['n_t_PFDEM']}\n\n",f"\nITERATION {dict_algorithm['i_PFDEM']} / {dict_algorithm['n_t_PFDEM']}\n")
-    os.mkdir('Output/Ite_'+str(dict_algorithm['i_PFDEM']))
-
-    #move grain
-    Grain.Compute_overlap_2_grains(dict_sample)
-    Grain.Apply_overlap_target(dict_material,dict_sample,dict_sollicitation,dict_tracker)
-
-    #compute the intersection surface
-    Owntools.Compute_S_int(dict_sample)
-
-    #plot
-    Owntools.Plot_config(dict_algorithm, dict_sample)
-
-    #write data
-    Owntools.Write_eta_txt(dict_algorithm, dict_sample)
-    Owntools.Write_solute_txt(dict_algorithm, dict_sample)
-    Owntools.Write_kc_txt(dict_algorithm, dict_material, dict_sample)
-    Owntools.Write_ep_txt(dict_algorithm, dict_sample)
-
-    #create i
-    Owntools.Create_i(dict_algorithm,dict_sample,dict_material)
-
-    simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: preparation of the pf simulation")
-    simulation_report.tic_tempo(datetime.now())
-
-    #---------------------------------------------------------------------------
-    #PF simulation
-    #---------------------------------------------------------------------------
-
-    #run
-    os.system('mpiexec -n '+str(dict_algorithm['np_proc'])+' ~/projects/moose/modules/combined/combined-opt -i '+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'.i')
-
-    simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: pf simulation")
-    simulation_report.tic_tempo(datetime.now())
-
-    #sorting files
-    j_str = Owntools.Sort_Files(dict_algorithm)
-
-    #---------------------------------------------------------------------------
-    #PF to DEM
-    #---------------------------------------------------------------------------
-
-    #look for the new grains shape
-    for grain in dict_sample['L_g']:
-        grain.PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
-        grain.geometric_study(dict_sample)
-    #look for the new solute shape
-    Owntools.solute_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
-    #look for the initial external energy sources
-    Owntools.Ed_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_000',dict_algorithm,dict_sample)
-
-    #plot
-    Owntools.Plot_config(dict_algorithm, dict_sample)
-    Owntools.Plot_init_current_shape(dict_algorithm, dict_sample)
-    Owntools.Plot_Ed(dict_sample)
-
-    #---------------------------------------------------------------------------
-    #postprocess
-    #---------------------------------------------------------------------------
-
-    #Compute the sphericity for the first grain
-    dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
-
-    #compute the mass of grain
-    Owntools.Compute_sum_eta(dict_sample)
-
-    #compute the mass of the solute
-    Owntools.Compute_sum_c(dict_sample)
-
-    #---------------------------------------------------------------------------
-    #tracker
-    #---------------------------------------------------------------------------
-
-    dict_tracker['L_sum_solute'].append(dict_sample['sum_c'])
-    dict_tracker['L_sum_eta'].append(dict_sample['sum_eta'])
-    dict_tracker['L_sum_total'].append(dict_sample['sum_c']+dict_sample['sum_eta'])
-    dict_tracker['L_area_sphericity_g0'].append(dict_sample['L_g'][0].area_sphericity)
-    dict_tracker['L_diameter_sphericity_g0'].append(dict_sample['L_g'][0].diameter_sphericity)
-    dict_tracker['L_circle_ratio_sphericity_g0'].append(dict_sample['L_g'][0].circle_ratio_sphericity)
-    dict_tracker['L_perimeter_sphericity_g0'].append(dict_sample['L_g'][0].perimeter_sphericity)
-    dict_tracker['L_width_to_length_ratio_sphericity_g0'].append(dict_sample['L_g'][0].width_to_length_ratio_sphericity)
-
-
-    #Plot trackers
-    Owntools.Plot_trackers(dict_tracker)
-
-    #---------------------------------------------------------------------------
-    #tempo save
-    #---------------------------------------------------------------------------
-
-    if dict_algorithm['SaveData']:
-        Owntools.save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
-        shutil.copy('Debug/Report.txt','../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
-
-    simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: from pf to dem")
+    main.iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
 
 #-------------------------------------------------------------------------------
 #close simulation
