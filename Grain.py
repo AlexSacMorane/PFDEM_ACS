@@ -430,7 +430,7 @@ class Grain:
               else :
                   map_inscribing[-1-i_y][i_x] = 0
       #look for the peak of the map
-      index_max = numpy.argmax(M)
+      index_max = np.argmax(M)
       l = index_max//dict_algorithm['n_spatial_inscribing']
       c = index_max%dict_algorithm['n_spatial_inscribing']
       radius_inscribing = map_inscribing[l][c]
