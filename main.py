@@ -39,6 +39,8 @@ os.mkdir('Data')
 if Path('Debug').exists():
     shutil.rmtree('Debug')
 os.mkdir('Debug')
+os.mkdir('Debug/Configuration')
+os.mkdir('Debug/Comparison_Init_Current')
 
 #-------------------------------------------------------------------------------
 #Create a simulation

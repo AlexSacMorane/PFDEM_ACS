@@ -209,7 +209,7 @@ def Plot_config(dict_algorithm, dict_sample):
             Nothing but a .png file is generated (a file)
     '''
     #look for the name of the new plot
-    template_name = 'Debug/Configuration_'
+    template_name = 'Debug/Configuration/Configuration_'
     j = 0
     plotpath = Path(template_name+str(j)+'.png')
     while plotpath.exists():
@@ -257,7 +257,7 @@ def Plot_init_current_shape(dict_algorithm, dict_sample):
     plt.figure(1,figsize=(16,9))
     plt.plot(L_border_x_init,L_border_y_init,'k',label='Initial')
     plt.plot(L_border_x,L_border_y,label='Current')
-    plt.savefig('Debug/Init_Current_Shape_'+str(dict_algorithm['i_PFDEM'])+'.png')
+    plt.savefig('Debug/Comparison_Init_Current/Init_Current_Shape_'+str(dict_algorithm['i_PFDEM'])+'.png')
     plt.close(1)
 
 #-------------------------------------------------------------------------------
