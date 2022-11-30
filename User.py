@@ -78,9 +78,9 @@ def All_parameters():
     n_spatial_inscribing = 100
 
     #Find a simulation ame
-    template = 'PS' #template of the name of the simulation
+    template = 'NoChe' #template of the name of the simulation
     SaveData = True #Save data or not
-    foldername = 'Data_2G_ACS' #name of the folder where data are saved
+    foldername = 'Data_2G_ACS_NoChe' #name of the folder where data are saved
     if SaveData :
         i_run = 1
         folderpath = Path('../'+foldername+'/'+template+'_'+str(i_run))
