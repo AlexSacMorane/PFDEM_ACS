@@ -121,12 +121,12 @@
     prop_names = kc
     prop_values = kc_txt
   [../]
-  [./epmap]
-    type = GenericFunctionMaterial
-    block = 0
-    prop_names = ep
-    prop_values = ep_txt
-  [../]
+  #[./epmap]
+  #  type = GenericFunctionMaterial
+  #  block = 0
+  #  prop_names = ep
+  #  prop_values = ep_txt
+  #[../]
   [./free_energy_etai]
   type = DerivativeParsedMaterial
   block = 0
@@ -138,16 +138,16 @@
   enable_jit = true
   derivative_order = 2
   [../]
-  [./Ed_mec]
-  type = DerivativeParsedMaterial
-  block = 0
-  f_name = Ed_mec
-  args = 'eta1 eta2'
-  material_property_names = 'ep'
-  function = 'ep*3*eta1^2-ep*2*eta1^3+ep*3*eta2^2-ep*2*eta2^3'
-  enable_jit = true
-  derivative_order = 2
-  [../]
+  #[./Ed_mec]
+  #type = DerivativeParsedMaterial
+  #block = 0
+  #f_name = Ed_mec
+  #args = 'eta1 eta2'
+  #material_property_names = 'ep'
+  #function = 'ep*3*eta1^2-ep*2*eta1^3+ep*3*eta2^2-ep*2*eta2^3'
+  #enable_jit = true
+  #derivative_order = 2
+  #[../]
   [./Ed_pre]
   type = DerivativeParsedMaterial
   block = 0
@@ -162,8 +162,8 @@
     block = 0
     f_name = F_total
     args = 'eta1 eta2'
-    material_property_names = 'F(eta1,eta2) Ed_mec(eta1,eta2) Ed_pre(eta1,eta2)'
-    function = 'F+Ed_mec-Ed_pre'
+    material_property_names = 'F(eta1,eta2) Ed_pre(eta1,eta2)'
+    function = 'F-Ed_pre'
     enable_jit = true
     derivative_order = 2
   [../]
@@ -182,10 +182,10 @@
     type = PiecewiseMultilinear
     data_file = Data/c_
   []
-	[ep_txt]
-		type = PiecewiseMultilinear
-		data_file = Data/ep_
-	[]
+	#[ep_txt]
+	#	type = PiecewiseMultilinear
+	#	data_file = Data/ep_
+	#[]
 	[kc_txt]
 		type = PiecewiseMultilinear
 		data_file = Data/kc_
