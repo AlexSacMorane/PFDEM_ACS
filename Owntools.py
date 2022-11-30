@@ -4,14 +4,6 @@
 alexandre.sac-morane@uclouvain.be
 
 This file contains the different functions used in the simulation.
-    ''      Compute the current overlap between two grains.
-        It is assumed the sample is composed  by only 2 grains.
-
-        Input :
-            a sample dictionnary (a dictionnary)
-    Output :
-        Nothing but the sample dictionnary gets an updated value (a float)
-  ''
 """
 
 #-------------------------------------------------------------------------------
@@ -25,6 +17,7 @@ import os
 import math
 import pickle
 import random
+import imageio
 
 #-------------------------------------------------------------------------------
 
@@ -374,6 +367,35 @@ def Plot_trackers(dict_tracker):
 
     plt.savefig('Debug/Sphericity_g_1.png')
     plt.close(1)
+
+#-------------------------------------------------------------------------------
+
+def make_mp4(template_name,name_video):
+    '''The goal of this function is to create a movie with pictures.
+
+    from https://www.blog.pythonlibrary.org/2021/06/23/creating-an-animated-gif-with-python/
+
+        Input :
+            the template of the pictures used (a string)
+        Output :
+            a movie file (a .mp4)
+    '''
+    #look for the largest iteration
+    i_f = 0
+    plotpath = Path(template_name+str(i_f)+'.png')
+    while plotpath.exists():
+        i_f = i_f + 1
+        plotpath = Path(template_name+str(i_f)+'.png')
+
+    fileList = []
+    for i in range(0,i_f):
+        fileList.append(template_name+str(i)+'.png')
+
+    duration_movie  = 10 #sec
+    writer = imageio.get_writer(name_video, fps=int(i_f/duration_movie))
+    for im in fileList:
+        writer.append_data(imageio.imread(im))
+    writer.close()
 
 #-------------------------------------------------------------------------------
 
