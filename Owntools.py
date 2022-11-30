@@ -276,7 +276,7 @@ def Plot_Ed(dict_sample):
     plt.title('Emec')
 
     #Eche_M
-    plt.subplot(211)
+    plt.subplot(224)
     im = plt.imshow(dict_sample['Eche_M'],interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])])
     plt.colorbar(im)
     #etai
