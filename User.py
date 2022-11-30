@@ -71,6 +71,8 @@ def All_parameters():
 
     #Margin for sphericity study
     sphericity_margin = 0.05
+    #Discretisation to find the inscribing (number of nodes in one direction)
+    n_spatial_inscribing = 100
 
     #Find a simulation ame
     template = 'PF_AC_PS' #template of the name of the simulation
@@ -90,6 +92,7 @@ def All_parameters():
     'c_min' : c_min,
     'c_max' : c_max,
     'sphericity_margin' : sphericity_margin,
+    'n_spatial_inscribing' : n_spatial_inscribing,
     'np_proc' : np_proc,
     'SaveData' : SaveData,
     'namefile' : namefile,

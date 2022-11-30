@@ -363,16 +363,12 @@ class Grain:
       #Find the minimum circumscribing circle
       #look for the two farthest and nearest points
       MaxDistance = 0
-      MinDistance = None
       for i_p in range(0,len(self.l_border)-2):
           for j_p in range(i_p+1,len(self.l_border)-1):
               Distance = np.linalg.norm(self.l_border[i_p]-self.l_border[j_p])
               if Distance > MaxDistance :
                   ij_farthest = (i_p,j_p)
                   MaxDistance = Distance
-              if MinDistance == None or Distance < MinDistance:
-                  ij_nearest = (i_p,j_p)
-                  MinDistance = Distance
 
       #Trial circle
       center_circumscribing = (self.l_border[ij_farthest[0]]+self.l_border[ij_farthest[1]])/2
@@ -413,8 +409,31 @@ class Grain:
       width = MaxWidth
 
       #look for maximum inscribed circle
-      center_inscribing = (self.l_border[ij_nearest[0]]+self.l_border[ij_nearest[1]])/2
-      radius_inscribing = MinDistance/2
+      #discretisation of the grain
+      l_x_inscribing = np.linspace(min(self.l_border_x),max(self.l_border_x),dict_algorithm['n_spatial_inscribing'])
+      l_y_inscribing = np.linspace(min(self.l_border_y),max(self.l_border_y),dict_algorithm['n_spatial_inscribing'])
+      #creation of an Euclidean distance map to the nearest boundary vertex
+      map_inscribing = np.zeros((dict_algorithm['n_spatial_inscribing'],dict_algorithm['n_spatial_inscribing']))
+      #compute the map
+      for i_x in range(dict_algorithm['n_spatial_inscribing']):
+          for i_y in range(dict_algorithm['n_spatial_inscribing']):
+              p = np.array([l_x_inscribing[i_x], l_y_inscribing[-1-i_y]])
+              #work only if the point is inside the grain
+              if self.P_is_inside(p):
+                  #look for the nearest vertex
+                  MinDistance = None
+                  for q in self.l_border[:-1]:
+                      Distance = np.linalg.norm(p-q)
+                      if MinDistance == None or Distance < MinDistance:
+                          MinDistance = Distance
+                  map_inscribing[-1-i_y][i_x] = MinDistance
+              else :
+                  map_inscribing[-1-i_y][i_x] = 0
+      #look for the peak of the map
+      index_max = numpy.argmax(M)
+      l = index_max//dict_algorithm['n_spatial_inscribing']
+      c = index_max%dict_algorithm['n_spatial_inscribing']
+      radius_inscribing = map_inscribing[l][c]
 
       #Area Sphericity
       SurfaceParticle = self.surface
