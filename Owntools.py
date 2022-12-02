@@ -589,6 +589,77 @@ def Write_kc_txt(dict_algorithm, dict_material, dict_sample):
     for l in range(len(dict_sample['y_L'])):
         for c in range(len(dict_sample['x_L'])):
 
+            #at the contact
+            if dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
+                file_to_write.write(str(dict_material['kappa_c'])+'\n')
+            #inside g1 and not g2
+            elif dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] < 0.5:
+                #compute the distance to g2
+                P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
+                MinDistance = None
+                for vertex in dict_sample['L_g'][1].l_border[:-1]:
+                    Distance = np.linalg.norm(P - vertex)
+                    if Distance == None or Distance < MinDistance:
+                        MinDistance = Distance
+                    #exponential decrease
+                    kappa_c_trans = dict_material['kappa_c']*math.exp(-MinDistance/(dict_sample['L_g'][0].r_mean/30))
+                file_to_write.write(str(kappa_c_trans)+'\n')
+            #inside g2 and not g1
+            elif dict_sample['L_g'][0].etai_M[-1-l][c] < 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
+                #compute the distance to g1
+                P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
+                MinDistance = None
+                for vertex in dict_sample['L_g'][0].l_border[:-1]:
+                    Distance = np.linalg.norm(P - vertex)
+                    if Distance == None or Distance < MinDistance:
+                        MinDistance = Distance
+                    #exponential decrease
+                    kappa_c_trans = dict_material['kappa_c']*math.exp(-MinDistance/(dict_sample['L_g'][1].r_mean/30))
+                file_to_write.write(str(kappa_c_trans)+'\n')
+            #outside
+            else :
+                file_to_write.write(str(dict_material['kappa_c'])+'\n')
+
+    file_to_write.close()
+
+#-------------------------------------------------------------------------------
+
+def Write_kc_txt_old(dict_algorithm, dict_material, dict_sample):
+    '''
+    Write a .txt file needed for MOOSE simulation.
+
+    The variable kc is transmitted to the MOOSE simulation.
+    This variable is the diffusion coefficient of the solute.
+    It takes the value 0 if the point is inside one grain and not in the other.
+    Else it takes an user defined value.
+
+        Input :
+            an algorithm dictionnary (a dict)
+            an material dictionnary (a dict)
+            an sample dictionnary (a dict)
+        Output :
+            Nothing but a .txt file is generated (a file)
+    '''
+
+    file_to_write = open('Data/kc_'+str(dict_algorithm['i_PFDEM'])+'.txt','w')
+    file_to_write.write('AXIS X\n')
+    line = ''
+    for x in dict_sample['x_L']:
+        line = line + str(x)+ ' '
+    line = line + '\n'
+    file_to_write.write(line)
+
+    file_to_write.write('AXIS Y\n')
+    line = ''
+    for y in dict_sample['y_L']:
+        line = line + str(y)+ ' '
+    line = line + '\n'
+    file_to_write.write(line)
+
+    file_to_write.write('DATA\n')
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+
             #inside g1 and not g2
             if dict_sample['L_g'][0].etai_M[-1-l][c] > 0.9 and dict_sample['L_g'][1].etai_M[-1-l][c] < 0.1:
                 file_to_write.write('0\n')
