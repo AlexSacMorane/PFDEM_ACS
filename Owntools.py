@@ -710,7 +710,6 @@ def Ed_PFtoDEM_Multi(FileToRead,dict_algorithm,dict_sample):
 
     id_L = None
     Emec_selector_len = len('        <DataArray type="Float64" Name="Ed_mec')
-    Eche_selector_len = len('        <DataArray type="Float64" Name="Ed_pre')
     end_len = len('        </DataArray>')
     XYZ_selector_len = len('        <DataArray type="Float64" Name="Points"')
     data_jump_len = len('          ')
@@ -719,8 +718,7 @@ def Ed_PFtoDEM_Multi(FileToRead,dict_algorithm,dict_sample):
 
         L_Work = [[], #X
                   [], #Y
-                  [], #Emec
-                  []] #Eche
+                  []] #Emec
 
     #---------------------------------------------------------------------------
     #Reading file
@@ -737,16 +735,13 @@ def Ed_PFtoDEM_Multi(FileToRead,dict_algorithm,dict_sample):
             if line[0:Emec_selector_len] == '        <DataArray type="Float64" Name="Ed_mec':
                 id_L = 2
 
-            elif line[0:Eche_selector_len] == '        <DataArray type="Float64" Name="Ed_pre':
-                id_L = 3
-
             elif line[0:XYZ_selector_len] == '        <DataArray type="Float64" Name="Points"':
                 id_L = 0
 
             elif (line[0:end_len] == '        </DataArray>' or  line[0:len('          <InformationKey')] == '          <InformationKey') and id_L != None:
                 id_L = None
 
-            elif line[0:data_jump_len] == '          ' and (id_L == 2 or id_L == 3): #Read Ed_mec or Ed_pre
+            elif line[0:data_jump_len] == '          ' and id_L == 2: #Read Ed_mec
                 line = line[data_jump_len:]
                 c_start = 0
                 for c_i in range(0,len(line)):
@@ -773,7 +768,7 @@ def Ed_PFtoDEM_Multi(FileToRead,dict_algorithm,dict_sample):
                 L_Work[0].append(XYZ_temp[0])
                 L_Work[1].append(XYZ_temp[1])
 
-        #Adaptating data and update of Ed_M, Emec_M and Eche_M
+        #Adaptating data and update of Ed_M, Emec_M
         for i in range(len(L_Work[0])):
             #Interpolation method
             L_dy = []
@@ -783,8 +778,6 @@ def Ed_PFtoDEM_Multi(FileToRead,dict_algorithm,dict_sample):
             for x_i in dict_sample['x_L'] :
                 L_dx.append(abs(x_i - L_Work[0][i]))
             dict_sample['Emec_M'][-1-list(L_dy).index(min(L_dy))][list(L_dx).index(min(L_dx))] = L_Work[2][i]
-            dict_sample['Eche_M'][-1-list(L_dy).index(min(L_dy))][list(L_dx).index(min(L_dx))] = L_Work[3][i]
-            dict_sample['Ed_M'][-1-list(L_dy).index(min(L_dy))][list(L_dx).index(min(L_dx))] = L_Work[2][i] - L_Work[3][i]
 
 #-------------------------------------------------------------------------------
 
