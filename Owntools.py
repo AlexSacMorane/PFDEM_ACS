@@ -739,7 +739,7 @@ def Ed_PFtoDEM_Multi(FileToRead,dict_algorithm,dict_sample):
         #iterations on line
         for line in lines:
 
-            elif line[0:Eche_selector_len] == '        <DataArray type="Float64" Name="Ed_pre':
+            if line[0:Eche_selector_len] == '        <DataArray type="Float64" Name="Ed_pre':
                 id_L = 2
 
             elif line[0:XYZ_selector_len] == '        <DataArray type="Float64" Name="Points"':
