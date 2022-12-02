@@ -639,7 +639,7 @@ def Write_kc_txt(dict_algorithm, dict_material, dict_sample):
     for l in range(len(dict_sample['y_L'])):
         for c in range(len(dict_sample['x_L'])):
 
-            P = np.array([dict_sample['x_L'][c],dict_sample['x_L'][-1-l]])
+            P = np.array([dict_sample['x_L'][c],dict_sample['y_L'][-1-l]])
 
             #inside g1 and not g2
             if dict_sample['L_g'][0].P_is_inside(P) and not dict_sample['L_g'][1].P_is_inside(P):
