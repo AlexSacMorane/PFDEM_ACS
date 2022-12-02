@@ -603,9 +603,9 @@ def Write_kc_txt(dict_algorithm, dict_material, dict_sample):
             elif dict_sample['L_g'][0].etai_M[-1-l][c] < 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
                 #compute the distance to g1
                 P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
-                Distance = np.linalg.norm(P - dict_sample['L_g'][0].center)
+                Distance = np.linalg.norm(P - dict_sample['L_g'][1].center)
                 #exponential decrease
-                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][0].r_mean-Distance)/(dict_sample['L_g'][0].r_mean/10))
+                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][1].r_mean-Distance)/(dict_sample['L_g'][1].r_mean/10))
                 file_to_write.write(str(kappa_c_trans)+'\n')
             #outside
             else :
