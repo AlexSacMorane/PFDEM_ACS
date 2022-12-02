@@ -596,10 +596,10 @@ def Write_kc_txt(dict_algorithm, dict_material, dict_sample):
             elif dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] < 0.5:
                 #compute the distance to g2
                 P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
-                MinDistance = None
+                MinDistance = max(dict_sample['x_L']) - min(dict_sample['x_L']) #large value
                 for vertex in dict_sample['L_g'][1].l_border[:-1]:
                     Distance = np.linalg.norm(P - vertex)
-                    if Distance == None or Distance < MinDistance:
+                    if Distance < MinDistance:
                         MinDistance = Distance
                     #exponential decrease
                     kappa_c_trans = dict_material['kappa_c']*math.exp(-MinDistance/(dict_sample['L_g'][0].r_mean/30))
@@ -608,10 +608,10 @@ def Write_kc_txt(dict_algorithm, dict_material, dict_sample):
             elif dict_sample['L_g'][0].etai_M[-1-l][c] < 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
                 #compute the distance to g1
                 P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
-                MinDistance = None
+                MinDistance = max(dict_sample['x_L']) - min(dict_sample['x_L']) #large value
                 for vertex in dict_sample['L_g'][0].l_border[:-1]:
                     Distance = np.linalg.norm(P - vertex)
-                    if Distance == None or Distance < MinDistance:
+                    if Distance < MinDistance:
                         MinDistance = Distance
                     #exponential decrease
                     kappa_c_trans = dict_material['kappa_c']*math.exp(-MinDistance/(dict_sample['L_g'][1].r_mean/30))
