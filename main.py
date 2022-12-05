@@ -61,10 +61,10 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     Owntools.Write_eta_txt(dict_algorithm, dict_sample)
     Owntools.Write_solute_txt(dict_algorithm, dict_sample)
     Owntools.Write_kc_txt(dict_algorithm, dict_material, dict_sample)
-    Owntools.Write_ep_txt(dict_algorithm, dict_sample)
+    Owntools.Write_ep_txt(dict_algorithm, dict_sample, dict_sollicitation)
 
     #create i
-    Owntools.Create_i(dict_algorithm,dict_sample,dict_material)
+    Owntools.Create_i(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
 
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: preparation of the pf simulation")
     simulation_report.tic_tempo(datetime.now())
@@ -181,6 +181,8 @@ User.Add_2grains(dict_material,dict_sample)
 Owntools.Compute_sum_eta(dict_sample)
 #Compute the surface of the contact initially
 User.Add_S0(dict_sample, dict_sollicitation)
+#Add the coefficient applied to e_mec
+User.Add_alpha_emec(dict_sample, dict_sollicitation)
 #Compute the sphericity initially for the first grain
 dict_sample['L_g'][0].geometric_study(dict_sample)
 dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)

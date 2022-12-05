@@ -153,7 +153,9 @@
   block = 0
   f_name = Ed_pre
   args = 'c eta1 eta2'
-  function = 'c*3*eta1^2-c*2*eta1^3+c*3*eta2^2-c*2*eta2^3'
+  constant_names = 'chi'
+  constant_expressions = '
+  function = 'chi*c*(3*eta1^2-2*eta1^3+3*eta2^2-2*eta2^3)'
   enable_jit = true
   derivative_order = 2
   [../]

@@ -21,7 +21,7 @@ import imageio
 
 #-------------------------------------------------------------------------------
 
-def Create_i(dict_algorithm,dict_sample,dict_material):
+def Create_i(dict_algorithm, dict_material, dict_sample, dict_sollicitation):
   '''
   Create the .i file to run MOOSE simulation.
 
@@ -58,11 +58,13 @@ def Create_i(dict_algorithm,dict_sample,dict_material):
       line = line[:-1] + "'"+str(dict_material['M'])+' '+str(dict_material['kappa_eta'])+"'\n"
     elif j == 136:
       line = line[:-1] + ' ' + str(dict_material['Energy_barrier'])+"'\n"
-    elif j == 175 or j == 179 or j == 183 or j == 187 or j == 191:
+    elif j == 157 :
+      line = line[:-1] + str(dict_sollicitation['chi'])+"'\n"
+    elif j == 177 or j == 181 or j == 185 or j == 189 or j == 193:
       line = line[:-1] + str(dict_algorithm['i_PFDEM']) + '.txt\n'
-    elif j == 221:
+    elif j == 223:
       line = line[:-1] + ' ' + str(dict_algorithm['dt_PF']*dict_algorithm['n_t_PF']) +'\n'
-    elif j == 225:
+    elif j == 227:
       line = line[:-1] + ' ' + str(dict_algorithm['dt_PF']) +'\n'
     file_to_write.write(line)
 
@@ -512,7 +514,7 @@ def Write_solute_txt(dict_algorithm, dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Write_ep_txt(dict_algorithm, dict_sample):
+def Write_ep_txt(dict_algorithm, dict_sample, dict_sollicitation):
     '''
     Write a .txt file needed for MOOSE simulation.
 
@@ -521,12 +523,13 @@ def Write_ep_txt(dict_algorithm, dict_sample):
 
         Input :
             an algorithm dictionnary (a dict)
-            an sample dictionnary (a dict)
+            a sample dictionnary (a dict)
+            a sollicitation dictionnary (a dict)
         Output :
             Nothing but a .txt file is generated (a file)
     '''
     #compute the variable e_mec
-    e_mec = 0.2*dict_sample['S_int_0']/dict_sample['S_int']
+    e_mec = dict_sollicitation['alpha']/dict_sample['S_int']
 
     #write data
     file_to_write = open('Data/ep_'+str(dict_algorithm['i_PFDEM'])+'.txt','w')
@@ -597,7 +600,7 @@ def Write_kc_txt(dict_algorithm, dict_material, dict_sample):
                 P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
                 Distance = np.linalg.norm(P - dict_sample['L_g'][0].center)
                 #exponential decrease
-                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][0].r_mean-Distance)/(dict_sample['L_g'][0].r_mean/10))
+                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][0].r_mean-Distance)/(dict_sample['L_g'][0].r_mean/dict_material['tau_kappa_c']))
                 file_to_write.write(str(kappa_c_trans)+'\n')
             #inside g2 and not g1
             elif dict_sample['L_g'][0].etai_M[-1-l][c] < 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
@@ -605,7 +608,7 @@ def Write_kc_txt(dict_algorithm, dict_material, dict_sample):
                 P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
                 Distance = np.linalg.norm(P - dict_sample['L_g'][1].center)
                 #exponential decrease
-                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][1].r_mean-Distance)/(dict_sample['L_g'][1].r_mean/10))
+                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][1].r_mean-Distance)/(dict_sample['L_g'][1].r_mean/dict_material['tau_kappa_c']))
                 file_to_write.write(str(kappa_c_trans)+'\n')
             #outside
             else :
