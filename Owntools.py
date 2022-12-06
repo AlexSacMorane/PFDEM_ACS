@@ -121,9 +121,9 @@ def Sort_Files(dict_algorithm):
 def Compute_S_int(dict_sample):
     '''
     Searching Surface,
-    #Monte Carlo Method
-    #A box is defined, we take a random point and we look if it is inside or outside the grain
-    #Properties are the statistic times the box properties
+    Monte Carlo Method
+    A box is defined, we take a random point and we look if it is inside or outside the grain
+    Properties are the statistic times the box properties
 
 
         Input :
@@ -152,6 +152,72 @@ def Compute_S_int(dict_sample):
 
     #Update element in dictionnary
     dict_sample['S_int'] = Surface
+
+#-------------------------------------------------------------------------------
+
+def Compute_Emec(dict_sample, dict_sollicitation):
+    '''
+    Compute the mechanical energy field in the sample.
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for the mechanical energy map (a nx x ny numpy array)
+    '''
+    #Initialisation
+    Emec_M = np.array(np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L']))))
+    #compute the variable e_mec
+    e_mec = dict_sollicitation['alpha']/dict_sample['S_int']
+    #compute the distribution of the mechanical energy
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+            Emec_M[-1-l][c] = e_mec*min(dict_sample['L_g'][0].etai_M[-1-l][c],dict_sample['L_g'][1].etai_M[-1-l][c])
+
+    #Update element in dictionnary
+    dict_sample['Emec_M'] = Emec_M
+
+#-------------------------------------------------------------------------------
+
+def Compute_kc(dict_material, dict_sample):
+    '''
+    Compute the solute diffusion coefficient field in the sample.
+
+        Input :
+            a material dictionnary (a dict)
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for the solute diffusion coefficient map (a nx x ny numpy array)
+    '''
+    #Initialisation
+    kc_M = np.array(np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L']))))
+
+    #compute the distribution of the solute diffusion coefficient
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+            #at the contact
+            if dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
+                kc_M[-l-1][c] = dict_material['kappa_c']
+            #inside g1 and not g2
+            elif dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] < 0.5:
+                P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
+                Distance = np.linalg.norm(P - dict_sample['L_g'][0].center)
+                #exponential decrease
+                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][0].r_mean-Distance)/(dict_sample['L_g'][0].r_mean/dict_material['tau_kappa_c']))
+                kc_M[-l-1][c] = kappa_c_trans
+            #inside g2 and not g1
+            elif dict_sample['L_g'][0].etai_M[-1-l][c] < 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
+                #compute the distance to g1
+                P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
+                Distance = np.linalg.norm(P - dict_sample['L_g'][1].center)
+                #exponential decrease
+                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][1].r_mean-Distance)/(dict_sample['L_g'][1].r_mean/dict_material['tau_kappa_c']))
+                kc_M[-l-1][c] = kappa_c_trans
+            #outside
+            else :
+                kc_M[-l-1][c] = dict_material['kappa_c']
+
+    #Update element in dictionnary
+    dict_sample['kc_M'] = kc_M
 
 #-------------------------------------------------------------------------------
 
@@ -326,6 +392,41 @@ def Plot_Ed(dict_sample):
 
 #-------------------------------------------------------------------------------
 
+def Plot_kc(dict_sample):
+    '''
+    Plot the distribution of the diffusion coefficient for the solute.
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but a .png file is generated (a file)
+    '''
+    #look for the name of the new plot
+    template_name = 'Debug/Kc/Kc_'
+    j = 0
+    plotpath = Path(template_name+str(j)+'.png')
+    while plotpath.exists():
+        j = j + 1
+        plotpath = Path(template_name+str(j)+'.png')
+    name = template_name+str(j)+'.png'
+
+    #plot
+    plt.figure(1,figsize=(16,9))
+    #kc_M
+    im = plt.imshow(dict_sample['kc_M'],interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])])
+    plt.colorbar(im)
+    #plot g1 and g2 boundaries
+    plt.plot(dict_sample['L_g'][0].l_border_x,dict_sample['L_g'][0].l_border_y)
+    plt.plot(dict_sample['L_g'][1].l_border_x,dict_sample['L_g'][1].l_border_y)
+
+    plt.axis('equal')
+    plt.xlim(min(dict_sample['x_L']),max(dict_sample['x_L']))
+    plt.title('Diffusion coefficient of the solute')
+    plt.savefig(name)
+    plt.close(1)
+
+#-------------------------------------------------------------------------------
+
 def Plot_init_current_shape(dict_sample):
     '''
     Plot the comparison between initial and current shape for the grain 1.
@@ -377,19 +478,19 @@ def Plot_trackers(dict_tracker):
     plt.figure(1,figsize=(16,9))
 
     plt.subplot(211)
-    plt.plot(dict_tracker['L_int_displacement'])
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_int_displacement'])
     plt.title('Total displacement done')
 
     plt.subplot(234)
-    plt.plot(dict_tracker['L_sum_eta'])
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_sum_eta'])
     plt.title('Sum of etai')
 
     plt.subplot(235)
-    plt.plot(dict_tracker['L_sum_solute'])
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_sum_solute'])
     plt.title('Sum of c')
 
     plt.subplot(236)
-    plt.plot(dict_tracker['L_sum_total'])
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_sum_total'])
     plt.title('Sum of etai and c')
 
     plt.savefig('Debug/Trackers.png')
@@ -399,11 +500,11 @@ def Plot_trackers(dict_tracker):
     #plot the sphericity of the grain 1
     plt.figure(1,figsize=(16,9))
 
-    plt.plot(dict_tracker['L_area_sphericity_g0'],label='Area sphericity')
-    plt.plot(dict_tracker['L_diameter_sphericity_g0'],label='Diameter sphericity')
-    plt.plot(dict_tracker['L_circle_ratio_sphericity_g0'],label='Circle sphericity')
-    plt.plot(dict_tracker['L_perimeter_sphericity_g0'],label='Perimeter sphericity')
-    plt.plot(dict_tracker['L_width_to_length_ratio_sphericity_g0'],label='Width to length ratio sphericity')
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_area_sphericity_g0'],label='Area sphericity')
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_diameter_sphericity_g0'],label='Diameter sphericity')
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_circle_ratio_sphericity_g0'],label='Circle sphericity')
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_perimeter_sphericity_g0'],label='Perimeter sphericity')
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_width_to_length_ratio_sphericity_g0'],label='Width to length ratio sphericity')
     plt.legend()
     plt.title('2D sphericity of grain 1')
 
@@ -414,7 +515,7 @@ def Plot_trackers(dict_tracker):
     #plot the value of the solute concentration at the point defined
     plt.figure(1,figsize=(16,9))
 
-    plt.plot(dict_tracker['c_at_the_center'])
+    plt.plot(dict_tracker['L_t'], dict_tracker['c_at_the_center'])
     plt.title('Value of the solute concentration at the center')
     plt.savefig('Debug/Solute_Contration_Center.png')
     plt.close(1)
@@ -424,16 +525,16 @@ def Plot_trackers(dict_tracker):
     plt.figure(1,figsize=(16,9))
 
     plt.subplot(131)
-    plt.plot(dict_tracker['sum_ed_L'])
+    plt.plot(dict_tracker['L_t'][:-1], dict_tracker['sum_ed_L'])
     plt.title('Total Energy Ed')
 
     plt.subplot(132)
-    plt.plot(dict_tracker['sum_ed_plus_L'], label = 'Ed+')
-    plt.plot(dict_tracker['sum_ed_minus_L'], label = 'Ed-')
+    plt.plot(dict_tracker['L_t'][:-1], dict_tracker['sum_ed_plus_L'], label = 'Ed+')
+    plt.plot(dict_tracker['L_t'][:-1], dict_tracker['sum_ed_minus_L'], label = 'Ed-')
     plt.title('Repartition of the energy in a + and a -  terms')
 
     plt.subplot(133)
-    plt.plot(dict_tracker['L_int_displacement'])
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_int_displacement'])
     plt.title('Total displacement done')
 
     plt.savefig('Debug/Evolution_sum_Ed.png')
@@ -597,7 +698,7 @@ def Write_solute_txt(dict_algorithm, dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Write_ep_txt(dict_algorithm, dict_sample, dict_sollicitation):
+def Write_Emec_txt(dict_algorithm, dict_sample):
     '''
     Write a .txt file needed for MOOSE simulation.
 
@@ -611,9 +712,6 @@ def Write_ep_txt(dict_algorithm, dict_sample, dict_sollicitation):
         Output :
             Nothing but a .txt file is generated (a file)
     '''
-    #compute the variable e_mec
-    e_mec = dict_sollicitation['alpha']/dict_sample['S_int']
-
     #write data
     file_to_write = open('Data/ep_'+str(dict_algorithm['i_PFDEM'])+'.txt','w')
     file_to_write.write('AXIS X\n')
@@ -633,13 +731,13 @@ def Write_ep_txt(dict_algorithm, dict_sample, dict_sollicitation):
     file_to_write.write('DATA\n')
     for l in range(len(dict_sample['y_L'])):
         for c in range(len(dict_sample['x_L'])):
-            file_to_write.write(str(e_mec*min(dict_sample['L_g'][0].etai_M[-1-l][c],dict_sample['L_g'][1].etai_M[-1-l][c]))+'\n')
+            file_to_write.write(str(dict_sample['Emec_M'][-1-l][c])+'\n')
 
     file_to_write.close()
 
 #-------------------------------------------------------------------------------
 
-def Write_kc_txt(dict_algorithm, dict_material, dict_sample):
+def Write_kc_txt(dict_algorithm, dict_sample):
     '''
     Write a .txt file needed for MOOSE simulation.
 
@@ -674,28 +772,7 @@ def Write_kc_txt(dict_algorithm, dict_material, dict_sample):
     file_to_write.write('DATA\n')
     for l in range(len(dict_sample['y_L'])):
         for c in range(len(dict_sample['x_L'])):
-
-            #at the contact
-            if dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
-                file_to_write.write(str(dict_material['kappa_c'])+'\n')
-            #inside g1 and not g2
-            elif dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] < 0.5:
-                P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
-                Distance = np.linalg.norm(P - dict_sample['L_g'][0].center)
-                #exponential decrease
-                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][0].r_mean-Distance)/(dict_sample['L_g'][0].r_mean/dict_material['tau_kappa_c']))
-                file_to_write.write(str(kappa_c_trans)+'\n')
-            #inside g2 and not g1
-            elif dict_sample['L_g'][0].etai_M[-1-l][c] < 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
-                #compute the distance to g1
-                P = np.array([dict_sample['x_L'][c], dict_sample['y_L'][-1-l]])
-                Distance = np.linalg.norm(P - dict_sample['L_g'][1].center)
-                #exponential decrease
-                kappa_c_trans = dict_material['kappa_c']*math.exp(-(dict_sample['L_g'][1].r_mean-Distance)/(dict_sample['L_g'][1].r_mean/dict_material['tau_kappa_c']))
-                file_to_write.write(str(kappa_c_trans)+'\n')
-            #outside
-            else :
-                file_to_write.write(str(dict_material['kappa_c'])+'\n')
+            file_to_write.write(str(dict_sample['kc_M'][-l-1][c])+'\n')
 
     file_to_write.close()
 

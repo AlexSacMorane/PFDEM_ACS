@@ -51,8 +51,10 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     Grain.Compute_overlap_2_grains(dict_sample)
     Grain.Apply_overlap_target(dict_material,dict_sample,dict_sollicitation,dict_tracker)
 
-    #compute the intersection surface
-    Owntools.Compute_S_int(dict_sample)
+    #Compute parameters needed
+    Owntools.Compute_S_int(dict_sample) #the intersection surface
+    Owntools.Compute_Emec(dict_sample, dict_sollicitation) #the mechanical energy
+    Owntools.Compute_kc(dict_material, dict_sample) #the solute diffusion
 
     #compute for total energy in the sample and track the value
     Owntools.Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation)
@@ -60,14 +62,27 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     dict_tracker['sum_ed_plus_L'].append(dict_sample['sum_ed_plus'])
     dict_tracker['sum_ed_minus_L'].append(dict_sample['sum_ed_minus'])
 
+    #Adaptative time step
+    if abs(dict_sample['sum_ed']) < dict_algorithm['Ed_level1']:
+        dict_algorithm['dt_PF'] = dict_algorithm['dt_PF_init']
+    elif dict_algorithm['Ed_level1'] <= abs(dict_sample['sum_ed']) and abs(dict_sample['sum_ed']) < dict_algorithm['Ed_level2']:
+        dict_algorithm['dt_PF'] = dict_algorithm['dt_PF_level1']
+    elif dict_algorithm['Ed_level2'] <= abs(dict_sample['sum_ed']) and abs(dict_sample['sum_ed']) < dict_algorithm['Ed_level3']:
+        dict_algorithm['dt_PF'] = dict_algorithm['dt_PF_level2']
+    elif dict_algorithm['Ed_level3'] <= abs(dict_sample['sum_ed']) :
+        dict_algorithm['dt_PF'] = dict_algorithm['dt_PF_level3']
+
     #plot
-    Owntools.Plot_config(dict_algorithm, dict_sample)
+    if 'Config' in dict_algorithm['L_flag_plot']:
+        Owntools.Plot_config(dict_algorithm, dict_sample)
+    if 'Kc' in dict_algorithm['L_flag_plot']:
+        Owntools.Plot_kc(dict_sample)
 
     #write data
     Owntools.Write_eta_txt(dict_algorithm, dict_sample)
     Owntools.Write_solute_txt(dict_algorithm, dict_sample)
-    Owntools.Write_kc_txt(dict_algorithm, dict_material, dict_sample)
-    Owntools.Write_ep_txt(dict_algorithm, dict_sample, dict_sollicitation)
+    Owntools.Write_kc_txt(dict_algorithm, dict_sample)
+    Owntools.Write_Emec_txt(dict_algorithm, dict_sample)
 
     #create i
     Owntools.Create_i(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
@@ -102,9 +117,12 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     Owntools.Ed_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_000',dict_algorithm,dict_sample)
 
     #plot
-    Owntools.Plot_config(dict_algorithm, dict_sample)
-    Owntools.Plot_init_current_shape(dict_sample)
-    Owntools.Plot_Ed(dict_sample)
+    if 'Config' in dict_algorithm['L_flag_plot']:
+        Owntools.Plot_config(dict_algorithm, dict_sample)
+    if 'Init_Current_Shape' in dict_algorithm['L_flag_plot']:
+        Owntools.Plot_init_current_shape(dict_sample)
+    if 'Ed' in dict_algorithm['L_flag_plot']:
+        Owntools.Plot_Ed(dict_sample)
 
     #---------------------------------------------------------------------------
     #postprocess
@@ -123,6 +141,7 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     #tracker
     #---------------------------------------------------------------------------
 
+    dict_tracker['L_t'].append(dict_tracker['L_t'][-1]+dict_algorithm['dt_PF']*dict_algorithm['n_t_PF'])
     dict_tracker['L_sum_solute'].append(dict_sample['sum_c'])
     dict_tracker['L_sum_eta'].append(dict_sample['sum_eta'])
     dict_tracker['L_sum_total'].append(dict_sample['sum_c']+dict_sample['sum_eta'])
@@ -134,7 +153,8 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     dict_tracker['c_at_the_center'].append(Owntools.Extract_solute_at_p(dict_sample,(int(len(dict_sample['y_L'])/2),int(len(dict_sample['x_L'])/2))))
 
     #Plot trackers
-    Owntools.Plot_trackers(dict_tracker)
+    if 'Trackers' in dict_algorithm['L_flag_plot']:
+        Owntools.Plot_trackers(dict_tracker)
 
     #---------------------------------------------------------------------------
     #tempo save
@@ -162,9 +182,6 @@ os.mkdir('Data')
 if Path('Debug').exists():
     shutil.rmtree('Debug')
 os.mkdir('Debug')
-os.mkdir('Debug/Configuration')
-os.mkdir('Debug/Ed')
-os.mkdir('Debug/Comparison_Init_Current')
 
 #-------------------------------------------------------------------------------
 #Create a simulation
@@ -182,6 +199,16 @@ if dict_algorithm['SaveData']:
     #tempo save of the user file
     shutil.copy('User.py','../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
 
+#prepare plot
+if 'Config' in dict_algorithm['L_flag_plot']:
+    os.mkdir('Debug/Configuration')
+if 'Init_Current_Shape' in dict_algorithm['L_flag_plot']:
+    os.mkdir('Debug/Comparison_Init_Current')
+if 'Ed' in dict_algorithm['L_flag_plot']:
+    os.mkdir('Debug/Ed')
+if 'Kc' in dict_algorithm['L_flag_plot']:
+    os.mkdir('Debug/Kc')
+
 #create the two grains
 User.Add_2grains(dict_material,dict_sample)
 #Compute initial sum_eta
@@ -197,7 +224,8 @@ dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
 User.Add_solute(dict_sample)
 
 #plot
-Owntools.Plot_config(dict_algorithm, dict_sample)
+if 'Config' in dict_algorithm['L_flag_plot']:
+    Owntools.Plot_config(dict_algorithm, dict_sample)
 
 simulation_report.tac_tempo(datetime.now(),'Initialisation')
 
@@ -206,6 +234,7 @@ simulation_report.tac_tempo(datetime.now(),'Initialisation')
 #-------------------------------------------------------------------------------
 
 dict_tracker = {
+'L_t' : [0],
 'L_displacement' : [0],
 'L_int_displacement' : [0],
 'L_sum_solute' : [0],

@@ -62,11 +62,19 @@ def All_parameters():
     #Algorithm parameters
 
     np_proc = 4 #number of processor used
-    n_t_PFDEM = 60 #number of cycle PF-DEM
+    n_t_PFDEM = 80 #number of cycle PF-DEM
 
     #Time step for phase field
-    dt_PF = 0.2
     n_t_PF = 8
+    dt_PF_init = 0.2
+    dt_PF_level1 = dt_PF_init/2
+    dt_PF_level2 = dt_PF_level1/2
+    dt_PF_level3 = dt_PF_level2/2
+
+    #criteria to switch level
+    Ed_level1 = 10
+    Ed_level2 = 20
+    Ed_level3 = 25
 
     #Visual parameters
     c_min = 0
@@ -77,8 +85,12 @@ def All_parameters():
     #Discretisation to find the inscribing (number of nodes in one direction)
     n_spatial_inscribing = 100
 
+    #List of plot to do
+    #Config, Init_Current_Shape, Ed, Kc, Trackers
+    L_flag_plot = ['Config', 'Kc', 'Trackers']
+
     #Find a simulation ame
-    template = 'PS' #template of the name of the simulation
+    template = 'PS_Adaptative_dt_PF' #template of the name of the simulation
     SaveData = True #Save data or not
     foldername = 'Data_2G_ACS' #name of the folder where data are saved
     if SaveData :
@@ -99,10 +111,18 @@ def All_parameters():
     'np_proc' : np_proc,
     'SaveData' : SaveData,
     'namefile' : namefile,
-    'dt_PF' : dt_PF,
+    'dt_PF' : dt_PF_init,
+    'dt_PF_init' : dt_PF_init,
+    'dt_PF_level1' : dt_PF_level1,
+    'dt_PF_level2' : dt_PF_level2,
+    'dt_PF_level3' : dt_PF_level3,
+    'Ed_level1' : Ed_level1,
+    'Ed_level2' : Ed_level2,
+    'Ed_level3' : Ed_level3,
     'n_t_PF' : n_t_PF,
     'foldername' : foldername,
-    'n_t_PFDEM' : n_t_PFDEM
+    'n_t_PFDEM' : n_t_PFDEM,
+    'L_flag_plot' : L_flag_plot
     }
 
     #---------------------------------------------------------------------------
