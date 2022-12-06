@@ -194,6 +194,46 @@ def Compute_sum_eta(dict_sample):
 
 #-------------------------------------------------------------------------------
 
+def Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation):
+    '''
+    Compute the total energy in the sample. This energy is divided in a plus term and a minus term.
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for energy inside the sample (three floats)
+    '''
+    sum_ed_plus = 0
+    sum_ed_minus = 0
+    sum_ed = 0
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+
+            #Emec
+            e_mec = dict_sollicitation['alpha']/dict_sample['S_int']
+            Ed_mec = e_mec*min(dict_sample['L_g'][0].etai_M[-1-l][c],dict_sample['L_g'][1].etai_M[-1-l][c])
+
+            #Eche
+            Ed_che = dict_sollicitation['chi']*dict_sample['solute_M'][-1-l][c]*(3*dict_sample['L_g'][0].etai_M[-1-l][c]**2-2*dict_sample['L_g'][0].etai_M[-1-l][c]**3+\
+                                                                                 3*dict_sample['L_g'][1].etai_M[-1-l][c]**2-2*dict_sample['L_g'][1].etai_M[-1-l][c]**3)
+
+            #Ed
+            Ed = Ed_mec - Ed_che
+
+            #sum actualisation
+            sum_ed = sum_ed + Ed
+            if Ed > 0 :
+                sum_ed_plus = sum_ed_plus + Ed
+            else :
+                sum_ed_minus = sum_ed_minus - Ed
+
+    #update elements in dict
+    dict_sample['sum_ed'] = sum_ed
+    dict_sample['sum_ed_plus'] = sum_ed_plus
+    dict_sample['sum_ed_minus'] = sum_ed_minus
+
+#-------------------------------------------------------------------------------
+
 def Plot_config(dict_algorithm, dict_sample):
     '''
     Plot the sample configuration.
@@ -369,6 +409,49 @@ def Plot_trackers(dict_tracker):
 
     plt.savefig('Debug/Sphericity_g_1.png')
     plt.close(1)
+
+    #---------------------------------------------------------------------------
+    #plot the value of the solute concentration at the point defined
+    plt.figure(1,figsize=(16,9))
+
+    plt.plot(dict_tracker['c_at_the_center'])
+    plt.title('Value of the solute concentration at the center')
+    plt.savefig('Debug/Solute_Contration_Center.png')
+    plt.close(1)
+
+    #---------------------------------------------------------------------------
+    #plot the value of the total energy in the sample
+    plt.figure(1,figsize=(16,9))
+
+    plt.subplot(131)
+    plt.plot(dict_tracker['sum_ed_L'])
+    plt.title('Total Energy Ed')
+
+    plt.subplot(132)
+    plt.plot(dict_tracker['sum_ed_plus_L'], label = 'Ed+')
+    plt.plot(dict_tracker['sum_ed_minus_L'], label = 'Ed-')
+    plt.title('Repartition of the energy in a + and a -  terms')
+
+    plt.subplot(133)
+    plt.plot(dict_tracker['L_int_displacement'])
+    plt.title('Total displacement done')
+
+    plt.savefig('Debug/Evolution_sum_Ed.png')
+    plt.close(1)
+
+#-------------------------------------------------------------------------------
+
+def Extract_solute_at_p(dict_sample,ij_p):
+    '''
+    Extract the value of the solute concentration at a given point.
+
+        Input :
+            a sample dictionnary (a dict)
+            a coordinate of the point (a tuple of int)
+        Output :
+            the value of the solute concentration (a float)
+    '''
+    return dict_sample['solute_M'][-1-ij_p[0]][ij_p[1]]
 
 #-------------------------------------------------------------------------------
 
