@@ -59,6 +59,8 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     #compute for total energy in the sample and track the value
     Owntools.Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation)
     dict_tracker['sum_ed_L'].append(dict_sample['sum_ed'])
+    dict_tracker['sum_Ed_che_L'].append(dict_sample['sum_Ed_che'])
+    dict_tracker['sum_Ed_mec_L'].append(dict_sample['sum_Ed_mec'])
     dict_tracker['sum_ed_plus_L'].append(dict_sample['sum_ed_plus'])
     dict_tracker['sum_ed_minus_L'].append(dict_sample['sum_ed_minus'])
 
@@ -247,6 +249,8 @@ dict_tracker = {
 'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_length_ratio_sphericity],
 'c_at_the_center' : [Owntools.Extract_solute_at_p(dict_sample,(int(len(dict_sample['y_L'])/2),int(len(dict_sample['x_L'])/2)))],
 'sum_ed_L': [],
+'sum_Ed_che_L': [],
+'sum_Ed_mec_L': [],
 'sum_ed_plus_L' : [],
 'sum_ed_minus_L' : []
 }

@@ -272,6 +272,8 @@ def Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation):
     sum_ed_plus = 0
     sum_ed_minus = 0
     sum_ed = 0
+    sum_Ed_mec = 0
+    sum_Ed_che = 0
     for l in range(len(dict_sample['y_L'])):
         for c in range(len(dict_sample['x_L'])):
 
@@ -288,6 +290,8 @@ def Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation):
 
             #sum actualisation
             sum_ed = sum_ed + Ed
+            sum_Ed_mec = sum_Ed_mec + Ed_mec
+            sum_Ed_che = sum_Ed_che + Ed_che
             if Ed > 0 :
                 sum_ed_plus = sum_ed_plus + Ed
             else :
@@ -295,6 +299,8 @@ def Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation):
 
     #update elements in dict
     dict_sample['sum_ed'] = sum_ed
+    dict_sample['sum_Ed_mec'] = sum_Ed_mec
+    dict_sample['sum_Ed_che'] = sum_Ed_che
     dict_sample['sum_ed_plus'] = sum_ed_plus
     dict_sample['sum_ed_minus'] = sum_ed_minus
 
@@ -524,9 +530,17 @@ def Plot_trackers(dict_tracker):
     #plot the value of the total energy in the sample
     plt.figure(1,figsize=(16,9))
 
-    plt.subplot(131)
+    plt.subplot(331)
+    plt.plot(dict_tracker['L_t'][:-1], dict_tracker['sum_Ed_che_L'])
+    plt.title('Total chemical energy Ed_che')
+
+    plt.subplot(334)
+    plt.plot(dict_tracker['L_t'][:-1], dict_tracker['sum_Ed_mec_L'])
+    plt.title('Total mechanical energy Ed_mec')
+
+    plt.subplot(337)
     plt.plot(dict_tracker['L_t'][:-1], dict_tracker['sum_ed_L'])
-    plt.title('Total Energy Ed')
+    plt.title('Total Energy Ed = Ed_mec - Ed_che')
 
     plt.subplot(132)
     plt.plot(dict_tracker['L_t'][:-1], dict_tracker['sum_ed_plus_L'], label = 'Ed+')
