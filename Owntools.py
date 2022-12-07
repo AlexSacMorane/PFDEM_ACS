@@ -362,6 +362,7 @@ def Plot_config(dict_algorithm, dict_sample):
     #etai
     for i in range(len(dict_sample['L_g'])):
         plt.plot(dict_sample['L_g'][i].l_border_x,dict_sample['L_g'][i].l_border_y)
+    plt.title('Solute c and grains')
     plt.axis('equal')
     plt.xlim(min(dict_sample['x_L']),max(dict_sample['x_L']))
 
@@ -369,14 +370,14 @@ def Plot_config(dict_algorithm, dict_sample):
     plt.subplot(223)
     im = plt.imshow(dict_sample['L_g'][0].etai_M,interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])], vmin = 0, vmax = 1)
     plt.colorbar(im)
-    plt.plot(dict_sample['L_g'][0].l_border_x,dict_sample['L_g'][0].l_border_y)
+    plt.plot(dict_sample['L_g'][0].l_border_x,dict_sample['L_g'][0].l_border_y,'r')
     plt.title(r'$\eta$1')
 
     #eta2_M
     plt.subplot(224)
     im = plt.imshow(dict_sample['L_g'][1].etai_M,interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])], vmin = 0, vmax = 1)
     plt.colorbar(im)
-    plt.plot(dict_sample['L_g'][1].l_border_x,dict_sample['L_g'][1].l_border_y)
+    plt.plot(dict_sample['L_g'][1].l_border_x,dict_sample['L_g'][1].l_border_y,'r')
     plt.title(r'$\eta$2')
 
     plt.savefig(name)
