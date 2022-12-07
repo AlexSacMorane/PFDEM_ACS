@@ -268,6 +268,10 @@ while not User.Criteria_StopSimulation(dict_algorithm):
 #close simulation
 #-------------------------------------------------------------------------------
 
+#make movie of the different configuration
+if 'Movie' in dict_algorithm['L_flag_plot'] and 'Config' in dict_algorithm['L_flag_plot']:
+    Owntools.make_mp4('Debug/Configuration/Configuration_','Debug/Configuration.mp4')
+
 simulation_report.end(datetime.now())
 
 #final save

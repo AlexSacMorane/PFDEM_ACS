@@ -339,6 +339,36 @@ def Plot_config(dict_algorithm, dict_sample):
 
 #-------------------------------------------------------------------------------
 
+def make_mp4(template_name,name_video):
+    '''The goal of this function is to create a movie with pictures.
+
+    from https://www.blog.pythonlibrary.org/2021/06/23/creating-an-animated-gif-with-python/
+
+        Input :
+            the template of the pictures used (a string)
+            the name of the video (a string)
+        Output :
+            a movie file (a .mp4)
+    '''
+    #look for the largest iteration
+    i_f = 0
+    plotpath = Path(template_name+str(i_f)+'.png')
+    while plotpath.exists():
+        i_f = i_f + 1
+        plotpath = Path(template_name+str(i_f)+'.png')
+
+    fileList = []
+    for i in range(0,i_f):
+        fileList.append(template_name+str(i)+'.png')
+
+    duration_movie  = 10 #sec
+    writer = imageio.get_writer(name_video, fps=int(i_f/duration_movie))
+    for im in fileList:
+        writer.append_data(imageio.imread(im))
+    writer.close()
+    
+#-------------------------------------------------------------------------------
+
 def Plot_Ed(dict_sample):
     '''
     Plot the energy source configuration at the start of the simultion.
@@ -567,36 +597,6 @@ def Extract_solute_at_p(dict_sample,ij_p):
             the value of the solute concentration (a float)
     '''
     return dict_sample['solute_M'][-1-ij_p[0]][ij_p[1]]
-
-#-------------------------------------------------------------------------------
-
-def make_mp4(template_name,name_video):
-    '''The goal of this function is to create a movie with pictures.
-
-    from https://www.blog.pythonlibrary.org/2021/06/23/creating-an-animated-gif-with-python/
-
-        Input :
-            the template of the pictures used (a string)
-            the name of the video (a string)
-        Output :
-            a movie file (a .mp4)
-    '''
-    #look for the largest iteration
-    i_f = 0
-    plotpath = Path(template_name+str(i_f)+'.png')
-    while plotpath.exists():
-        i_f = i_f + 1
-        plotpath = Path(template_name+str(i_f)+'.png')
-
-    fileList = []
-    for i in range(0,i_f):
-        fileList.append(template_name+str(i)+'.png')
-
-    duration_movie  = 10 #sec
-    writer = imageio.get_writer(name_video, fps=int(i_f/duration_movie))
-    for im in fileList:
-        writer.append_data(imageio.imread(im))
-    writer.close()
 
 #-------------------------------------------------------------------------------
 

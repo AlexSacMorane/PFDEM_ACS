@@ -86,7 +86,7 @@ def All_parameters():
     n_spatial_inscribing = 100
 
     #List of plot to do
-    #Config, Init_Current_Shape, Ed, Kc, Trackers
+    #Config, Init_Current_Shape, Ed, Kc, Trackers, Movie (need Config to work)
     L_flag_plot = ['Config', 'Kc', 'Trackers']
 
     #Find a simulation ame
