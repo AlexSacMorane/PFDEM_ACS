@@ -547,7 +547,7 @@ def Plot_init_current_shape(dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Plot_trackers(dict_tracker):
+def Plot_sum_eta_c(dict_tracker):
     '''
     Plot the trackers.
 
@@ -578,8 +578,17 @@ def Plot_trackers(dict_tracker):
     plt.savefig('Debug/Trackers.png')
     plt.close(1)
 
-    #---------------------------------------------------------------------------
-    #plot the sphericity of the grain 1
+#-------------------------------------------------------------------------------
+
+def Plot_sphericity(dict_tracker):
+    '''
+    Plot the sphericity of the grain 1.
+
+        Input :
+            a tracker dictionnary (a dict)
+        Output :
+            Nothing but a .png files are generated (files)
+    '''
     plt.figure(1,figsize=(16,9))
 
     plt.plot(dict_tracker['L_t'], dict_tracker['L_area_sphericity_g0'],label='Area sphericity')
@@ -593,8 +602,17 @@ def Plot_trackers(dict_tracker):
     plt.savefig('Debug/Sphericity_g_1.png')
     plt.close(1)
 
-    #---------------------------------------------------------------------------
-    #plot the value of the solute concentration at the point defined
+#-------------------------------------------------------------------------------
+
+def Plot_c_at_p(dict_tracker):
+    '''
+    Plot the value of the solute concentration at the point defined.
+
+        Input :
+            a tracker dictionnary (a dict)
+        Output :
+            Nothing but a .png files are generated (files)
+    '''
     plt.figure(1,figsize=(16,9))
 
     plt.plot(dict_tracker['L_t'], dict_tracker['c_at_the_center'])
@@ -602,8 +620,17 @@ def Plot_trackers(dict_tracker):
     plt.savefig('Debug/Solute_Contration_Center.png')
     plt.close(1)
 
-    #---------------------------------------------------------------------------
-    #plot the value of the total energy in the sample
+#-------------------------------------------------------------------------------
+
+def Plot_sum_Ed(dict_tracker):
+    '''
+    Plot the value of the total energy in the sample.
+
+        Input :
+            a tracker dictionnary (a dict)
+        Output :
+            Nothing but a .png files are generated (files)
+    '''
     plt.figure(1,figsize=(16,9))
 
     plt.subplot(331)
@@ -630,8 +657,17 @@ def Plot_trackers(dict_tracker):
     plt.savefig('Debug/Evolution_sum_Ed.png')
     plt.close(1)
 
-    #---------------------------------------------------------------------------
-    #plot the evolution of the intersection surface and the some of etai
+#-------------------------------------------------------------------------------
+
+def Plot_Sint_SumMinEtai(dict_tracker):
+    '''
+    Plot the evolution of the intersection surface and the sum of min of etai.
+
+        Input :
+            a tracker dictionnary (a dict)
+        Output :
+            Nothing but a .png files are generated (files)
+    '''
     plt.figure(1,figsize=(16,9))
 
     plt.subplot(211)
@@ -644,6 +680,24 @@ def Plot_trackers(dict_tracker):
 
     plt.savefig('Debug/Evolution_Sint_SumMinEtai.png')
     plt.close(1)
+
+#-------------------------------------------------------------------------------
+
+def Plot_dt_used(dict_tracker):
+    '''
+    Plot the evolution of the time step used in the phase field simulation.
+
+        Input :
+            a tracker dictionnary (a dict)
+        Output :
+            Nothing but a .png files are generated (files)
+    '''
+    plt.figure(1,figsize=(16,9))
+    plt.plot(dict_tracker['L_dt'])
+    plt.title('Evolution of the time step used')
+    plt.savefig('Debug/Evolution_dt_used.png')
+    plt.close(1)
+
 
 #-------------------------------------------------------------------------------
 

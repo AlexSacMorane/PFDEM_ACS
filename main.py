@@ -156,6 +156,7 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     #---------------------------------------------------------------------------
 
     dict_tracker['L_t'].append(dict_tracker['L_t'][-1]+dict_algorithm['dt_PF']*dict_algorithm['n_t_PF'])
+    dict_tracker['L_dt'].append(dict_algorithm['dt_PF'])
     dict_tracker['L_sum_solute'].append(dict_sample['sum_c'])
     dict_tracker['L_sum_eta'].append(dict_sample['sum_eta'])
     dict_tracker['L_sum_total'].append(dict_sample['sum_c']+dict_sample['sum_eta'])
@@ -167,8 +168,18 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     dict_tracker['c_at_the_center'].append(Owntools.Extract_solute_at_p(dict_sample,(int(len(dict_sample['y_L'])/2),int(len(dict_sample['x_L'])/2))))
 
     #Plot trackers
-    if 'Trackers' in dict_algorithm['L_flag_plot']:
-        Owntools.Plot_trackers(dict_tracker)
+    if 'Eta_c' in dict_algorithm['L_flag_plot'] :
+        Owntools.Plot_sum_eta_c(dict_tracker)
+    if 'Sphericity' in dict_algorithm['L_flag_plot'] :
+        Owntools.Plot_sphericity(dict_tracker)
+    if 'C_at_P' in dict_algorithm['L_flag_plot'] :
+        Owntools.Plot_c_at_p(dict_tracker)
+    if 'sum_Ed' in dict_algorithm['L_flag_plot'] :
+        Owntools.Plot_sum_Ed(dict_tracker)
+    if 'Sint_MinEtai' in dict_algorithm['L_flag_plot'] :
+        Owntools.Plot_Sint_SumMinEtai(dict_tracker)
+    if 'dt' in dict_algorithm['L_flag_plot'] :
+        Owntools.Plot_Sint_SumMinEtai(dict_tracker)
 
     #---------------------------------------------------------------------------
     #tempo save
@@ -281,6 +292,7 @@ simulation_report.tac_tempo(datetime.now(),'Initialisation')
 
 dict_tracker = {
 'L_t' : [0],
+'L_dt' : [],
 'L_displacement' : [0],
 'L_int_displacement' : [0],
 'L_sum_solute' : [0],
