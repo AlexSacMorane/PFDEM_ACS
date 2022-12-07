@@ -155,6 +155,34 @@ def Compute_S_int(dict_sample):
 
 #-------------------------------------------------------------------------------
 
+def Compute_sum_min_etai(dict_sample, dict_sollicitation):
+    '''
+    Compute the sum over the sample of the minimum of etai.
+
+    This variable is used for Compute_Emec().
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value (a float)
+            If it is the first call of the function, dictionnaries gets new value (2 floats)
+    '''
+    #Initialisation
+    sum_min_etai = 0
+    #compute the sum over the sample of the minimum of etai
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+            sum_min_etai = sum_min_etai + min(dict_sample['L_g'][0].etai_M[-1-l][c],dict_sample['L_g'][1].etai_M[-1-l][c])
+
+    #Update element in dictionnary
+    dict_sample['sum_min_etai'] = sum_min_etai
+    #create element in dictionnary if not already created
+    if 'sum_min_etai0' not in dict_sample.keys():
+        dict_sample['sum_min_etai0'] = sum_min_etai
+        dict_sollicitation['alpha'] = 0.2*sum_min_etai
+
+#-------------------------------------------------------------------------------
+
 def Compute_Emec(dict_sample, dict_sollicitation):
     '''
     Compute the mechanical energy field in the sample.
@@ -167,7 +195,8 @@ def Compute_Emec(dict_sample, dict_sollicitation):
     #Initialisation
     Emec_M = np.array(np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L']))))
     #compute the variable e_mec
-    e_mec = dict_sollicitation['alpha']/dict_sample['S_int']
+    #e_mec = dict_sollicitation['alpha']/dict_sample['S_int']
+    e_mec = dict_sollicitation['alpha']/dict_sample['sum_min_etai']
     #compute the distribution of the mechanical energy
     for l in range(len(dict_sample['y_L'])):
         for c in range(len(dict_sample['x_L'])):
@@ -366,7 +395,7 @@ def make_mp4(template_name,name_video):
     for im in fileList:
         writer.append_data(imageio.imread(im))
     writer.close()
-    
+
 #-------------------------------------------------------------------------------
 
 def Plot_Ed(dict_sample):
@@ -508,7 +537,7 @@ def Plot_trackers(dict_tracker):
         Input :
             a tracker dictionnary (a dict)
         Output :
-            Nothing but a .png file is generated (a file)
+            Nothing but a .png files are generated (files)
     '''
     #plot Displacement and sum of c and etai
     plt.figure(1,figsize=(16,9))
@@ -582,6 +611,21 @@ def Plot_trackers(dict_tracker):
     plt.title('Total displacement done')
 
     plt.savefig('Debug/Evolution_sum_Ed.png')
+    plt.close(1)
+
+    #---------------------------------------------------------------------------
+    #plot the evolution of the intersection surface and the some of etai
+    plt.figure(1,figsize=(16,9))
+
+    plt.subplot(211)
+    plt.plot(dict_tracker['L_t'][:-1], dict_tracker['S_int_L'])
+    plt.title('Intersection surface')
+
+    plt.subplot(212)
+    plt.plot(dict_tracker['L_t'][:-1], dict_tracker['sum_min_etai_L'])
+    plt.title('Sum of minimum etai')
+
+    plt.savefig('Debug/Evolution_Sint_SumMinEtai.png')
     plt.close(1)
 
 #-------------------------------------------------------------------------------

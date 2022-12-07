@@ -41,20 +41,32 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
         Output :
             Nothing but the dictionnaies and the report are updated
     '''
+    #---------------------------------------------------------------------------
     #prepare iteration
+    #---------------------------------------------------------------------------
     simulation_report.tic_tempo(datetime.now())
     dict_algorithm['i_PFDEM'] = dict_algorithm['i_PFDEM'] + 1
     simulation_report.write_and_print(f"\nITERATION {dict_algorithm['i_PFDEM']} / {dict_algorithm['n_t_PFDEM']}\n\n",f"\nITERATION {dict_algorithm['i_PFDEM']} / {dict_algorithm['n_t_PFDEM']}\n")
     os.mkdir('Output/Ite_'+str(dict_algorithm['i_PFDEM']))
 
-    #move grain
+    #---------------------------------------------------------------------------
+    #move grains
+    #---------------------------------------------------------------------------
+
     Grain.Compute_overlap_2_grains(dict_sample)
     Grain.Apply_overlap_target(dict_material,dict_sample,dict_sollicitation,dict_tracker)
 
+    #---------------------------------------------------------------------------
+    #prepare phase field simulation
+    #---------------------------------------------------------------------------
+
     #Compute parameters needed
     Owntools.Compute_S_int(dict_sample) #the intersection surface
+    Owntools.Compute_sum_min_etai(dict_sample, dict_sollicitation) #the sum of the minimum of etai
     Owntools.Compute_Emec(dict_sample, dict_sollicitation) #the mechanical energy
     Owntools.Compute_kc(dict_material, dict_sample) #the solute diffusion
+    dict_tracker['S_int_L'].append(dict_sample['S_int'])
+    dict_tracker['sum_min_etai_L'].append(dict_sample['sum_min_etai'])
 
     #compute for total energy in the sample and track the value
     Owntools.Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation)
@@ -218,7 +230,7 @@ Owntools.Compute_sum_eta(dict_sample)
 #Compute the surface of the contact initially
 User.Add_S0(dict_sample, dict_sollicitation)
 #Add the coefficient applied to e_mec
-User.Add_alpha_emec(dict_sample, dict_sollicitation)
+#User.Add_alpha_emec(dict_sample, dict_sollicitation)
 #Compute the sphericity initially for the first grain
 dict_sample['L_g'][0].geometric_study(dict_sample)
 dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
@@ -252,7 +264,9 @@ dict_tracker = {
 'sum_Ed_che_L': [],
 'sum_Ed_mec_L': [],
 'sum_ed_plus_L' : [],
-'sum_ed_minus_L' : []
+'sum_ed_minus_L' : [],
+'S_int_L' : [],
+'sum_min_etai' : []
 }
 
 #-------------------------------------------------------------------------------
