@@ -181,6 +181,36 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: from pf to dem")
 
 #-------------------------------------------------------------------------------
+
+def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
+    '''
+    Close the PFDEM.
+
+        Input :
+            an algorithm dictionnary (a dict)
+            a material dictionnary (a dict)
+            a sample dictionnary (a dict)
+            a sollicitation dictionnary (a dict)
+            a tracker dictionnary (a dict)
+            a simulation report (a Report)
+        Output :
+            Nothing but the dictionnaries and the report are updated
+    '''
+    #make movie of the different configuration
+    if 'Movie' in dict_algorithm['L_flag_plot'] and 'Config' in dict_algorithm['L_flag_plot']:
+        Owntools.make_mp4('Debug/Configuration/Configuration_','Debug/Configuration.mp4')
+
+    simulation_report.end(datetime.now())
+
+    #final save
+    if dict_algorithm['SaveData']:
+        Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
+        name_actual_folder = os.path.dirname(os.path.realpath(__file__))
+        shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
+        os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
+        os.remove('../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
+
+#-------------------------------------------------------------------------------
 #Plan simulation
 #-------------------------------------------------------------------------------
 
@@ -282,16 +312,4 @@ while not User.Criteria_StopSimulation(dict_algorithm):
 #close simulation
 #-------------------------------------------------------------------------------
 
-#make movie of the different configuration
-if 'Movie' in dict_algorithm['L_flag_plot'] and 'Config' in dict_algorithm['L_flag_plot']:
-    Owntools.make_mp4('Debug/Configuration/Configuration_','Debug/Configuration.mp4')
-
-simulation_report.end(datetime.now())
-
-#final save
-if dict_algorithm['SaveData']:
-    Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
-    name_actual_folder = os.path.dirname(os.path.realpath(__file__))
-    shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
-    os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
-    os.remove('../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
+close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)

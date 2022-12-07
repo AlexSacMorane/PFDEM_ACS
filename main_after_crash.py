@@ -69,12 +69,4 @@ while not User.Criteria_StopSimulation(dict_algorithm):
 #close simulation
 #-------------------------------------------------------------------------------
 
-simulation_report.end(datetime.now())
-
-#final save
-if dict_algorithm['SaveData']:
-    Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
-    name_actual_folder = os.path.dirname(os.path.realpath(__file__))
-    shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
-    os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
-    os.remove('../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
+main.close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
