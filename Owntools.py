@@ -307,8 +307,7 @@ def Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation):
         for c in range(len(dict_sample['x_L'])):
 
             #Emec
-            e_mec = dict_sollicitation['alpha']/dict_sample['S_int']
-            Ed_mec = e_mec*min(dict_sample['L_g'][0].etai_M[-1-l][c],dict_sample['L_g'][1].etai_M[-1-l][c])
+            Ed_mec = dict_sample['Emec_M'][-1-l][c]
 
             #Eche
             Ed_che = dict_sollicitation['chi']*dict_sample['solute_M'][-1-l][c]*(3*dict_sample['L_g'][0].etai_M[-1-l][c]**2-2*dict_sample['L_g'][0].etai_M[-1-l][c]**3+\
