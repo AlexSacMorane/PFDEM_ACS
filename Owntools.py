@@ -355,6 +355,8 @@ def Plot_config(dict_algorithm, dict_sample):
 
     #plot
     plt.figure(1,figsize=(16,9))
+
+    plt.subplot(211)
     #solute
     im = plt.imshow(dict_sample['solute_M'],interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])], vmin = dict_algorithm['c_min'], vmax = dict_algorithm['c_max'])
     plt.colorbar(im)
@@ -363,6 +365,21 @@ def Plot_config(dict_algorithm, dict_sample):
         plt.plot(dict_sample['L_g'][i].l_border_x,dict_sample['L_g'][i].l_border_y)
     plt.axis('equal')
     plt.xlim(min(dict_sample['x_L']),max(dict_sample['x_L']))
+
+    #eta1_M
+    plt.subplot(223)
+    im = plt.imshow(dict_sample['L_g'][0].etai_M,interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])], vmin = 0, vmax = 1)
+    plt.colorbar(im)
+    plt.plot(dict_sample['L_g'][0].l_border_x,dict_sample['L_g'][0].l_border_y)
+    plt.title(r'$\eta$1')
+
+    #eta2_M
+    plt.subplot(224)
+    im = plt.imshow(dict_sample['L_g'][1].etai_M,interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])], vmin = 0, vmax = 1)
+    plt.colorbar(im)
+    plt.plot(dict_sample['L_g'][1].l_border_x,dict_sample['L_g'][1].l_border_y)
+    plt.title(r'$\eta$2')
+
     plt.savefig(name)
     plt.close(1)
 
