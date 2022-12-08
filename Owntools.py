@@ -493,7 +493,7 @@ def Plot_Diffusion_Solute(dict_algorithm, dict_material, dict_sample):
     #plot
     plt.figure(1,figsize=(16,9))
 
-    plt.subplot(211)
+    plt.subplot(311)
     #diffusion coefficient
     im = plt.imshow(dict_sample['kc_M'],interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])])
     plt.colorbar(im)
@@ -504,14 +504,34 @@ def Plot_Diffusion_Solute(dict_algorithm, dict_material, dict_sample):
     plt.axis('equal')
     plt.xlim(min(dict_sample['x_L']),max(dict_sample['x_L']))
 
-    plt.subplot(212)
+    plt.subplot(312)
     #diffusion coefficient
     im = plt.imshow(delta_solute,interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])])
     plt.colorbar(im)
     #etai
     for i in range(len(dict_sample['L_g'])):
         plt.plot(dict_sample['L_g'][i].l_border_x,dict_sample['L_g'][i].l_border_y)
-    plt.title('Delta solute and grains')
+    plt.title('Delta solute (= diffused - initial)')
+    plt.axis('equal')
+    plt.xlim(min(dict_sample['x_L']),max(dict_sample['x_L']))
+
+    grad_y, grad_x = np.gradient(-delta_solute)
+    plt.subplot(325)
+    im = plt.imshow(grad_x,interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])])
+    plt.colorbar(im)
+    #etai
+    for i in range(len(dict_sample['L_g'])):
+        plt.plot(dict_sample['L_g'][i].l_border_x,dict_sample['L_g'][i].l_border_y)
+    plt.title('Grad_x(Delta solute)')
+    plt.axis('equal')
+    plt.xlim(min(dict_sample['x_L']),max(dict_sample['x_L']))
+    plt.subplot(326)
+    im = plt.imshow(grad_y,interpolation='nearest', extent=[min(dict_sample['x_L']),max(dict_sample['x_L']),min(dict_sample['y_L']),max(dict_sample['y_L'])])
+    plt.colorbar(im)
+    #etai
+    for i in range(len(dict_sample['L_g'])):
+        plt.plot(dict_sample['L_g'][i].l_border_x,dict_sample['L_g'][i].l_border_y)
+    plt.title('Grad_y(Delta solute)')
     plt.axis('equal')
     plt.xlim(min(dict_sample['x_L']),max(dict_sample['x_L']))
 
