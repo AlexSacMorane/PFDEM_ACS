@@ -278,10 +278,6 @@ if 'Diff_Solute' in dict_algorithm['L_flag_plot']:
 User.Add_2grains(dict_material,dict_sample)
 #Compute initial sum_eta
 Owntools.Compute_sum_eta(dict_sample)
-#Compute the surface of the contact initially
-User.Add_S0(dict_sample, dict_sollicitation)
-#Add the coefficient applied to e_mec
-#User.Add_alpha_emec(dict_sample, dict_sollicitation)
 #Compute the sphericity initially for the first grain
 dict_sample['L_g'][0].geometric_study(dict_sample)
 dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)

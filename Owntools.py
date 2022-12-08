@@ -195,7 +195,6 @@ def Compute_Emec(dict_sample, dict_sollicitation):
     #Initialisation
     Emec_M = np.array(np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L']))))
     #compute the variable e_mec
-    #e_mec = dict_sollicitation['alpha']/dict_sample['S_int']
     e_mec = dict_sollicitation['alpha']/dict_sample['sum_min_etai']
     #compute the distribution of the mechanical energy
     for l in range(len(dict_sample['y_L'])):
