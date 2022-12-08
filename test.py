@@ -24,6 +24,7 @@ import User
 import Owntools
 import Grain
 import Report
+from main import iteration_main
 
 #-------------------------------------------------------------------------------
 #Test
@@ -41,6 +42,121 @@ class TestExample(unittest.TestCase):
                 The result is always True (a bool)
         '''
         self.assertTrue(True)
+
+#-------------------------------------------------------------------------------
+
+class TestGlobal(unittest.TestCase):
+    '''
+    Test global.
+    '''
+    def test_all_files_here(self):
+        '''
+        This test verifies that all files are in the directory.
+
+            Output :
+                The result is True if all files needed for a simulation are here (a bool)
+        '''
+        L_files = ['Debug_Diff_Solute_base.i',
+                   'Grain.py',
+                   'main_after_crash.py',
+                   'main.py',
+                   'Owntools.py',
+                   'PF_ACS_base.i',
+                   'Report.py',
+                   'User.py']
+        AllHere = True
+        MissingFiles = ''
+        for file in L_files :
+            plotpath = Path(file)
+            if not plotpath.exists():
+                MissingFiles = MissingFiles + ' '+ file
+                AllHere = False
+        self.assertTrue(AllHere,'Some files are missing :'+MissingFiles)
+
+    #---------------------------------------------------------------------------
+
+    def test_main_iteration_main(self):
+        '''
+        This test verifies that one PFDEM iteration can be done.
+
+            Output :
+                No result, except if an error appears
+        '''
+        if Path('Input').exists():
+            shutil.rmtree('Input')
+        os.mkdir('Input')
+        if Path('Output').exists():
+            shutil.rmtree('Output')
+        os.mkdir('Output')
+        if Path('Data').exists():
+            shutil.rmtree('Data')
+        os.mkdir('Data')
+        if Path('Debug').exists():
+            shutil.rmtree('Debug')
+        os.mkdir('Debug')
+
+        #create a simulation report
+        simulation_report = Report.Report('Debug/Report',datetime.now())
+        simulation_report.tic_tempo(datetime.now())
+
+        #general parameters
+        dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
+        if dict_algorithm['SaveData']:
+            if not Path('../'+dict_algorithm['foldername']).exists():
+                os.mkdir('../'+dict_algorithm['foldername'])
+            #tempo save of the user file
+            shutil.copy('User.py','../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
+
+        #prepare plot
+        if 'Config' in dict_algorithm['L_flag_plot']:
+            os.mkdir('Debug/Configuration')
+        if 'Init_Current_Shape' in dict_algorithm['L_flag_plot']:
+            os.mkdir('Debug/Comparison_Init_Current')
+        if 'Ed' in dict_algorithm['L_flag_plot']:
+            os.mkdir('Debug/Ed')
+        if 'Kc' in dict_algorithm['L_flag_plot']:
+            os.mkdir('Debug/Kc')
+        if 'Diff_Solute' in dict_algorithm['L_flag_plot']:
+            os.mkdir('Debug/Diff_Solute')
+
+        #create the two grains
+        User.Add_2grains(dict_material,dict_sample)
+        #Compute initial sum_eta
+        Owntools.Compute_sum_eta(dict_sample)
+        #Compute the sphericity initially for the first grain
+        dict_sample['L_g'][0].geometric_study(dict_sample)
+        dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
+        #create the solute
+        User.Add_solute(dict_sample)
+        simulation_report.tac_tempo(datetime.now(),'Initialisation')
+
+        #trackers
+        dict_tracker = {
+        'L_t' : [0],
+        'L_dt' : [],
+        'L_displacement' : [0],
+        'L_int_displacement' : [0],
+        'L_sum_solute' : [0],
+        'L_sum_eta' : [dict_sample['sum_eta']],
+        'L_sum_total' : [dict_sample['sum_eta']],
+        'L_area_sphericity_g0' : [dict_sample['L_g'][0].area_sphericity],
+        'L_diameter_sphericity_g0' : [dict_sample['L_g'][0].diameter_sphericity],
+        'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_ratio_sphericity],
+        'L_perimeter_sphericity_g0' : [dict_sample['L_g'][0].perimeter_sphericity],
+        'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_length_ratio_sphericity],
+        'c_at_the_center' : [Owntools.Extract_solute_at_p(dict_sample,(int(len(dict_sample['y_L'])/2),int(len(dict_sample['x_L'])/2)))],
+        'sum_ed_L': [],
+        'sum_Ed_che_L': [],
+        'sum_Ed_mec_L': [],
+        'sum_ed_plus_L' : [],
+        'sum_ed_minus_L' : [],
+        'S_int_L' : [],
+        'sum_min_etai_L' : []
+        }
+
+        #Try to run one iteration
+        dict_algorithm['i_PFDEM'] = 0
+        iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
 
 #-------------------------------------------------------------------------------
 
@@ -93,6 +209,24 @@ class TestUser(unittest.TestCase):
 
     #---------------------------------------------------------------------------
 
+    def test_Add_S0(self):
+        '''
+        Try to compute the initial intersection surface with the function User.Add_solute().
+
+            Output :
+                The result depends on the fact if initial surface is well computed or not (a bool)
+        '''
+        #Acquire data
+        dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
+        #Create 2 grains
+        User.Add_2grains(dict_material,dict_sample)
+        #try to compute the initial intersection surface
+        User.Add_S0(dict_sample, dict_sollicitation)
+        #check if there is a attribute
+        self.assertTrue('S_int_0' in dict_sample.keys(),'The function User.Add_S0 does not compute an initial intersection surface!')
+
+    #---------------------------------------------------------------------------
+
     def test_Add_solute(self):
         '''
         Try to generate a solute with the function User.Add_solute().
@@ -106,6 +240,26 @@ class TestUser(unittest.TestCase):
         User.Add_solute(dict_sample)
         #check if there are 2 grains
         self.assertTrue('solute_M' in dict_sample.keys(),'The function User.Add_solute does not create a solute!')
+
+    #---------------------------------------------------------------------------
+
+    def test_alpha_emec(self):
+        '''
+        Try to compute the coefficient in front of the mechanical energy term with the function User.Add_alpha_emec().
+
+            Output :
+                The result depends on the fact if the coefficient is well generated or not (a bool)
+        '''
+        #Acquire data
+        dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
+        #Create 2 grains
+        User.Add_2grains(dict_material,dict_sample)
+        #Compute the initial intersection surface
+        User.Add_S0(dict_sample, dict_sollicitation)
+        #Try to compute the initial coefficient
+        User.Add_alpha_emec(dict_sample, dict_sollicitation)
+        #check if there is a attribute
+        self.assertTrue('alpha' in dict_sollicitation.keys(),'The function User.Add_alpha_emec does not compute a coefficient!')
 
 #-------------------------------------------------------------------------------
 
@@ -138,7 +292,7 @@ class TestOwntools(unittest.TestCase):
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         dict_algorithm['i_PFDEM'] = 0
         #try to create a .i file
-        Owntools.Create_i(dict_algorithm,dict_sample,dict_material)
+        Owntools.Create_i(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
         #Check if the file PF_CH_AC_base.i is in the directory
         self.assertTrue(Path(dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'.i').is_file(),"The file namefile.i has not been created!")
         os.remove(dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'.i')
@@ -172,14 +326,17 @@ class TestOwntools(unittest.TestCase):
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         #create the two grains
         User.Add_2grains(dict_material,dict_sample)
+        #create the solute
+        User.Add_solute(dict_sample)
         #create a folder
         if Path('Debug').exists():
             shutil.rmtree('Debug')
         os.mkdir('Debug')
+        os.mkdir('Debug/Configuration')
         #try to plot the configuration
-        Owntools.Plot_config(dict_sample)
+        Owntools.Plot_config(dict_algorithm, dict_sample)
         #check if the .png has been created
-        self.assertTrue(Path('Debug/Configuration_0.png').is_file(),"The image Debug/Configuration_0.png has not been created by the function Owntools.Plot_config()!")
+        self.assertTrue(Path('Debug/Configuration/Configuration_0.png').is_file(),"The image Debug/Configuration/Configuration_0.png has not been created by the function Owntools.Plot_config()!")
         shutil.rmtree('Debug')
 
     #---------------------------------------------------------------------------
@@ -254,9 +411,9 @@ class TestOwntools(unittest.TestCase):
 
     #---------------------------------------------------------------------------
 
-    def test_Write_ep_txt(self):
+    def test_Write_Emec_txt(self):
         '''
-        Try to create file needed for MOOSE simulation with Owntools.Write_ep_txt().
+        Try to create file needed for MOOSE simulation with Owntools.Write_Emec_txt().
 
         This file is about the dissolution field due to mechanical loading.
 
@@ -273,7 +430,7 @@ class TestOwntools(unittest.TestCase):
             shutil.rmtree('Data')
         os.mkdir('Data')
         #try to create .txt files
-        Owntools.Write_ep_txt(dict_algorithm, dict_sample)
+        Owntools.Write_Emec_txt(dict_algorithm, dict_sample)
         #Check if the files are in the directory
         self.assertTrue(Path('Data/ep_0.txt').is_file(),"The file Data/ep_0.txt has not been created!")
         shutil.rmtree('Data')
@@ -298,8 +455,10 @@ class TestOwntools(unittest.TestCase):
         if Path('Data').exists():
             shutil.rmtree('Data')
         os.mkdir('Data')
+        #Compute the diffusion coefficient
+        Owntools.Compute_kc(dict_material,dict_sample)
         #try to create .txt files
-        Owntools.Write_kc_txt(dict_algorithm, dict_material, dict_sample)
+        Owntools.Write_kc_txt(dict_algorithm, dict_sample)
         #Check if the files are in the directory
         self.assertTrue(Path('Data/kc_0.txt').is_file(),"The file Data/kc_0.txt has not been created!")
         shutil.rmtree('Data')
@@ -393,7 +552,7 @@ class TestGrain(unittest.TestCase):
         #Create one grain
         grain = Grain.Grain(0,10,np.array([np.mean(dict_sample['x_L']),np.mean(dict_sample['y_L'])]),dict_material,dict_sample)
         #try to move the grain
-        grain.move_grain_interpolation(np.array([5,0]),dict_material,dict_sample)
+        grain.move_grain_interpolation(np.array([5,0]),dict_sample)
         #check if the center computed is near the analytical one
         self.assertTrue(np.linalg.norm(np.array([np.mean(dict_sample['x_L'])+5,np.mean(dict_sample['y_L'])])-grain.center)==0,'The grain has not been well moved!')
         #Study the geometric of the grain
@@ -447,8 +606,10 @@ class TestGrain(unittest.TestCase):
         User.Add_2grains(dict_material,dict_sample)
         #Compute the initial overlap
         Grain.Compute_overlap_2_grains(dict_sample)
+        #Create the dict_tracker
+        dict_tracker = {'L_displacement': [0], 'L_int_displacement' : [0]}
         #try to apply a target overlap
-        Grain.Apply_overlap_target(dict_material,dict_sample,dict_sollicitation)
+        Grain.Apply_overlap_target(dict_material,dict_sample,dict_sollicitation,dict_tracker)
         #Compute the current overlap
         Grain.Compute_overlap_2_grains(dict_sample)
         #Check if the overlap target is well applied
