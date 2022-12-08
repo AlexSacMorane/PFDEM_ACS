@@ -78,7 +78,7 @@ def All_parameters():
 
     #Visual parameters
     c_min = 0
-    c_max = 0.2
+    c_max = 0.08
 
     #Margin for sphericity study
     sphericity_margin = 0.05
