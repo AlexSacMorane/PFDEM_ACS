@@ -230,104 +230,107 @@ def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, d
         os.remove('../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
 
 #-------------------------------------------------------------------------------
-#Plan simulation
-#-------------------------------------------------------------------------------
 
-if Path('Input').exists():
-    shutil.rmtree('Input')
-os.mkdir('Input')
-if Path('Output').exists():
-    shutil.rmtree('Output')
-os.mkdir('Output')
-if Path('Data').exists():
-    shutil.rmtree('Data')
-os.mkdir('Data')
-if Path('Debug').exists():
-    shutil.rmtree('Debug')
-os.mkdir('Debug')
+if '__main__' == __name__:
+    #-------------------------------------------------------------------------------
+    #Plan simulation
+    #-------------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------------
-#Create a simulation
-#-------------------------------------------------------------------------------
+    if Path('Input').exists():
+        shutil.rmtree('Input')
+    os.mkdir('Input')
+    if Path('Output').exists():
+        shutil.rmtree('Output')
+    os.mkdir('Output')
+    if Path('Data').exists():
+        shutil.rmtree('Data')
+    os.mkdir('Data')
+    if Path('Debug').exists():
+        shutil.rmtree('Debug')
+    os.mkdir('Debug')
 
-#create a simulation report
-simulation_report = Report.Report('Debug/Report',datetime.now())
-simulation_report.tic_tempo(datetime.now())
+    #-------------------------------------------------------------------------------
+    #Create a simulation
+    #-------------------------------------------------------------------------------
 
-#general parameters
-dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
-if dict_algorithm['SaveData']:
-    if not Path('../'+dict_algorithm['foldername']).exists():
-        os.mkdir('../'+dict_algorithm['foldername'])
-    #tempo save of the user file
-    shutil.copy('User.py','../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
+    #create a simulation report
+    simulation_report = Report.Report('Debug/Report',datetime.now())
+    simulation_report.tic_tempo(datetime.now())
 
-#prepare plot
-if 'Config' in dict_algorithm['L_flag_plot']:
-    os.mkdir('Debug/Configuration')
-if 'Init_Current_Shape' in dict_algorithm['L_flag_plot']:
-    os.mkdir('Debug/Comparison_Init_Current')
-if 'Ed' in dict_algorithm['L_flag_plot']:
-    os.mkdir('Debug/Ed')
-if 'Kc' in dict_algorithm['L_flag_plot']:
-    os.mkdir('Debug/Kc')
-if 'Diff_Solute' in dict_algorithm['L_flag_plot']:
-    os.mkdir('Debug/Diff_Solute')
+    #general parameters
+    dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
+    if dict_algorithm['SaveData']:
+        if not Path('../'+dict_algorithm['foldername']).exists():
+            os.mkdir('../'+dict_algorithm['foldername'])
+        #tempo save of the user file
+        shutil.copy('User.py','../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
 
-#create the two grains
-User.Add_2grains(dict_material,dict_sample)
-#Compute initial sum_eta
-Owntools.Compute_sum_eta(dict_sample)
-#Compute the sphericity initially for the first grain
-dict_sample['L_g'][0].geometric_study(dict_sample)
-dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
-#create the solute
-User.Add_solute(dict_sample)
+    #prepare plot
+    if 'Config' in dict_algorithm['L_flag_plot']:
+        os.mkdir('Debug/Configuration')
+    if 'Init_Current_Shape' in dict_algorithm['L_flag_plot']:
+        os.mkdir('Debug/Comparison_Init_Current')
+    if 'Ed' in dict_algorithm['L_flag_plot']:
+        os.mkdir('Debug/Ed')
+    if 'Kc' in dict_algorithm['L_flag_plot']:
+        os.mkdir('Debug/Kc')
+    if 'Diff_Solute' in dict_algorithm['L_flag_plot']:
+        os.mkdir('Debug/Diff_Solute')
 
-#plot
-if 'Config' in dict_algorithm['L_flag_plot']:
-    Owntools.Plot_config(dict_algorithm, dict_sample)
+    #create the two grains
+    User.Add_2grains(dict_material,dict_sample)
+    #Compute initial sum_eta
+    Owntools.Compute_sum_eta(dict_sample)
+    #Compute the sphericity initially for the first grain
+    dict_sample['L_g'][0].geometric_study(dict_sample)
+    dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
+    #create the solute
+    User.Add_solute(dict_sample)
 
-simulation_report.tac_tempo(datetime.now(),'Initialisation')
+    #plot
+    if 'Config' in dict_algorithm['L_flag_plot']:
+        Owntools.Plot_config(dict_algorithm, dict_sample)
 
-#-------------------------------------------------------------------------------
-#trackers
-#-------------------------------------------------------------------------------
+    simulation_report.tac_tempo(datetime.now(),'Initialisation')
 
-dict_tracker = {
-'L_t' : [0],
-'L_dt' : [],
-'L_displacement' : [0],
-'L_int_displacement' : [0],
-'L_sum_solute' : [0],
-'L_sum_eta' : [dict_sample['sum_eta']],
-'L_sum_total' : [dict_sample['sum_eta']],
-'L_area_sphericity_g0' : [dict_sample['L_g'][0].area_sphericity],
-'L_diameter_sphericity_g0' : [dict_sample['L_g'][0].diameter_sphericity],
-'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_ratio_sphericity],
-'L_perimeter_sphericity_g0' : [dict_sample['L_g'][0].perimeter_sphericity],
-'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_length_ratio_sphericity],
-'c_at_the_center' : [Owntools.Extract_solute_at_p(dict_sample,(int(len(dict_sample['y_L'])/2),int(len(dict_sample['x_L'])/2)))],
-'sum_ed_L': [],
-'sum_Ed_che_L': [],
-'sum_Ed_mec_L': [],
-'sum_ed_plus_L' : [],
-'sum_ed_minus_L' : [],
-'S_int_L' : [],
-'sum_min_etai_L' : []
-}
+    #-------------------------------------------------------------------------------
+    #trackers
+    #-------------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------------
-#main
-#-------------------------------------------------------------------------------
+    dict_tracker = {
+    'L_t' : [0],
+    'L_dt' : [],
+    'L_displacement' : [0],
+    'L_int_displacement' : [0],
+    'L_sum_solute' : [0],
+    'L_sum_eta' : [dict_sample['sum_eta']],
+    'L_sum_total' : [dict_sample['sum_eta']],
+    'L_area_sphericity_g0' : [dict_sample['L_g'][0].area_sphericity],
+    'L_diameter_sphericity_g0' : [dict_sample['L_g'][0].diameter_sphericity],
+    'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_ratio_sphericity],
+    'L_perimeter_sphericity_g0' : [dict_sample['L_g'][0].perimeter_sphericity],
+    'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_length_ratio_sphericity],
+    'c_at_the_center' : [Owntools.Extract_solute_at_p(dict_sample,(int(len(dict_sample['y_L'])/2),int(len(dict_sample['x_L'])/2)))],
+    'sum_ed_L': [],
+    'sum_Ed_che_L': [],
+    'sum_Ed_mec_L': [],
+    'sum_ed_plus_L' : [],
+    'sum_ed_minus_L' : [],
+    'S_int_L' : [],
+    'sum_min_etai_L' : []
+    }
 
-dict_algorithm['i_PFDEM'] = 0
-while not User.Criteria_StopSimulation(dict_algorithm):
+    #-------------------------------------------------------------------------------
+    #main
+    #-------------------------------------------------------------------------------
 
-    iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+    dict_algorithm['i_PFDEM'] = 0
+    while not User.Criteria_StopSimulation(dict_algorithm):
 
-#-------------------------------------------------------------------------------
-#close simulation
-#-------------------------------------------------------------------------------
+        iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
 
-close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+    #-------------------------------------------------------------------------------
+    #close simulation
+    #-------------------------------------------------------------------------------
+
+    close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
