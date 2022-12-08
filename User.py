@@ -86,7 +86,7 @@ def All_parameters():
     n_spatial_inscribing = 100
 
     #List of plot to do
-    # Config, C_at_P, dt, Ed, Eta_c, Init_Current_Shape, Kc, Movie (need Config to work), Sint_MinEtai, Sphericity, sum_Ed
+    # Config, C_at_P, Diff_Solute, dt, Ed, Eta_c, Init_Current_Shape, Kc, Movie (need Config to work), Sint_MinEtai, Sphericity, sum_Ed
     L_flag_plot = ['Config', 'C_at_P', 'dt', 'Eta_c', 'Sphericity', 'sum_Ed']
 
     #Find a simulation ame

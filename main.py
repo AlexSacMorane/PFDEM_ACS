@@ -98,6 +98,11 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     Owntools.Write_kc_txt(dict_algorithm, dict_sample)
     Owntools.Write_Emec_txt(dict_algorithm, dict_sample)
 
+    #plot the difference of solute conentration in the case of a pure diffusion problem
+    if 'Diff_Solute' in dict_algorithm['L_flag_plot']:
+        os.mkdir('Debug/Diff_Solute/Ite_'+str(dict_algorithm['i_PFDEM']))
+        Owntools.Plot_Diffusion_Solute(dict_algorithm, dict_material, dict_sample)
+
     #create i
     Owntools.Create_i(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
 
@@ -215,6 +220,7 @@ def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, d
 
     #final save
     if dict_algorithm['SaveData']:
+        print()
         print('Copying data, it can take long times...')
 
         Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
@@ -265,6 +271,8 @@ if 'Ed' in dict_algorithm['L_flag_plot']:
     os.mkdir('Debug/Ed')
 if 'Kc' in dict_algorithm['L_flag_plot']:
     os.mkdir('Debug/Kc')
+if 'Diff_Solute' in dict_algorithm['L_flag_plot']:
+    os.mkdir('Debug/Diff_Solute')
 
 #create the two grains
 User.Add_2grains(dict_material,dict_sample)
