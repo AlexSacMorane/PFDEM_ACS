@@ -56,6 +56,9 @@ simulation_report = Report.Report(name_report,datetime.now())
 #delete last folder
 if Path('Output/Ite_'+str(dict_algorithm['i_PFDEM']+1)).exists():
     shutil.rmtree('Output/Ite_'+str(dict_algorithm['i_PFDEM']+1))
+if 'Diff_Solute' in dict_algorithm['L_flag_plot']:
+    if Path('Debug/Diff_Solute/Ite_'+str(dict_algorithm['i_PFDEM']+1)).exists():
+        shutil.rmtree('Debug/Diff_Solute/Ite_'+str(dict_algorithm['i_PFDEM']+1))
 
 #-------------------------------------------------------------------------------
 #main
