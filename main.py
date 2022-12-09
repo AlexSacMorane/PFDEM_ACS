@@ -20,6 +20,11 @@ import math
 #Own functions and classes
 import Grain
 import Owntools
+import Owntools.Compute
+import Owntools.PFtoDEM_Multi
+import Owntools.Plot
+import Owntools.Save
+import Owntools.Write
 import User
 import Report
 
@@ -61,15 +66,15 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     #---------------------------------------------------------------------------
 
     #Compute parameters needed
-    Owntools.Compute_S_int(dict_sample) #the intersection surface
-    Owntools.Compute_sum_min_etai(dict_sample, dict_sollicitation) #the sum of the minimum of etai
-    Owntools.Compute_Emec(dict_sample, dict_sollicitation) #the mechanical energy
-    Owntools.Compute_kc_bool(dict_material, dict_sample) #the solute diffusion
+    Owntools.Compute.Compute_S_int(dict_sample) #the intersection surface
+    Owntools.Compute.Compute_sum_min_etai(dict_sample, dict_sollicitation) #the sum of the minimum of etai
+    Owntools.Compute.Compute_Emec(dict_sample, dict_sollicitation) #the mechanical energy
+    Owntools.Compute.Compute_kc_bool(dict_material, dict_sample) #the solute diffusion
     dict_tracker['S_int_L'].append(dict_sample['S_int'])
     dict_tracker['sum_min_etai_L'].append(dict_sample['sum_min_etai'])
 
     #compute for total energy in the sample and track the value
-    Owntools.Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation)
+    Owntools.Compute.Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation)
     dict_tracker['sum_ed_L'].append(dict_sample['sum_ed'])
     dict_tracker['sum_Ed_che_L'].append(dict_sample['sum_Ed_che'])
     dict_tracker['sum_Ed_mec_L'].append(dict_sample['sum_Ed_mec'])
@@ -88,23 +93,23 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
 
     #plot
     if 'Config' in dict_algorithm['L_flag_plot']:
-        Owntools.Plot_config(dict_algorithm, dict_sample)
+        Owntools.Plot.Plot_config(dict_algorithm, dict_sample)
     if 'Kc' in dict_algorithm['L_flag_plot']:
-        Owntools.Plot_kc(dict_sample)
+        Owntools.Plot.Plot_kc(dict_sample)
 
     #write data
-    Owntools.Write_eta_txt(dict_algorithm, dict_sample)
-    Owntools.Write_solute_txt(dict_algorithm, dict_sample)
-    Owntools.Write_kc_txt(dict_algorithm, dict_sample)
-    Owntools.Write_Emec_txt(dict_algorithm, dict_sample)
+    Owntools.Write.Write_eta_txt(dict_algorithm, dict_sample)
+    Owntools.Write.Write_solute_txt(dict_algorithm, dict_sample)
+    Owntools.Write.Write_kc_txt(dict_algorithm, dict_sample)
+    Owntools.Write.Write_Emec_txt(dict_algorithm, dict_sample)
 
     #plot the difference of solute conentration in the case of a pure diffusion problem
     if 'Diff_Solute' in dict_algorithm['L_flag_plot']:
         os.mkdir('Debug/Diff_Solute/Ite_'+str(dict_algorithm['i_PFDEM']))
-        Owntools.Plot_Diffusion_Solute(dict_algorithm, dict_material, dict_sample)
+        Owntools.Plot.Plot_Diffusion_Solute(dict_algorithm, dict_material, dict_sample)
 
     #create i
-    Owntools.Create_i(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
+    Owntools.Write.Write_i(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
 
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: preparation of the pf simulation")
     simulation_report.tic_tempo(datetime.now())
@@ -131,17 +136,17 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
         grain.PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
         grain.geometric_study(dict_sample)
     #look for the new solute shape
-    Owntools.solute_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
+    Owntools.PFtoDEM_Multi.solute_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_'+j_str,dict_algorithm,dict_sample)
     #look for the initial external energy sources
-    Owntools.Ed_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_000',dict_algorithm,dict_sample)
+    Owntools.PFtoDEM_Multi.Ed_PFtoDEM_Multi('Output/Ite_'+str(dict_algorithm['i_PFDEM'])+'/'+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'_other_000',dict_algorithm,dict_sample)
 
     #plot
     if 'Config' in dict_algorithm['L_flag_plot']:
-        Owntools.Plot_config(dict_algorithm, dict_sample)
+        Owntools.Plot.Plot_config(dict_algorithm, dict_sample)
     if 'Init_Current_Shape' in dict_algorithm['L_flag_plot']:
-        Owntools.Plot_init_current_shape(dict_sample)
+        Owntools.Plot.Plot_init_current_shape(dict_sample)
     if 'Ed' in dict_algorithm['L_flag_plot']:
-        Owntools.Plot_Ed(dict_sample)
+        Owntools.Plot.Plot_Ed(dict_sample)
 
     #---------------------------------------------------------------------------
     #postprocess
@@ -151,10 +156,10 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
 
     #compute the mass of grain
-    Owntools.Compute_sum_eta(dict_sample)
+    Owntools.Compute.Compute_sum_eta(dict_sample)
 
     #compute the mass of the solute
-    Owntools.Compute_sum_c(dict_sample)
+    Owntools.Compute.Compute_sum_c(dict_sample)
 
     #---------------------------------------------------------------------------
     #tracker
@@ -174,24 +179,24 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
 
     #Plot trackers
     if 'Eta_c' in dict_algorithm['L_flag_plot'] :
-        Owntools.Plot_sum_eta_c(dict_tracker)
+        Owntools.Plot.Plot_sum_eta_c(dict_tracker)
     if 'Sphericity' in dict_algorithm['L_flag_plot'] :
-        Owntools.Plot_sphericity(dict_tracker)
+        Owntools.Plot.Plot_sphericity(dict_tracker)
     if 'C_at_P' in dict_algorithm['L_flag_plot'] :
-        Owntools.Plot_c_at_p(dict_tracker)
+        Owntools.Plot.Plot_c_at_p(dict_tracker)
     if 'sum_Ed' in dict_algorithm['L_flag_plot'] :
-        Owntools.Plot_sum_Ed(dict_tracker)
+        Owntools.Plot.Plot_sum_Ed(dict_tracker)
     if 'Sint_MinEtai' in dict_algorithm['L_flag_plot'] :
-        Owntools.Plot_Sint_SumMinEtai(dict_tracker)
+        Owntools.Plot.Plot_Sint_SumMinEtai(dict_tracker)
     if 'dt' in dict_algorithm['L_flag_plot'] :
-        Owntools.Plot_dt_used(dict_tracker)
+        Owntools.Plot.Plot_dt_used(dict_tracker)
 
     #---------------------------------------------------------------------------
     #tempo save
     #---------------------------------------------------------------------------
 
     if dict_algorithm['SaveData']:
-        Owntools.save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
+        Owntools.Save.save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
         shutil.copy('Debug/Report.txt','../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
 
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: from pf to dem")
@@ -214,7 +219,7 @@ def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, d
     '''
     #make movie of the different configuration
     if 'Movie' in dict_algorithm['L_flag_plot'] and 'Config' in dict_algorithm['L_flag_plot']:
-        Owntools.make_mp4('Debug/Configuration/Configuration_','Debug/Configuration.mp4')
+        Owntools.Plot.Plot_mp4('Debug/Configuration/Configuration_','Debug/Configuration.mp4')
 
     simulation_report.end(datetime.now())
 
@@ -223,7 +228,7 @@ def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, d
         print()
         print('Copying data, it can take long times...')
 
-        Owntools.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
+        Owntools.Save.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
         name_actual_folder = os.path.dirname(os.path.realpath(__file__))
         shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
         os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
@@ -280,7 +285,7 @@ if '__main__' == __name__:
     #create the two grains
     User.Add_2grains(dict_material,dict_sample)
     #Compute initial sum_eta
-    Owntools.Compute_sum_eta(dict_sample)
+    Owntools.Compute.Compute_sum_eta(dict_sample)
     #Compute the sphericity initially for the first grain
     dict_sample['L_g'][0].geometric_study(dict_sample)
     dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
@@ -289,7 +294,7 @@ if '__main__' == __name__:
 
     #plot
     if 'Config' in dict_algorithm['L_flag_plot']:
-        Owntools.Plot_config(dict_algorithm, dict_sample)
+        Owntools.Plot.Plot_config(dict_algorithm, dict_sample)
 
     simulation_report.tac_tempo(datetime.now(),'Initialisation')
 

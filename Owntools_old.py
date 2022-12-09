@@ -943,7 +943,6 @@ def Plot_dt_used(dict_tracker):
     plt.savefig('Debug/Evolution_dt_used.png')
     plt.close(1)
 
-
 #-------------------------------------------------------------------------------
 
 def Extract_solute_at_p(dict_sample,ij_p):

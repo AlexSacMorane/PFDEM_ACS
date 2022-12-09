@@ -22,6 +22,9 @@ import math
 #own functions and classes
 import User
 import Owntools
+import Owntools.Compute
+import Owntools.Plot
+import Owntools.Write
 import Grain
 import Report
 from main import iteration_main
@@ -56,11 +59,15 @@ class TestGlobal(unittest.TestCase):
             Output :
                 The result is True if all files needed for a simulation are here (a bool)
         '''
-        L_files = ['Debug_Diff_Solute_base.i',
-                   'Grain.py',
+        L_files = ['Grain.py',
                    'main_after_crash.py',
                    'main.py',
-                   'Owntools.py',
+                   'Owntools/__init__.py',
+                   'Owntools/Debug_Diff_Solute_base.i',
+                   'Owntools/PFtoDEM_Multi.py',
+                   'Owntools/Plot.py',
+                   'Owntools/Save.py',
+                   'Owntools/Write.py',
                    'PF_ACS_base.i',
                    'Report.py',
                    'User.py']
@@ -122,7 +129,7 @@ class TestGlobal(unittest.TestCase):
         #create the two grains
         User.Add_2grains(dict_material,dict_sample)
         #Compute initial sum_eta
-        Owntools.Compute_sum_eta(dict_sample)
+        Owntools.Compute.Compute_sum_eta(dict_sample)
         #Compute the sphericity initially for the first grain
         dict_sample['L_g'][0].geometric_study(dict_sample)
         dict_sample['L_g'][0].Compute_sphericity(dict_algorithm)
@@ -279,9 +286,9 @@ class TestOwntools(unittest.TestCase):
 
     #---------------------------------------------------------------------------
 
-    def test_Create_i(self):
+    def test_Write_i(self):
         '''
-        Try to create a MOOSE simulation input file with Owntools.Create_i().
+        Try to create a MOOSE simulation input file with Owntools.Write.Write_i().
 
         This file is created from the template PF_ACS_base.i.
 
@@ -292,7 +299,7 @@ class TestOwntools(unittest.TestCase):
         dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
         dict_algorithm['i_PFDEM'] = 0
         #try to create a .i file
-        Owntools.Create_i(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
+        Owntools.Write.Write_i(dict_algorithm, dict_material, dict_sample, dict_sollicitation)
         #Check if the file PF_CH_AC_base.i is in the directory
         self.assertTrue(Path(dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'.i').is_file(),"The file namefile.i has not been created!")
         os.remove(dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'.i')
@@ -334,7 +341,7 @@ class TestOwntools(unittest.TestCase):
         os.mkdir('Debug')
         os.mkdir('Debug/Configuration')
         #try to plot the configuration
-        Owntools.Plot_config(dict_algorithm, dict_sample)
+        Owntools.Plot.Plot_config(dict_algorithm, dict_sample)
         #check if the .png has been created
         self.assertTrue(Path('Debug/Configuration/Configuration_0.png').is_file(),"The image Debug/Configuration/Configuration_0.png has not been created by the function Owntools.Plot_config()!")
         shutil.rmtree('Debug')
@@ -377,7 +384,7 @@ class TestOwntools(unittest.TestCase):
             shutil.rmtree('Data')
         os.mkdir('Data')
         #try to create .txt files
-        Owntools.Write_eta_txt(dict_algorithm, dict_sample)
+        Owntools.Write.Write_eta_txt(dict_algorithm, dict_sample)
         #Check if the files are in the directory
         self.assertTrue(Path('Data/eta1_0.txt').is_file(),"The file Data/eta1_0.txt has not been created!")
         self.assertTrue(Path('Data/eta2_0.txt').is_file(),"The file Data/eta2_0.txt has not been created!")
@@ -404,7 +411,7 @@ class TestOwntools(unittest.TestCase):
             shutil.rmtree('Data')
         os.mkdir('Data')
         #try to create .txt files
-        Owntools.Write_solute_txt(dict_algorithm, dict_sample)
+        Owntools.Write.Write_solute_txt(dict_algorithm, dict_sample)
         #Check if the files are in the directory
         self.assertTrue(Path('Data/c_0.txt').is_file(),"The file Data/c_0.txt has not been created!")
         shutil.rmtree('Data')
@@ -430,7 +437,7 @@ class TestOwntools(unittest.TestCase):
             shutil.rmtree('Data')
         os.mkdir('Data')
         #try to create .txt files
-        Owntools.Write_Emec_txt(dict_algorithm, dict_sample)
+        Owntools.Write.Write_Emec_txt(dict_algorithm, dict_sample)
         #Check if the files are in the directory
         self.assertTrue(Path('Data/ep_0.txt').is_file(),"The file Data/ep_0.txt has not been created!")
         shutil.rmtree('Data')
@@ -456,9 +463,9 @@ class TestOwntools(unittest.TestCase):
             shutil.rmtree('Data')
         os.mkdir('Data')
         #Compute the diffusion coefficient
-        Owntools.Compute_kc_bool(dict_material,dict_sample)
+        Owntools.Compute.Compute_kc_bool(dict_material,dict_sample)
         #try to create .txt files
-        Owntools.Write_kc_txt(dict_algorithm, dict_sample)
+        Owntools.Write.Write_kc_txt(dict_algorithm, dict_sample)
         #Check if the files are in the directory
         self.assertTrue(Path('Data/kc_0.txt').is_file(),"The file Data/kc_0.txt has not been created!")
         shutil.rmtree('Data')

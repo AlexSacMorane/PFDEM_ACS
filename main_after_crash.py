@@ -21,7 +21,6 @@ import pickle
 
 #Own functions and classes
 import Grain
-import Owntools
 import User
 import Report
 import main
