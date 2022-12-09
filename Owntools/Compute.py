@@ -13,6 +13,8 @@ This file contains the different functions used to compute parameters or variabl
 import numpy as np
 import math
 import random
+from scipy.ndimage import binary_dilation
+
 #-------------------------------------------------------------------------------
 
 def Compute_S_int(dict_sample):

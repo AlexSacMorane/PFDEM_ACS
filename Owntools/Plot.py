@@ -16,6 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import imageio
+from Owntools import index_to_str
 
 #-------------------------------------------------------------------------------
 
@@ -32,8 +33,8 @@ def Plot_Diffusion_Solute(dict_algorithm, dict_material, dict_sample):
     #---------------------------------------------------------------------------
     #create .i
     #---------------------------------------------------------------------------
-    file_to_write = open('Owntools/Debug_Diff_Solute_'+str(dict_algorithm['i_PFDEM'])+'.i','w')
-    file_to_read = open('Debug_Diff_Solute_base.i','r')
+    file_to_write = open('Debug_Diff_Solute_'+str(dict_algorithm['i_PFDEM'])+'.i','w')
+    file_to_read = open('Owntools/Debug_Diff_Solute_base.i','r')
     lines = file_to_read.readlines()
     file_to_read.close()
 

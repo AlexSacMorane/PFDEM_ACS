@@ -60,19 +60,19 @@ def Sort_Files(dict_algorithm):
 
      return index_to_str(j-1)
 
- #-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
- def Extract_solute_at_p(dict_sample,ij_p):
-     '''
-     Extract the value of the solute concentration at a given point.
+def Extract_solute_at_p(dict_sample,ij_p):
+    '''
+    Extract the value of the solute concentration at a given point.
 
-         Input :
-             a sample dictionnary (a dict)
-             a coordinate of the point (a tuple of int)
-         Output :
-             the value of the solute concentration (a float)
-     '''
-     return dict_sample['solute_M'][-1-ij_p[0]][ij_p[1]]
+     Input :
+         a sample dictionnary (a dict)
+         a coordinate of the point (a tuple of int)
+     Output :
+         the value of the solute concentration (a float)
+    '''
+    return dict_sample['solute_M'][-1-ij_p[0]][ij_p[1]]
 
 #-------------------------------------------------------------------------------
 
@@ -82,12 +82,12 @@ def Cosine_Profile(R,r,w):
 
     A cosine profile is assumed (see https://mooseframework.inl.gov/source/ics/SmoothCircleIC.html).
 
-        Input :
-            the radius R of the grain in the direction (a float)
-            the distance r between the current point and the center (a float)
-            the width w of the interface (a float)
-        Output :
-            the value of the phase field variable (a float)
+    Input :
+        the radius R of the grain in the direction (a float)
+        the distance r between the current point and the center (a float)
+        the width w of the interface (a float)
+    Output :
+        the value of the phase field variable (a float)
     '''
     #inside the grain
     if r<R-w/2:
