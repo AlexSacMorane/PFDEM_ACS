@@ -456,7 +456,7 @@ class TestOwntools(unittest.TestCase):
             shutil.rmtree('Data')
         os.mkdir('Data')
         #Compute the diffusion coefficient
-        Owntools.Compute_kc(dict_material,dict_sample)
+        Owntools.Compute_kc_bool(dict_material,dict_sample)
         #try to create .txt files
         Owntools.Write_kc_txt(dict_algorithm, dict_sample)
         #Check if the files are in the directory

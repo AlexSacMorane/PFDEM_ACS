@@ -11,6 +11,7 @@ This file contains the different functions used in the simulation.
 #-------------------------------------------------------------------------------
 
 from pathlib import Path
+from scipy.ndimage import binary_dilation
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -206,7 +207,46 @@ def Compute_Emec(dict_sample, dict_sollicitation):
 
 #-------------------------------------------------------------------------------
 
-def Compute_kc(dict_material, dict_sample):
+def Compute_kc_bool(dict_material, dict_sample):
+    '''
+    Compute the solute diffusion coefficient field in the sample.
+
+        Input :
+            a material dictionnary (a dict)
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for the solute diffusion coefficient map (a nx x ny numpy array)
+    '''
+    #Initialisation
+    on_off_M = np.array(np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L']))), dtype = bool)
+
+    #compute the on off map
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+            #at the contact
+            if dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
+                on_off_M[-l-1][c] = True
+            #in the pore space
+            elif dict_sample['L_g'][0].etai_M[-1-l][c] < 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] < 0.5:
+                on_off_M[-l-1][c] = True
+
+    #dilatation
+    struct_element = np.array(np.ones(8,8), dtype = bool)
+    dilated_M = binary_dilation(on_off_M, struct_element)
+
+    #compute the map of the solute diffusion coefficient
+    kc_M = np.array(np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L']))))
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+            if dilated_M[-1-l][c] :
+                kc_M[-1-l][c] = dict_material['kappa_c']
+
+    #Update element in dictionnary
+    dict_sample['kc_M'] = kc_M
+
+#-------------------------------------------------------------------------------
+
+def Compute_kc_exp(dict_material, dict_sample):
     '''
     Compute the solute diffusion coefficient field in the sample.
 
@@ -1107,56 +1147,6 @@ def Write_kc_txt(dict_algorithm, dict_sample):
     for l in range(len(dict_sample['y_L'])):
         for c in range(len(dict_sample['x_L'])):
             file_to_write.write(str(dict_sample['kc_M'][-l-1][c])+'\n')
-
-    file_to_write.close()
-
-#-------------------------------------------------------------------------------
-
-def Write_kc_txt_old(dict_algorithm, dict_material, dict_sample):
-    '''
-    Write a .txt file needed for MOOSE simulation.
-
-    The variable kc is transmitted to the MOOSE simulation.
-    This variable is the diffusion coefficient of the solute.
-    It takes the value 0 if the point is inside one grain and not in the other.
-    Else it takes an user defined value.
-
-        Input :
-            an algorithm dictionnary (a dict)
-            an material dictionnary (a dict)
-            an sample dictionnary (a dict)
-        Output :
-            Nothing but a .txt file is generated (a file)
-    '''
-
-    file_to_write = open('Data/kc_'+str(dict_algorithm['i_PFDEM'])+'.txt','w')
-    file_to_write.write('AXIS X\n')
-    line = ''
-    for x in dict_sample['x_L']:
-        line = line + str(x)+ ' '
-    line = line + '\n'
-    file_to_write.write(line)
-
-    file_to_write.write('AXIS Y\n')
-    line = ''
-    for y in dict_sample['y_L']:
-        line = line + str(y)+ ' '
-    line = line + '\n'
-    file_to_write.write(line)
-
-    file_to_write.write('DATA\n')
-    for l in range(len(dict_sample['y_L'])):
-        for c in range(len(dict_sample['x_L'])):
-
-            #inside g1 and not g2
-            if dict_sample['L_g'][0].etai_M[-1-l][c] > 0.9 and dict_sample['L_g'][1].etai_M[-1-l][c] < 0.1:
-                file_to_write.write('0\n')
-            #inside g2 and not g1
-            elif dict_sample['L_g'][0].etai_M[-1-l][c] < 0.1 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.9:
-                file_to_write.write('0\n')
-            #at the contact or outside of grains
-            else:
-                file_to_write.write(str(dict_material['kappa_c'])+'\n')
 
     file_to_write.close()
 
