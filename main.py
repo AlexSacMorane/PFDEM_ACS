@@ -184,7 +184,7 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     if 'Sint_MinEtai' in dict_algorithm['L_flag_plot'] :
         Owntools.Plot_Sint_SumMinEtai(dict_tracker)
     if 'dt' in dict_algorithm['L_flag_plot'] :
-        Owntools.Plot_Sint_SumMinEtai(dict_tracker)
+        Owntools.Plot_dt_used(dict_tracker)
 
     #---------------------------------------------------------------------------
     #tempo save
