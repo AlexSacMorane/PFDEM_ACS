@@ -62,7 +62,7 @@ def All_parameters():
     #Algorithm parameters
 
     np_proc = 4 #number of processor used
-    n_t_PFDEM = 80 #number of cycle PF-DEM
+    n_t_PFDEM = 200 #number of cycle PF-DEM
 
     #Time step for phase field
     n_t_PF = 8
@@ -87,10 +87,10 @@ def All_parameters():
 
     #List of plot to do
     # Config, C_at_P, Diff_Solute, dt, Ed, Eta_c, Init_Current_Shape, Kc, Movie (need Config to work), Sint_MinEtai, Sphericity, sum_Ed
-    L_flag_plot = ['Config', 'C_at_P', 'dt', 'Eta_c', 'Sphericity', 'sum_Ed']
+    L_flag_plot = ['Config', 'C_at_P', 'Diff_Solute', 'dt', 'Sphericity', 'Kc', 'Movie', 'sum_Ed']
 
     #Find a simulation ame
-    template = 'PS_Adaptative_dt_PF' #template of the name of the simulation
+    template = 'PS_Long_Run' #template of the name of the simulation
     SaveData = True #Save data or not
     foldername = 'Data_2G_ACS' #name of the folder where data are saved
     if SaveData :
