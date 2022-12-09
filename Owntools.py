@@ -231,7 +231,7 @@ def Compute_kc_bool(dict_material, dict_sample):
                 on_off_M[-l-1][c] = True
 
     #dilatation
-    struct_element = np.array(np.ones(8,8), dtype = bool)
+    struct_element = np.array(np.ones((8,8)), dtype = bool)
     dilated_M = binary_dilation(on_off_M, struct_element)
 
     #compute the map of the solute diffusion coefficient
