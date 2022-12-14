@@ -69,7 +69,12 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     Owntools.Compute.Compute_S_int(dict_sample) #the intersection surface
     Owntools.Compute.Compute_sum_min_etai(dict_sample, dict_sollicitation) #the sum of the minimum of etai
     Owntools.Compute.Compute_Emec(dict_sample, dict_sollicitation) #the mechanical energy
-    Owntools.Compute.Compute_kc_bool(dict_material, dict_sample) #the solute diffusion
+    if dict_material['method_to_compute_kc'] == 'dilation':
+        Owntools.Compute.Compute_kc_dil(dict_material, dict_sample) #the solute diffusion
+    elif dict_material['method_to_compute_kc'] == 'wfd':
+        Owntools.Compute.Compute_kc_wfd(dict_material, dict_sample) #the solute diffusion
+    if dict_material['method_to_compute_kc'] == 'interpolation':
+        Owntools.Compute.Compute_kc_int(dict_material, dict_sample) #the solute diffusion
     dict_tracker['S_int_L'].append(dict_sample['S_int'])
     dict_tracker['sum_min_etai_L'].append(dict_sample['sum_min_etai'])
 

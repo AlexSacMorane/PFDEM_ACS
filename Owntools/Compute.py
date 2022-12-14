@@ -105,9 +105,18 @@ def Compute_Emec(dict_sample, dict_sollicitation):
 
 #-------------------------------------------------------------------------------
 
-def Compute_kc_bool(dict_material, dict_sample):
+def Compute_kc_dil(dict_material, dict_sample):
     '''
     Compute the solute diffusion coefficient field in the sample.
+
+    Here, a dilation method is applied. For all node, a Boolean variable is defined.
+    This variable is True if eta_i and eta_j are greater than 0.5 (in the contact zone).
+                  is True if eta_i and eta_j are lower than 0.5 (in the pore zone).
+                  is False else.
+
+    A dilation method is applied, the size of the structural element is the main case.
+
+    The diffusion map is built on the Boolean map. If the variable is True, the diffusion is kc, else 0.
 
         Input :
             a material dictionnary (a dict)
@@ -144,9 +153,79 @@ def Compute_kc_bool(dict_material, dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Compute_kc_exp(dict_material, dict_sample):
+def Compute_kc_wfd(dict_material, dict_sample):
     '''
     Compute the solute diffusion coefficient field in the sample.
+
+    Here, a water film diffusion is assumed. For all node, a Boolean variable is defined.
+    This variable is True if eta_i and eta_j are greater than 0.5 (in the contact zone).
+                  is True if eta_i and eta_j are lower than 0.5 (in the pore zone).
+                  is False else.
+
+    Then, the nodes inside the water film diffusion are searched. This film is assumed centered on x = 0 (approximately the contact center).
+    All nodes in this film get a variable True.
+
+    The diffusion map is built on the Boolean map. If the variable is True, the diffusion is kc, else 0.
+
+        Input :
+            a material dictionnary (a dict)
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for the solute diffusion coefficient map (a nx x ny numpy array)
+    '''
+    #Initialisation
+    on_off_M = np.array(np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L']))), dtype = bool)
+
+    #compute the on off map
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+            #at the contact
+            if dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
+                on_off_M[-l-1][c] = True
+            #in the pore space
+            elif dict_sample['L_g'][0].etai_M[-1-l][c] < 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] < 0.5:
+                on_off_M[-l-1][c] = True
+
+    #look for nodes delimiting the wfd
+    c = 0
+    search_limits_wfd = True
+    search_first = True
+    while search_limits_wfd :
+        if search_first and dict_sample['x_L'][c] > -dict_material['width_wfd']/2:
+            c_start = c - 1
+            search_first = False
+        elif dict_sample['x_L'][c] > dict_material['width_wfd']/2:
+            c_end = c
+            search_limits_wfd = False
+        c = c + 1
+
+    #force diffusion in the wter film diffusion
+    for c in range(c_start,c_end+1):
+        for l in range(len(dict_sample['y_L'])):
+            on_off_M[-l-1][c] = True
+
+    #compute the map of the solute diffusion coefficient
+    kc_M = np.array(np.zeros((len(dict_sample['y_L']),len(dict_sample['x_L']))))
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+            if dilated_M[-1-l][c] :
+                kc_M[-1-l][c] = dict_material['kappa_c']
+
+    #Update element in dictionnary
+    dict_sample['kc_M'] = kc_M
+
+#-------------------------------------------------------------------------------
+
+def Compute_kc_int(dict_material, dict_sample):
+    '''
+    Compute the solute diffusion coefficient field in the sample.
+
+    For all nodes in the mesh a diffusion coefficient is computed.
+    If eta_i and eta_j are greater than 0.5 (in the contact zone), the diffusion is kc0.
+    If eta_i and eta_j are lower than 0.5 (in the pore zone), the diffusion is kc0.
+    If eta_i (resp. eta_j) is greater than 0.5 and eta_j (resp. eta_i) is lower than 0.5 (in one grain but not the other), an interpolated diffusion is used.
+
+    This interpolated diffusion is kc = kc0*exp(tau*(d_to_center_i-radius_i)/radius_i).
 
         Input :
             a material dictionnary (a dict)
