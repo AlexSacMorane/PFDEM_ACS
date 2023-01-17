@@ -1,6 +1,6 @@
 # PFDEM_ACS
 
-Phase-Field Discrete Element Modelisation with solute generation applied to granular material.
+Phase-Field Discrete Element Modelisation with solute generation applied to two grains.
 
 ## Simulation presentation
 The goal is to simulate the pressure solution phenomena between two grains.
