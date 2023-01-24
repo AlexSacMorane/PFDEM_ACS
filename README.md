@@ -3,10 +3,9 @@
 Phase-Field Discrete Element Modelisation with solute generation applied to two grains.
 
 ## Simulation presentation
-The goal is to simulate the pressure solution phenomena between two grains.
+The goal is to simulate the pressure solution phenomena (illustrated by the following scheme) between two grains.
 
 ![scheme of grain-grain interaction](image/PressureSolutionScheme_WB.png)
-
 
 ## Technical description
 The PFDEM is a discussion between phase-field (PF) simulation and discrete element modelization (DEM). Even if those formulations are different, they can collaborate with data exchange.
@@ -30,7 +29,7 @@ A [documentation](https://alexsacmorane.github.io/pfdem_acs) for the python scri
 
 ### Phase-field
 The goal of the phase-field step is to compute the shape of the grains as it evolves with the precipitation/dissolution.
-An Allen-Cahn formulation is used. Hence, the conservation of the phase variables mass should not be verified as precipitation/dissolution occurs. The total mass conservation is verified by the solute.
+An Allen-Cahn formulation is used coupled with a solute generation and diffusion. Hence, the conservation of the mass should be verified as precipitation/dissolution occurs.
 
 ### DEM
 The goal of the DEM step is to compute a steady-state configuration. Grains are assumed as polygonal. The shape is computed from an interpolation of the phase variable. At the end of the step, interactions (grain-grain and grain-wall) are computed to highlight the evolution of the chain force and k0.
