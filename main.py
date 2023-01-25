@@ -30,11 +30,11 @@ import Report
 
 #-------------------------------------------------------------------------------
 
-def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
+def iteration_main_until_pf(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
     '''
     Description of one PDEM iteration.
 
-    The iteration is composed by a DEM step (to obtain a steady state configuration) and a PF step (to obtain dissolution and precipitation).
+    The iteration is composed by a DEM step (to obtain a steady state configuration).
 
         Input :
             an algorithm dictionnary (a dict)
@@ -119,11 +119,27 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: preparation of the pf simulation")
     simulation_report.tic_tempo(datetime.now())
 
-    #---------------------------------------------------------------------------
-    #PF simulation
-    #---------------------------------------------------------------------------
+    #tempo save
+    Owntools.Save.save_dicts_tempo_before_pf(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
 
-    #run
+#-------------------------------------------------------------------------------
+
+def iteration_main_from_pf(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
+    '''
+    Description of one PDEM iteration.
+
+    The iteration is composed by a PF step (to obtain a shape change).
+
+        Input :
+            an algorithm dictionnary (a dict)
+            a material dictionnary (a dict)
+            a sample dictionnary (a dict)
+            a sollicitation dictionnary (a dict)
+            a tracker dictionnary (a dict)
+            a simulation report (a Report)
+        Output :
+            Nothing but the dictionnaies and the report are updated
+    '''
     os.system('mpiexec -n '+str(dict_algorithm['np_proc'])+' ~/projects/moose/modules/combined/combined-opt -i '+dict_algorithm['namefile']+'_'+str(dict_algorithm['i_PFDEM'])+'.i')
 
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: pf simulation")
@@ -200,8 +216,8 @@ def iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitatio
     #tempo save
     #---------------------------------------------------------------------------
 
+    Owntools.Save.save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
     if dict_algorithm['SaveData']:
-        Owntools.Save.save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
         shutil.copy('Debug/Report.txt','../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
 
     simulation_report.tac_tempo(datetime.now(),f"Iteration {dict_algorithm['i_PFDEM']}: from pf to dem")
@@ -233,7 +249,7 @@ def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, d
         print()
         print('Copying data, it can take long times...')
 
-        Owntools.Save.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker)
+        Owntools.Save.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
         name_actual_folder = os.path.dirname(os.path.realpath(__file__))
         shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
         os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
@@ -337,7 +353,8 @@ if '__main__' == __name__:
     dict_algorithm['i_PFDEM'] = 0
     while not User.Criteria_StopSimulation(dict_algorithm):
 
-        iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+        iteration_main_until_pf(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+        iteration_main_from_pf(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
 
     #-------------------------------------------------------------------------------
     #close simulation

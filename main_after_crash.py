@@ -4,7 +4,7 @@
 alexandre.sac-morane@uclouvain.be
 
 This is the file to restart a simulation after a crash.
-There is a save at the end of each PFDEM iteration.
+There are saves before phase-field simulation and at the end of each PFDEM iteration.
 """
 
 #-------------------------------------------------------------------------------
@@ -29,8 +29,7 @@ import main
 #User
 #-------------------------------------------------------------------------------
 
-name_to_load = '../Data_2G_ACS/PS_Adaptative_dt_PF_3_save'
-name_report = 'Debug/Report_after_crash'
+name_to_load = 'PS_Adaptative_dt_PF_1_save'
 
 #-------------------------------------------------------------------------------
 #load data
@@ -44,13 +43,11 @@ dict_material = dict_save['material']
 dict_sample = dict_save['sample']
 dict_sollicitation = dict_save['sollicitation']
 dict_tracker = dict_save['tracker']
+simulation_report = dict_save['report']
 
 #-------------------------------------------------------------------------------
 #Plan the simulation
 #-------------------------------------------------------------------------------
-
-#create a simulation report
-simulation_report = Report.Report(name_report,datetime.now())
 
 #delete last folder
 if Path('Output/Ite_'+str(dict_algorithm['i_PFDEM']+1)).exists():
@@ -63,9 +60,14 @@ if 'Diff_Solute' in dict_algorithm['L_flag_plot']:
 #main
 #-------------------------------------------------------------------------------
 
+if name_to_load[:-10] == '_before_pf' :
+
+    main.iteration_main_from_pf(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+
 while not User.Criteria_StopSimulation(dict_algorithm):
 
-    main.iteration_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+    main.iteration_main_until_pf(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+    main.iteration_main_from_pf(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
 
 #-------------------------------------------------------------------------------
 #close simulation
