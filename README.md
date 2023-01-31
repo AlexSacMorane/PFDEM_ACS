@@ -37,7 +37,6 @@ The goal of the DEM step is to compute a steady-state configuration. Grains are 
 ## What is next ?
 Some next releases are presented here.
 
-- update documentation online
 - increase the user experience (homogenize names, correct english)
 - create AI or a guide to select algorithm parameters (as neighborhood update frequency, time step, stop criteria, etc...)
 - add some quick tests to check the script
@@ -46,6 +45,50 @@ Some next releases are presented here.
 
 ## Understand User.py
 
-Inputs are sorted in different dictionnaries.
+#### Sample
 
-description in coming
+- <i>x_box_min</i> : the minimum on the x axis of the sample
+- <i>x_box_max</i> : the maximum on the x axis of the sample
+- <i>n_x</i> : the number of nodes in the x direction
+- <i>y_box_min</i> : the minimum on the y axis of the sample
+- <i>y_box_max</i> : the maximum on the y axis of the sample
+- <i>n_y</i> : the number of nodes in the y direction
+- <i>grain_discretization_square</i> : is the discretization of the grains
+
+#### Algorithm
+
+- <i>np_proc</i> : number of processor used for the simulation
+- <i>n_t_PFDEM</i> : the total number of PFDEM iteration. A PFDEM iteration is composed by one DEM and one phase-field simulations.
+- <i>n_t_PF</i> : approximatively the time step of the phase-field simulation. It defines with <i>dt_PF</i> the total duration of the phase-field simulation
+- <i>dt_PF</i> : the time step used for the phase-field simulation. This value is defined with different values. The selection of the value depend on the total absolute energy energy. Criterias to switch level are defined with <i>Ed_level</i>
+- <i>c_min</i> and <i>c_max</i> : are minimum and maximum values for plotting solute concentration 
+- <i>sphericity_margin</i> : is a margin (because of numerical estimation) for grain sphericity compute
+- <i>n_spatial_inscribing</i> : is a precision (because of numerical estimation) for grain sphericity compute
+- <i>L_flag_plot</i> : is the list of plots to do. The different options are available.
+                      - <i>Config</i> : Grain et solute configuration
+                      - <i>C_at_P</i> : Evolution of the solute concentration at the point (0,0), always in the contact area
+                      - <i>Diff_Solute</i> : Focus on the diffusion of the solute
+                      - <i>dt</i> : Evolution of the time step used during phase-field iterations. This one depend on the energy introduced in the sample
+                      - <i>Sphericity</i> : Evolution of the 2D sphericity of the grains
+                      - <i>Kc</i> : Diffusion map
+                      - <i>Movie</i> : Movie of the different configurations
+                      - <i>sum_Ed</i> : Distribution of the energy in the sample
+
+#### Sollicitations
+
+- <i>overlap_target</i> : overlap applied at the DEM iterations
+- <i>chi</i> : chemical energy coefficient in the phase-field formulation
+
+#### Material
+
+- <i>width_int</i> : The width interface of the phase variable
+- <i>M_pf</i> : The mobility of the phase variables
+- <i>kappa_eta</i> : the gradient coefficient for the phase variables
+- <i>Energy_barrier</i> : the energy barrier og the phase variables
+- <i>kappa_c</i> : the gradient coefficient for the solute
+- <i>method_to_compute_kc</i> : the method to compute the diffusion map. Can be <i>dilation</i> (recommended) or <i>interpolation</i>
+- <i>tau_kappa_c</i> : define the interpolation in the case of interpolation method to compute the diffusion map
+
+#### Initial configuration
+
+The initial configuration and grains generation is done in the function <i>Add_2grains</i>. The radius and the position is defined here.
