@@ -62,37 +62,31 @@ Some next releases are presented here.
 - <i>n_t_PF</i> : approximatively the time step of the phase-field simulation. It defines with <i>dt_PF</i> the total duration of the phase-field simulation
 - <i>dt_PF</i> : the time step used for the phase-field simulation. This value is defined with different values. The selection of the value depend on the total absolute energy energy. Criterias to switch level are defined with <i>Ed_level</i>
 - <i>c_min</i> and <i>c_max</i> : are minimum and maximum values for plotting solute concentration 
-
-
-
-
-
-#### Material
-
-- <i>Y</i> : the Young modulus
-- <i>nu</i> : the Poisson ratio
-- <i>rho</i> : the density of the grain, it defines the surface mass for dissolvable and undissolvable grains.
-- <i>mu_friction_gg</i> : the friction coefficient for the contact grain-grain
-- <i>mu_friction_gw</i> : the friction coefficient for the contact grain-wall
-- <i>coeff_restitution</i> : the restitution coefficient (= 1 perfect elastic, = 0 perfect plastic)
-- <i>M_pf</i> : The mobility of the phase variables
-- <i>kc_pf</i> : the gradient coefficient for the phase variables
-
-
-#### Initial condition
-
-- <i>n_generation</i> : number of grain generation
-- <i>N_test_max</i> : the maximum number of try to generate a grain without overlap with grains already created
-- <i>factor_ymax_box</i> : define the upper wall position for the grain generation
-- <i>i_update_neighborhoods_gen</i>: frequency of neighborhood update during one generation step.
-- <i>i_update_neighborhoods_com</i>: frequency of neighborhood update during multi generation step.
-- <i>factor_neighborhood_IC</i> : defines the size of the neighborhood
-- <i>i_DEM_stop_IC</i> : the maximum DEM iterations
-- <i>dt_DEM_IC</i> : the DEM time step
-- <i>Ecin_ratio_IC</i> : defines a stop criteria for the DEM simulation. The steady-state is assumed when the mean displacement during one DEM step is lower than the ratio of the mean radius
+- <i>sphericity_margin</i> : is a margin (because of numerical estimation) for grain sphericity compute
+- <i>n_spatial_inscribing</i> : is a precision (because of numerical estimation) for grain sphericity compute
+- <i>L_flag_plot</i> : is the list of plots to do. The different options are available.
+                      - <i>Config</i> : Grain et solute configuration
+                      - <i>C_at_P</i> : Evolution of the solute concentration at the point (0,0), always in the contact area
+                      - <i>Diff_Solute</i> : Focus on the diffusion of the solute
+                      - <i>dt</i> : Evolution of the time step used during phase-field iterations. This one depend on the energy introduced in the sample
+                      - <i>Sphericity</i> : Evolution of the 2D sphericity of the grains
+                      - <i>Kc</i> : Diffusion map
+                      - <i>Movie</i> : Movie of the different configurations
+                      - <i>sum_Ed</i> : Distribution of the energy in the sample
 
 #### Sollicitations
 
-- <i>Dissolution_Energy</i> : the dissolution energy introduced in the phase-field simulations
-- <i>Vertical_Confinement_Force</i> : the vertical confinement force applied on the upper wall
-- <i>gravity</i> : value of the gravity
+- <i>overlap_target</i> : overlap applied at the DEM iterations
+- <i>chi</i> : chemical energy coefficient in the phase-field formulation
+
+#### Material
+
+- <i>width_int</i> : The width interface of the phase variable
+- <i>M_pf</i> : The mobility of the phase variables
+- <i>kappa_eta</i> : the gradient coefficient for the phase variables
+- <i>Energy_barrier</i> : the energy barrier og the phase variables
+- <i>kappa_c</i> : the gradient coefficient for the solute
+- <i>method_to_compute_kc</i> : the method to compute the diffusion map. Can be <i>dilation</i> (recommended) or <i>interpolation</i>
+- <i>tau_kappa_c</i> : define the interpolation in the case of interpolation method to compute the diffusion map
+
+
