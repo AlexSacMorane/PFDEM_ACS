@@ -45,6 +45,54 @@ Some next releases are presented here.
 
 ## Understand User.py
 
-Inputs are sorted in different dictionnaries.
+#### Sample
 
-description in coming
+- <i>x_box_min</i> : the minimum on the x axis of the sample
+- <i>x_box_max</i> : the maximum on the x axis of the sample
+- <i>n_x</i> : the number of nodes in the x direction
+- <i>y_box_min</i> : the minimum on the y axis of the sample
+- <i>y_box_max</i> : the maximum on the y axis of the sample
+- <i>n_y</i> : the number of nodes in the y direction
+- <i>grain_discretization_square</i> : is the discretization of the grains
+
+#### Algorithm
+
+- <i>np_proc</i> : number of processor used for the simulation
+- <i>n_t_PFDEM</i> : the total number of PFDEM iteration. A PFDEM iteration is composed by one DEM and one phase-field simulations.
+- <i>n_t_PF</i> : approximatively the time step of the phase-field simulation. It defines with <i>dt_PF</i> the total duration of the phase-field simulation
+- <i>dt_PF</i> : the time step used for the phase-field simulation. This value is defined with different values. The selection of the value depend on the total absolute energy energy. Criterias to switch level are defined with <i>Ed_level</i>
+- <i>c_min</i> and <i>c_max</i> : are minimum and maximum values for plotting solute concentration 
+
+
+
+
+
+#### Material
+
+- <i>Y</i> : the Young modulus
+- <i>nu</i> : the Poisson ratio
+- <i>rho</i> : the density of the grain, it defines the surface mass for dissolvable and undissolvable grains.
+- <i>mu_friction_gg</i> : the friction coefficient for the contact grain-grain
+- <i>mu_friction_gw</i> : the friction coefficient for the contact grain-wall
+- <i>coeff_restitution</i> : the restitution coefficient (= 1 perfect elastic, = 0 perfect plastic)
+- <i>M_pf</i> : The mobility of the phase variables
+- <i>kc_pf</i> : the gradient coefficient for the phase variables
+
+
+#### Initial condition
+
+- <i>n_generation</i> : number of grain generation
+- <i>N_test_max</i> : the maximum number of try to generate a grain without overlap with grains already created
+- <i>factor_ymax_box</i> : define the upper wall position for the grain generation
+- <i>i_update_neighborhoods_gen</i>: frequency of neighborhood update during one generation step.
+- <i>i_update_neighborhoods_com</i>: frequency of neighborhood update during multi generation step.
+- <i>factor_neighborhood_IC</i> : defines the size of the neighborhood
+- <i>i_DEM_stop_IC</i> : the maximum DEM iterations
+- <i>dt_DEM_IC</i> : the DEM time step
+- <i>Ecin_ratio_IC</i> : defines a stop criteria for the DEM simulation. The steady-state is assumed when the mean displacement during one DEM step is lower than the ratio of the mean radius
+
+#### Sollicitations
+
+- <i>Dissolution_Energy</i> : the dissolution energy introduced in the phase-field simulations
+- <i>Vertical_Confinement_Force</i> : the vertical confinement force applied on the upper wall
+- <i>gravity</i> : value of the gravity
