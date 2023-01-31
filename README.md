@@ -89,4 +89,6 @@ Some next releases are presented here.
 - <i>method_to_compute_kc</i> : the method to compute the diffusion map. Can be <i>dilation</i> (recommended) or <i>interpolation</i>
 - <i>tau_kappa_c</i> : define the interpolation in the case of interpolation method to compute the diffusion map
 
+#### Initial configuration
 
+The initial configuration and grains generation is done in the function <i>Add_2grains</i>. The radius and the position is defined here.
