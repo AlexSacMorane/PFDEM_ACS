@@ -37,8 +37,8 @@ def All_parameters():
     #Sample parameters
 
     #spatial discretisation
-    x_min = -230
-    x_max = 230
+    x_min = -210
+    x_max = 210
     nx = 180
     x_L = np.linspace(x_min,x_max,nx)
     y_min = -130
@@ -47,7 +47,7 @@ def All_parameters():
     y_L = np.linspace(y_min,y_max,ny)
 
     #approximatively the number of vertices for one grain during DEM simulation
-    grain_discretisation = 20
+    grain_discretisation = 80
 
     dict_sample = {
     'x_L' : x_L,
@@ -65,20 +65,20 @@ def All_parameters():
     n_t_PFDEM = 200 #number of cycle PF-DEM
 
     #Time step for phase field
-    n_t_PF = 8
+    n_t_PF = 6
     dt_PF_init = 0.3
     dt_PF_level1 = dt_PF_init/2
     dt_PF_level2 = dt_PF_level1/2
     dt_PF_level3 = dt_PF_level2/2
 
     #criteria to switch level
-    Ed_level1 = 10
-    Ed_level2 = 20
-    Ed_level3 = 25
+    Ed_level1 = 3
+    Ed_level2 = 5
+    Ed_level3 = 10
 
     #Visual parameters
     c_min = 0
-    c_max = 0.08
+    c_max = 0.1
 
     #Margin for sphericity study
     sphericity_margin = 0.05
@@ -87,7 +87,7 @@ def All_parameters():
 
     #List of plot to do
     # Config, C_at_P, Diff_Solute, dt, Ed, Eta_c, Init_Current_Shape, Kc, Movie (need Config to work), Sint_MinEtai, Sphericity, sum_Ed
-    L_flag_plot = ['Config', 'C_at_P', 'Diff_Solute', 'dt', 'Sphericity', 'Kc', 'Movie', 'sum_Ed']
+    L_flag_plot = ['Config', 'C_at_P', 'dt', 'Sphericity', 'Movie', 'sum_Ed']
 
     #Find a simulation ame
     template = 'PS_Long_Run' #template of the name of the simulation
@@ -129,7 +129,7 @@ def All_parameters():
     #External sollicitation parameters
 
     overlap_target = 10 #overlap verified before each phase field iteration
-    chi = 0.5 #coefficient applied to the chemical energy
+    chi = 0.2 #coefficient applied to the chemical energy
 
     dict_sollicitation = {
     'overlap_target' : overlap_target,
