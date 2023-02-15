@@ -85,6 +85,9 @@ def All_parameters():
     #Discretisation to find the inscribing (number of nodes in one direction)
     n_spatial_inscribing = 100
 
+    #structural element for dilation
+    struct_element = np.array(np.ones((10,6)), dtype = bool)
+
     #List of plot to do
     # Config, C_at_P, Diff_Solute, dt, Ed, Eta_c, Init_Current_Shape, Kc, Movie (need Config to work), Sint_MinEtai, Sphericity, sum_Ed
     L_flag_plot = ['Config', 'C_at_P', 'dt', 'Sphericity', 'Movie', 'sum_Ed']
@@ -104,6 +107,7 @@ def All_parameters():
         namefile = template
 
     dict_algorithm = {
+    'struct_element' : struct_element,
     'c_min' : c_min,
     'c_max' : c_max,
     'sphericity_margin' : sphericity_margin,

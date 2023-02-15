@@ -105,7 +105,7 @@ def Compute_Emec(dict_sample, dict_sollicitation):
 
 #-------------------------------------------------------------------------------
 
-def Compute_kc_dil(dict_material, dict_sample):
+def Compute_kc_dil(dict_algorithm, dict_material, dict_sample):
     '''
     Compute the solute diffusion coefficient field in the sample.
 
@@ -119,6 +119,7 @@ def Compute_kc_dil(dict_material, dict_sample):
     The diffusion map is built on the Boolean map. If the variable is True, the diffusion is kc, else 0.
 
         Input :
+            an algorithm dictionnary (a dict)
             a material dictionnary (a dict)
             a sample dictionnary (a dict)
         Output :
@@ -138,7 +139,7 @@ def Compute_kc_dil(dict_material, dict_sample):
                 on_off_M[-l-1][c] = True
 
     #dilatation
-    struct_element = np.array(np.ones((10,6)), dtype = bool)
+    struct_element = dict_algorithm['struct_element']
     dilated_M = binary_dilation(on_off_M, struct_element)
 
     #compute the map of the solute diffusion coefficient
