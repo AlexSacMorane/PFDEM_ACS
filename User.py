@@ -96,6 +96,7 @@ def All_parameters():
     template = 'PS_Long_Run' #template of the name of the simulation
     SaveData = False #Save data or not
     foldername = 'Data_2G_ACS' #name of the folder where data are saved
+    cleanData = True #clean unused data
     if SaveData :
         i_run = 1
         folderpath = Path('../'+foldername+'/'+template+'_'+str(i_run))
@@ -114,6 +115,7 @@ def All_parameters():
     'n_spatial_inscribing' : n_spatial_inscribing,
     'np_proc' : np_proc,
     'SaveData' : SaveData,
+    'cleanData' : cleanData,
     'namefile' : namefile,
     'dt_PF' : dt_PF_init,
     'dt_PF_init' : dt_PF_init,

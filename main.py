@@ -219,6 +219,14 @@ def iteration_main_from_pf(dict_algorithm, dict_material, dict_sample, dict_soll
     #tempo save
     #---------------------------------------------------------------------------
 
+    if dict_algorithm['cleanData'] :
+            shutil.rmtree('Data')
+            os.mkdir('Data')
+            shutil.rmtree('Input')
+            os.mkdir('Input')
+            shutil.rmtree('Output')
+            os.mkdir('Output')
+
     Owntools.Save.save_dicts_tempo(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
     if dict_algorithm['SaveData']:
         shutil.copy('Debug/Report.txt','../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
@@ -246,6 +254,14 @@ def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, d
         Owntools.Plot.Plot_mp4('Debug/Configuration/Configuration_','Debug/Configuration.mp4')
 
     simulation_report.end(datetime.now())
+
+    if dict_algorithm['cleanData'] :
+            shutil.rmtree('Data')
+            os.mkdir('Data')
+            shutil.rmtree('Input')
+            os.mkdir('Input')
+            shutil.rmtree('Output')
+            os.mkdir('Output')
 
     #final save
     if dict_algorithm['SaveData']:
