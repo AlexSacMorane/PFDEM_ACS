@@ -86,6 +86,9 @@ def iteration_main_until_pf(dict_algorithm, dict_material, dict_sample, dict_sol
     dict_tracker['sum_ed_plus_L'].append(dict_sample['sum_ed_plus'])
     dict_tracker['sum_ed_minus_L'].append(dict_sample['sum_ed_minus'])
 
+    #compute the absolute total energy by contact node (related to the deformation in PF)
+    Owntools.Compute.Compute_Ed_abs_node_contact(dict_sample, dict_sollicitation)
+
     #Adaptative time step
     if abs(dict_sample['sum_ed']) < dict_algorithm['Ed_level1']:
         dict_algorithm['dt_PF'] = dict_algorithm['dt_PF_init']
@@ -95,6 +98,12 @@ def iteration_main_until_pf(dict_algorithm, dict_material, dict_sample, dict_sol
         dict_algorithm['dt_PF'] = dict_algorithm['dt_PF_level2']
     elif dict_algorithm['Ed_level3'] <= abs(dict_sample['sum_ed']) :
         dict_algorithm['dt_PF'] = dict_algorithm['dt_PF_level3']
+
+    #to delete
+    simulation_report.write('sum_ed_abs '+str(dict_sample['sum_ed_abs'])+'\n'+\
+                            'n_node '+str(dict_sample['n_node'])+'\n'+\
+                            'sum_ed_abs_node '+str(dict_sample['sum_ed_abs_node'])+'\n'+\
+                            'dt_PF '+str(dict_algorithm['dt_PF'])+'\n')
 
     #plot
     if 'Config' in dict_algorithm['L_flag_plot']:

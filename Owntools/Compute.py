@@ -305,6 +305,43 @@ def Compute_sum_eta(dict_sample):
 
 #-------------------------------------------------------------------------------
 
+def Compute_Ed_abs_node_contact(dict_sample, dict_sollicitation):
+    '''
+    Compute the absolute total energy in the sample.
+
+    This energy is related to the deformation during the phase-field step.
+
+    Only absolute total energy in the contact zone (eta_i and eta_j > 0.5) is considered for the sum.
+    The sum obtained is divided by the number of nodes in the contact zone.
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for energy inside the sample (three floats)
+    '''
+    sum_ed_abs = 0
+    n_node = 0
+    for l in range(len(dict_sample['y_L'])):
+        for c in range(len(dict_sample['x_L'])):
+            if dict_sample['L_g'][0].etai_M[-1-l][c] > 0.5 and dict_sample['L_g'][1].etai_M[-1-l][c] > 0.5:
+                #Emec
+                Ed_mec = dict_sample['Emec_M'][-1-l][c]
+                #Eche
+                Ed_che = dict_sollicitation['chi']*dict_sample['solute_M'][-1-l][c]*(3*dict_sample['L_g'][0].etai_M[-1-l][c]**2-2*dict_sample['L_g'][0].etai_M[-1-l][c]**3+\
+                                                                                     3*dict_sample['L_g'][1].etai_M[-1-l][c]**2-2*dict_sample['L_g'][1].etai_M[-1-l][c]**3)
+                #Ed
+                Ed = Ed_mec - Ed_che
+                #sum
+                sum_ed_abs = sum_ed_abs + abs(Ed)
+                n_node = n_node + 1
+
+    #update elements in dict
+    dict_sample['sum_ed_abs'] = sum_ed_abs
+    dict_sample['n_node'] = n_node
+    dict_sample['sum_ed_abs_node'] = sum_ed_abs/n_node
+
+#-------------------------------------------------------------------------------
+
 def Compute_sum_Ed_plus_minus(dict_sample, dict_sollicitation):
     '''
     Compute the total energy in the sample. This energy is divided in a plus term and a minus term.
