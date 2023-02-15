@@ -72,9 +72,9 @@ def All_parameters():
     dt_PF_level3 = dt_PF_level2/2
 
     #criteria to switch level
-    Ed_level1 = 3
-    Ed_level2 = 5
-    Ed_level3 = 10
+    Ed_level1 = 0.025
+    Ed_level2 = 0.05
+    Ed_level3 = 0.075
 
     #Visual parameters
     c_min = 0
