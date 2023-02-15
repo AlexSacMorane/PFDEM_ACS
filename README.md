@@ -37,6 +37,7 @@ The goal of the DEM step is to compute a steady-state configuration. Grains are 
 ## What is next ?
 Some next releases are presented here.
 
+- update doc on the website
 - increase the user experience (homogenize names, correct english)
 - create AI or a guide to select algorithm parameters (as neighborhood update frequency, time step, stop criteria, etc...)
 - add some quick tests to check the script
@@ -61,7 +62,7 @@ Some next releases are presented here.
 - <i>n_t_PFDEM</i> : the total number of PFDEM iteration. A PFDEM iteration is composed by one DEM and one phase-field simulations.
 - <i>n_t_PF</i> : approximatively the time step of the phase-field simulation. It defines with <i>dt_PF</i> the total duration of the phase-field simulation
 - <i>dt_PF</i> : the time step used for the phase-field simulation. This value is defined with different values. The selection of the value depend on the total absolute energy energy. Criterias to switch level are defined with <i>Ed_level</i>
-- <i>c_min</i> and <i>c_max</i> : are minimum and maximum values for plotting solute concentration 
+- <i>c_min</i> and <i>c_max</i> : are minimum and maximum values for plotting solute concentration
 - <i>sphericity_margin</i> : is a margin (because of numerical estimation) for grain sphericity compute
 - <i>n_spatial_inscribing</i> : is a precision (because of numerical estimation) for grain sphericity compute
 - <i>L_flag_plot</i> : is the list of plots to do. The different options are available.
