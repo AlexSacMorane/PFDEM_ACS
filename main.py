@@ -221,6 +221,7 @@ def iteration_main_from_pf(dict_algorithm, dict_material, dict_sample, dict_soll
 
     simulation_report.write('S_1 '+str(int(dict_sample['L_g'][0].surface))+'\n')
     dict_tracker['L_surface_g0'].append(dict_sample['L_g'][0].surface)
+    simulation_report.write('Delta of '+str(abs(dict_tracker['L_surface_g0'][-1]-dict_tracker['L_surface_g0'][-2])/dict_tracker['L_surface_g0'][-2]*100)+' % Si-1\n')
     Owntools.Plot.Plot_surface_g0(dict_tracker)
 
     if dict_algorithm['cleanData'] :
