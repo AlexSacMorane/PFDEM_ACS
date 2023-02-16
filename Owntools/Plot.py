@@ -462,7 +462,7 @@ def Plot_surface_g0(dict_tracker):
 
     plt.subplot(212)
     plt.plot(dict_tracker['L_t'][1:], L_delta_perc)
-    plt.title('Reduction of surface %Si')
+    plt.title('Delta of surface %Si')
 
     plt.savefig('Debug/Surface.png')
     plt.close(1)
