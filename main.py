@@ -219,6 +219,8 @@ def iteration_main_from_pf(dict_algorithm, dict_material, dict_sample, dict_soll
     #tempo save
     #---------------------------------------------------------------------------
 
+    simulation_report.write('S_1 '+str(int(dict_sample['L_g'][0].surface))+'\n')
+
     if dict_algorithm['cleanData'] :
             shutil.rmtree('Data')
             os.mkdir('Data')
