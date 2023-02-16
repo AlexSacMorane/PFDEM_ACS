@@ -439,6 +439,36 @@ def Plot_init_current_shape(dict_sample):
 
 #-------------------------------------------------------------------------------
 
+def Plot_surface_g0(dict_tracker):
+    '''
+    Plot the surface of g0.
+
+        Input :
+            a tracker dictionnary (a dict)
+        Output :
+            Nothing but a .png files are generated (files)
+    '''
+    #prepare curve
+    L_delta_perc = []
+    for i in range(1,len(dict_tracker['L_surface_g0'])):
+        L_delta_perc.append(abs(dict_tracker['L_surface_g0'][i]-dict_tracker['L_surface_g0'][i-1])/dict_tracker['L_surface_g0'][i-1]*100)
+
+    #plot Displacement and sum of c and etai
+    plt.figure(1,figsize=(16,9))
+
+    plt.subplot(211)
+    plt.plot(dict_tracker['L_t'], dict_tracker['L_surface_g0'])
+    plt.title('Surface of g0')
+
+    plt.subplot(212)
+    plt.plot(dict_tracker['L_t'][1:], L_delta_perc)
+    plt.title('Reduction of surface %Si')
+
+    plt.savefig('Debug/Surface.png')
+    plt.close(1)
+
+#-------------------------------------------------------------------------------
+
 def Plot_sum_eta_c(dict_tracker):
     '''
     Plot the trackers.

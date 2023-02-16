@@ -220,6 +220,8 @@ def iteration_main_from_pf(dict_algorithm, dict_material, dict_sample, dict_soll
     #---------------------------------------------------------------------------
 
     simulation_report.write('S_1 '+str(int(dict_sample['L_g'][0].surface))+'\n')
+    dict_tracker['L_surface_g0'].append(dict_sample['L_g'][0].surface)
+    Owntools.Plot.Plot_surface_g0(dict_tracker)
 
     if dict_algorithm['cleanData'] :
             shutil.rmtree('Data')
@@ -357,6 +359,7 @@ if '__main__' == __name__:
     'L_circle_ratio_sphericity_g0' : [dict_sample['L_g'][0].circle_ratio_sphericity],
     'L_perimeter_sphericity_g0' : [dict_sample['L_g'][0].perimeter_sphericity],
     'L_width_to_length_ratio_sphericity_g0' : [dict_sample['L_g'][0].width_to_length_ratio_sphericity],
+    'L_surface_g0' : [dict_sample['L_g'][0].surface],
     'c_at_the_center' : [Owntools.Extract_solute_at_p(dict_sample,(int(len(dict_sample['y_L'])/2),int(len(dict_sample['x_L'])/2)))],
     'sum_ed_L': [],
     'sum_Ed_che_L': [],
