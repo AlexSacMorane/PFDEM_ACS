@@ -276,7 +276,15 @@ def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, d
 
 #-------------------------------------------------------------------------------
 
-if '__main__' == __name__:
+def open_main(overlap, chi, kappa_c):
+    '''
+    Open the PFDEM.
+
+        Input :
+        
+        Output :
+
+    '''
     #-------------------------------------------------------------------------------
     #Plan simulation
     #-------------------------------------------------------------------------------
@@ -303,7 +311,7 @@ if '__main__' == __name__:
     simulation_report.tic_tempo(datetime.now())
 
     #general parameters
-    dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters()
+    dict_algorithm, dict_material, dict_sample, dict_sollicitation = User.All_parameters(overlap, chi, kappa_c)
     if dict_algorithm['SaveData']:
         if not Path('../'+dict_algorithm['foldername']).exists():
             os.mkdir('../'+dict_algorithm['foldername'])
@@ -380,3 +388,5 @@ if '__main__' == __name__:
     #-------------------------------------------------------------------------------
 
     close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+
+#-------------------------------------------------------------------------------
