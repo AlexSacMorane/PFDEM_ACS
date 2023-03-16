@@ -136,7 +136,7 @@ def All_parameters(overlap, chi, kappa_c):
     L_flag_plot = ['Config', 'C_at_P', 'dt', 'Eta_c', 'Sphericity', 'Movie', 'sum_Ed']
 
     #Find a simulation ame
-    template = str(overlap)+'_'+str(int(100*chi))+'_'+str(kappa_c) #template of the name of the simulation
+    template = str(overlap)+'_'+str(int(100*chi))+'_'+str(kappa_c)+'_run_' #template of the name of the simulation
     #overlap_100*chi_kappac
     SaveData = True #Save data or not
     foldername = 'Data_2G_ACS_Parametric_Study' #name of the folder where data are saved
