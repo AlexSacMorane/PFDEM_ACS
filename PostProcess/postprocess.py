@@ -348,5 +348,5 @@ for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
             plt.plot(L_L_vertical_strain[i_list], L_L_circle_ratio_sphericity_g0[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         plt.legend()
-plt.savefig('chi_influence/strain_circle_sphericity.png')
+plt.savefig('kappa_c_influence/strain_circle_sphericity.png')
 plt.close()
