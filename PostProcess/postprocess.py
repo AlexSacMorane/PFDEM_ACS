@@ -210,7 +210,7 @@ for i_chi in range(len(chi_L)):
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_vertical_strain[i_list], L_L_circle_sphericity_g0[i_list], label='overlap = '+str(overlap_L[i_overlap]))
+            plt.plot(L_L_vertical_strain[i_list], L_L_circle_ratio_sphericity_g0[i_list], label='overlap = '+str(overlap_L[i_overlap]))
         plt.legend()
 plt.savefig('overlap_influence/strain_circle_sphericity.png')
 plt.close()
@@ -278,7 +278,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_vertical_strain[i_list], L_L_circle_sphericity_g0[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
+            plt.plot(L_L_vertical_strain[i_list], L_L_circle_ratio_sphericity_g0[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
         plt.legend()
 plt.savefig('chi_influence/strain_circle_sphericity.png')
 plt.close()
@@ -346,7 +346,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_vertical_strain[i_list], L_L_circle_sphericity_g0[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+            plt.plot(L_L_vertical_strain[i_list], L_L_circle_ratio_sphericity_g0[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         plt.legend()
 plt.savefig('chi_influence/strain_circle_sphericity.png')
 plt.close()
