@@ -114,7 +114,7 @@ for overlap in overlap_L :
                 #energy distribution (chemical, mechanical, total)
                 L_ed_che = []
                 for i in range(len(dict_tracker['c_at_the_center'])):
-                    L_ed_che.append(dict_tracker['c_at_the_center']*dict_save['sollicitation']['chi'])
+                    L_ed_che.append(dict_tracker['c_at_the_center'][i]*dict_save['sollicitation']['chi'])
                 L_L_ed_che.append(L_ed_che)
 
                 L_ed_mec = []
