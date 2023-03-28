@@ -27,7 +27,7 @@ from pathlib import Path
 
 overlap_L = []
 chi_L = []
-kappa_c_L []
+kappa_c_L = []
 
 fontsize_title = 44
 fontsize_axis = 36
@@ -60,7 +60,7 @@ for overlap in overlap_L :
         for kappa_c in kappa_c_L :
             if Path('../../Data_2G_ACS_Parametric_Study/'+str(overlap)+'_'+str(int(100*chi))+'_'+str(kappa_c)+'_run_1').exists():
 
-                toload = open(name_file,'rb')
+                toload = open('../../Data_2G_ACS_Parametric_Study/'+str(overlap)+'_'+str(int(100*chi))+'_'+str(kappa_c)+'_run_1_save','rb')
                 dict_save = pickle.load(toload,encoding = 'bytes')
                 toload.close()
                 dict_tracker = dict_save['tracker']
