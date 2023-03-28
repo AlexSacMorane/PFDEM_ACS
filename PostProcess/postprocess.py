@@ -185,6 +185,36 @@ for i_chi in range(len(chi_L)):
 plt.savefig('overlap_influence/log_times_log_strain.png')
 plt.close()
 
+#strain - diameter sphericity
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Strain (-) - Diameter sphericity (-)')
+for i_chi in range(len(chi_L)):
+    for i_kappa_c in range(len(kappa_c_L)):
+        i_subplot = i_chi*len(kappa_c_L) + i_kappa_c
+        plt.subplot(len(chi_L),len(kappa_c_L),i_subplot+1)
+        plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        for i_overlap in range(len(overlap_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_vertical_strain[i_list], L_L_diameter_sphericity_g0[i_list], label='overlap = '+str(overlap_L[i_overlap]))
+        plt.legend()
+plt.savefig('overlap_influence/strain_diameter_sphericity.png')
+plt.close()
+
+#strain - circle sphericity
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Strain (-) - Circle sphericity (-)')
+for i_chi in range(len(chi_L)):
+    for i_kappa_c in range(len(kappa_c_L)):
+        i_subplot = i_chi*len(kappa_c_L) + i_kappa_c
+        plt.subplot(len(chi_L),len(kappa_c_L),i_subplot+1)
+        plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        for i_overlap in range(len(overlap_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_vertical_strain[i_list], L_L_circle_sphericity_g0[i_list], label='overlap = '+str(overlap_L[i_overlap]))
+        plt.legend()
+plt.savefig('overlap_influence/strain_circle_sphericity.png')
+plt.close()
+
 #------------------------------------------------------------------------------
 # Print data (influence of chi)
 #------------------------------------------------------------------------------
@@ -223,6 +253,36 @@ for i_overlap in range(len(overlap_L)):
 plt.savefig('chi_influence/log_times_log_strain.png')
 plt.close()
 
+#strain - diameter sphericity
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Strain (-) - Diameter sphericity (-)')
+for i_overlap in range(len(overlap_L)):
+    for i_kappa_c in range(len(kappa_c_L)):
+        i_subplot = i_overlap*len(kappa_c_L) + i_kappa_c
+        plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot+1)
+        plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        for i_chi in range(len(chi_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_vertical_strain[i_list], L_L_diameter_sphericity_g0[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
+        plt.legend()
+plt.savefig('chi_influence/strain_diameter_sphericity.png')
+plt.close()
+
+#strain - circle sphericity
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Strain (-) - Circle sphericity (-)')
+for i_overlap in range(len(overlap_L)):
+    for i_kappa_c in range(len(kappa_c_L)):
+        i_subplot = i_overlap*len(kappa_c_L) + i_kappa_c
+        plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot+1)
+        plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        for i_chi in range(len(chi_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_vertical_strain[i_list], L_L_circle_sphericity_g0[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
+        plt.legend()
+plt.savefig('chi_influence/strain_circle_sphericity.png')
+plt.close()
+
 #------------------------------------------------------------------------------
 # Print data (influence of kappa_c)
 #------------------------------------------------------------------------------
@@ -259,4 +319,34 @@ for i_overlap in range(len(overlap_L)):
             plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         plt.legend()
 plt.savefig('kappa_c_influence/log_times_log_strain.png')
+plt.close()
+
+#strain - diameter sphericity
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Strain (-) - Diameter sphericity (-)')
+for i_overlap in range(len(overlap_L)):
+    for i_chi in range(len(chi_L)):
+        i_subplot = i_overlap*len(chi_L) + i_chi
+        plt.subplot(len(overlap_L),len(chi_L),i_subplot+1)
+        plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
+        for i_kappa_c in range(len(kappa_c_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_vertical_strain[i_list], L_L_diameter_sphericity_g0[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        plt.legend()
+plt.savefig('kappa_c_influence/strain_diameter_sphericity.png')
+plt.close()
+
+#strain - circle sphericity
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Strain (-) - Circle sphericity (-)')
+for i_overlap in range(len(overlap_L)):
+    for i_chi in range(len(chi_L)):
+        i_subplot = i_overlap*len(chi_L) + i_chi
+        plt.subplot(len(overlap_L),len(chi_L),i_subplot+1)
+        plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
+        for i_kappa_c in range(len(kappa_c_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_vertical_strain[i_list], L_L_circle_sphericity_g0[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        plt.legend()
+plt.savefig('chi_influence/strain_circle_sphericity.png')
 plt.close()
