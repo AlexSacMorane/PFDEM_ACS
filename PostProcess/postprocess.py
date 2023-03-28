@@ -164,7 +164,7 @@ for i_chi in range(len(chi_L)):
         plt.subplot(len(chi_L),len(kappa_c_L),i_subplot+1)
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
-            i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
             plt.plot(L_L_t[i_list], L_L_vertical_strain[i_list], label='overlap = '+str(overlap_L[i_overlap]))
         plt.legend()
 plt.savefig('overlap_influence/times_strain.png')
@@ -179,7 +179,7 @@ for i_chi in range(len(chi_L)):
         plt.subplot(len(chi_L),len(kappa_c_L),i_subplot+1)
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
-            i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
             plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label='overlap = '+str(overlap_L[i_overlap]))
         plt.legend()
 plt.savefig('overlap_influence/log_times_log_strain.png')
@@ -202,7 +202,7 @@ for i_overlap in range(len(overlap_L)):
         plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot+1)
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
-            i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
             plt.plot(L_L_t[i_list], L_L_vertical_strain[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
         plt.legend()
 plt.savefig('chi_influence/times_strain.png')
@@ -217,7 +217,7 @@ for i_overlap in range(len(overlap_L)):
         plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot+1)
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
-            i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
             plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
         plt.legend()
 plt.savefig('chi_influence/log_times_log_strain.png')
@@ -240,7 +240,7 @@ for i_overlap in range(len(overlap_L)):
         plt.subplot(len(overlap_L),len(chi_L),i_subplot+1)
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
-            i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
             plt.plot(L_L_t[i_list], L_L_vertical_strain[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         plt.legend()
 plt.savefig('kappa_c_influence/times_strain.png')
@@ -255,7 +255,7 @@ for i_overlap in range(len(overlap_L)):
         plt.subplot(len(overlap_L),len(chi_L),i_subplot+1)
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
-            i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
             plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         plt.legend()
 plt.savefig('kappa_c_influence/log_times_log_strain.png')
