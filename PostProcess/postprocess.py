@@ -136,7 +136,7 @@ for overlap in overlap_L :
                 L_L_vertical_strain.append([])
                 L_L_t.append([])
                 L_L_log_vertical_strain.append([])
-                L_L_log_time.append()
+                L_L_log_time.append([])
                 L_L_fit.append([])
                 L_L_ed_che.append([])
                 L_L_ed_mec.append([])
