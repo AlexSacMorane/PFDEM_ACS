@@ -161,7 +161,7 @@ plt.suptitle('Times (s) - Strain (-)')
 for i_chi in range(len(chi_L)):
     for i_kappa_c in range(len(kappa_c_L)):
         i_subplot = i_chi*len(kappa_c_L) + i_kappa_c
-        plt.subplot(len(chi_L),len(kappa_c_L),i_subplot)
+        plt.subplot(len(chi_L),len(kappa_c_L),i_subplot+1)
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
@@ -176,7 +176,7 @@ plt.suptitle('log(Times) - log(Strain)')
 for i_chi in range(len(chi_L)):
     for i_kappa_c in range(len(kappa_c_L)):
         i_subplot = i_chi*len(kappa_c_L) + i_kappa_c
-        plt.subplot(len(chi_L),len(kappa_c_L),i_subplot)
+        plt.subplot(len(chi_L),len(kappa_c_L),i_subplot+1)
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
@@ -199,7 +199,7 @@ plt.suptitle('Times (s) - Strain (-)')
 for i_overlap in range(len(overlap_L)):
     for i_kappa_c in range(len(kappa_c_L)):
         i_subplot = i_overlap*len(kappa_c_L) + i_kappa_c
-        plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot)
+        plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot+1)
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
             i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
@@ -214,7 +214,7 @@ plt.suptitle('log(Times) - log(Strain)')
 for i_overlap in range(len(overlap_L)):
     for i_kappa_c in range(len(kappa_c_L)):
         i_subplot = i_overlap*len(kappa_c_L) + i_kappa_c
-        plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot)
+        plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot+1)
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
             i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
@@ -237,7 +237,7 @@ plt.suptitle('Times (s) - Strain (-)')
 for i_overlap in range(len(overlap_L)):
     for i_chi in range(len(chi_L)):
         i_subplot = i_overlap*len(chi_L) + i_chi
-        plt.subplot(len(overlap_L),len(chi_L),i_subplot)
+        plt.subplot(len(overlap_L),len(chi_L),i_subplot+1)
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
             i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
@@ -252,7 +252,7 @@ plt.suptitle('log(Times) - log(Strain)')
 for i_overlap in range(len(overlap_L)):
     for i_chi in range(len(chi_L)):
         i_subplot = i_overlap*len(chi_L) + i_chi
-        plt.subplot(len(overlap_L),len(chi_L),i_subplot)
+        plt.subplot(len(overlap_L),len(chi_L),i_subplot+1)
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
             i_list = i_overlap*len(chi_l)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
