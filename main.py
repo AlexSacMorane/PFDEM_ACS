@@ -278,12 +278,14 @@ def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, d
 
 def open_main(overlap, chi, kappa_c):
     '''
-    Open the PFDEM.
+    Open the PFDEM. The overlap, chi and kappa_c are inputs and describe the problem.
 
         Input :
-        
+            an overlap (a float)
+            a chemical coefficient (a float)
+            a solute diffusion coefficient (a float)
         Output :
-
+            Nothing, but a PFDEM simulation is done
     '''
     #-------------------------------------------------------------------------------
     #Plan simulation
