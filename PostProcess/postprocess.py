@@ -25,9 +25,9 @@ from pathlib import Path
 # User
 #------------------------------------------------------------------------------
 
-overlap_L = []
-chi_L = []
-kappa_c_L = []
+overlap_L = [5, 10]
+chi_L = [0.05, 0.1, 0.2]
+kappa_c_L = [5, 50]
 
 fontsize_title = 44
 fontsize_axis = 36
