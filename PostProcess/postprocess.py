@@ -39,6 +39,8 @@ linewidth_plot = 6
 fontsize_legend = 26
 fontsize_ticks = 30
 
+color_L = ['b', 'g', 'r', 'orange', 'purple', 'tan']
+
 #------------------------------------------------------------------------------
 # Load data
 #------------------------------------------------------------------------------
@@ -51,6 +53,8 @@ L_L_fit = []
 L_L_ed_che = []
 L_L_ed_mec = []
 L_L_ed = []
+L_L_int_ed_plus = []
+L_L_int_ed_minus = []
 L_L_area_sphericity_g0 = []
 L_L_diameter_sphericity_g0 = []
 L_L_circle_ratio_sphericity_g0 = []
@@ -79,6 +83,8 @@ for overlap in overlap_L :
                 L_L_circle_ratio_sphericity_g0.append(dict_tracker['L_circle_ratio_sphericity_g0'])
                 L_L_perimeter_sphericity_g0.append(dict_tracker['L_perimeter_sphericity_g0'])
                 L_L_width_to_length_ratio_sphericity_g0.append(dict_tracker['L_width_to_length_ratio_sphericity_g0'])
+                L_L_int_ed_plus.append(dict_tracker['sum_ed_plus_L'])
+                L_L_int_ed_minus.append(dict_tracker['sum_ed_minus_L'])
 
                 #------------------------------------------------------------------------------
                 # Work and save data
@@ -146,6 +152,8 @@ for overlap in overlap_L :
                 L_L_circle_ratio_sphericity_g0.append([])
                 L_L_perimeter_sphericity_g0.append([])
                 L_L_width_to_length_ratio_sphericity_g0.append([])
+                L_L_int_ed_plus.append([])
+                L_L_int_ed_minus.append([])
 
 #------------------------------------------------------------------------------
 # Print data (influence of overlap)
@@ -165,7 +173,7 @@ for i_chi in range(len(chi_L)):
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list], L_L_vertical_strain[i_list], label='overlap = '+str(overlap_L[i_overlap]))
+            plt.plot(L_L_t[i_list], L_L_vertical_strain[i_list], label='overlap = '+str(overlap_L[i_overlap]), color = color_L[i_overlap])
         plt.legend()
 plt.savefig('overlap_influence/times_strain.png')
 plt.close()
@@ -180,7 +188,7 @@ for i_chi in range(len(chi_L)):
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label='overlap = '+str(overlap_L[i_overlap]))
+            plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label='overlap = '+str(overlap_L[i_overlap]), color = color_L[i_overlap])
         plt.legend()
 plt.savefig('overlap_influence/log_times_log_strain.png')
 plt.close()
@@ -195,7 +203,7 @@ for i_chi in range(len(chi_L)):
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list], L_L_diameter_sphericity_g0[i_list], label='overlap = '+str(overlap_L[i_overlap]))
+            plt.plot(L_L_t[i_list], L_L_diameter_sphericity_g0[i_list], label='overlap = '+str(overlap_L[i_overlap]), color = color_L[i_overlap])
         plt.legend()
 plt.savefig('overlap_influence/times_diameter_sphericity.png')
 plt.close()
@@ -210,7 +218,7 @@ for i_chi in range(len(chi_L)):
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list], L_L_circle_ratio_sphericity_g0[i_list], label='overlap = '+str(overlap_L[i_overlap]))
+            plt.plot(L_L_t[i_list], L_L_circle_ratio_sphericity_g0[i_list], label='overlap = '+str(overlap_L[i_overlap]), color = color_L[i_overlap])
         plt.legend()
 plt.savefig('overlap_influence/times_circle_sphericity.png')
 plt.close()
@@ -225,9 +233,25 @@ for i_chi in range(len(chi_L)):
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list][:-1], L_L_ed[i_list], label='overlap = '+str(overlap_L[i_overlap]))
+            plt.plot(L_L_t[i_list][:-1], L_L_ed[i_list], label='overlap = '+str(overlap_L[i_overlap]), color = color_L[i_overlap])
         plt.legend()
 plt.savefig('overlap_influence/times_ed_0_0.png')
+plt.close()
+
+#times - distribution ed
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)')
+for i_chi in range(len(chi_L)):
+    for i_kappa_c in range(len(kappa_c_L)):
+        i_subplot = i_chi*len(kappa_c_L) + i_kappa_c
+        plt.subplot(len(chi_L),len(kappa_c_L),i_subplot+1)
+        plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        for i_overlap in range(len(overlap_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_t[i_list][:-1], L_L_int_ed_plus[i_list], label='overlap = '+str(overlap_L[i_overlap]), color = color_L[i_overlap])
+            plt.plot(L_L_t[i_list][:-1], L_L_int_ed_minus[i_list], color = color_L[i_overlap], linestyle = '-.')
+        plt.legend()
+plt.savefig('overlap_influence/times_int_ed.png')
 plt.close()
 
 #------------------------------------------------------------------------------
@@ -248,7 +272,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list], L_L_vertical_strain[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
+            plt.plot(L_L_t[i_list], L_L_vertical_strain[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]), color = color_L[i_chi])
         plt.legend()
 plt.savefig('chi_influence/times_strain.png')
 plt.close()
@@ -263,7 +287,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
+            plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]), color = color_L[i_chi])
         plt.legend()
 plt.savefig('chi_influence/log_times_log_strain.png')
 plt.close()
@@ -278,7 +302,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list], L_L_diameter_sphericity_g0[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
+            plt.plot(L_L_t[i_list], L_L_diameter_sphericity_g0[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]), color = color_L[i_chi])
         plt.legend()
 plt.savefig('chi_influence/times_diameter_sphericity.png')
 plt.close()
@@ -293,7 +317,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list], L_L_circle_ratio_sphericity_g0[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
+            plt.plot(L_L_t[i_list], L_L_circle_ratio_sphericity_g0[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]), color = color_L[i_chi])
         plt.legend()
 plt.savefig('chi_influence/times_circle_sphericity.png')
 plt.close()
@@ -308,9 +332,25 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_chi in range(len(chi_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list][:-1], L_L_ed[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]))
+            plt.plot(L_L_t[i_list][:-1], L_L_ed[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]), color = color_L[i_chi])
         plt.legend()
 plt.savefig('chi_influence/times_ed_0_0.png')
+plt.close()
+
+#times - distribution ed
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)')
+for i_overlap in range(len(overlap_L)):
+    for i_kappa_c in range(len(kappa_c_L)):
+        i_subplot = i_overlap*len(kappa_c_L) + i_kappa_c
+        plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot+1)
+        plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        for i_chi in range(len(chi_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_t[i_list][:-1], L_L_int_ed_plus[i_list], label=r'$\chi$ = '+str(chi_L[i_chi]), color = color_L[i_chi])
+            plt.plot(L_L_t[i_list][:-1], L_L_int_ed_minus[i_list], color = color_L[i_chi], linestyle = '-.')
+        plt.legend()
+plt.savefig('chi_influence/times_int_ed.png')
 plt.close()
 
 #------------------------------------------------------------------------------
@@ -331,7 +371,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list], L_L_vertical_strain[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+            plt.plot(L_L_t[i_list], L_L_vertical_strain[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]), color = color_L[i_kappa_c])
         plt.legend()
 plt.savefig('kappa_c_influence/times_strain.png')
 plt.close()
@@ -346,7 +386,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+            plt.plot(L_L_log_time[i_list], L_L_log_vertical_strain[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]), color = color_L[i_kappa_c])
         plt.legend()
 plt.savefig('kappa_c_influence/log_times_log_strain.png')
 plt.close()
@@ -361,7 +401,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list], L_L_diameter_sphericity_g0[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+            plt.plot(L_L_t[i_list], L_L_diameter_sphericity_g0[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]), color = color_L[i_kappa_c])
         plt.legend()
 plt.savefig('kappa_c_influence/times_diameter_sphericity.png')
 plt.close()
@@ -376,7 +416,7 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list], L_L_circle_ratio_sphericity_g0[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+            plt.plot(L_L_t[i_list], L_L_circle_ratio_sphericity_g0[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]), color = color_L[i_kappa_c])
         plt.legend()
 plt.savefig('kappa_c_influence/times_circle_sphericity.png')
 plt.close()
@@ -391,7 +431,23 @@ for i_overlap in range(len(overlap_L)):
         plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
         for i_kappa_c in range(len(kappa_c_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list][:-1], L_L_ed[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+            plt.plot(L_L_t[i_list][:-1], L_L_ed[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]), color = color_L[i_kappa_c])
         plt.legend()
 plt.savefig('kappa_c_influence/times_ed_0_0.png')
+plt.close()
+
+#times - distribution ed
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)')
+for i_overlap in range(len(overlap_L)):
+    for i_chi in range(len(chi_L)):
+        i_subplot = i_overlap*len(chi_L) + i_chi
+        plt.subplot(len(overlap_L),len(chi_L),i_subplot+1)
+        plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
+        for i_kappa_c in range(len(kappa_c_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_t[i_list][:-1], L_L_int_ed_plus[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]), color = color_L[i_kappa_c])
+            plt.plot(L_L_t[i_list][:-1], L_L_int_ed_minus[i_list], color = color_L[i_kappa_c], linestyle = '-.')
+        plt.legend()
+plt.savefig('kappa_c_influence/times_int_ed.png')
 plt.close()
