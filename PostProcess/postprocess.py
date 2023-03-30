@@ -240,7 +240,7 @@ plt.close()
 
 #times - distribution ed
 plt.figure(1,figsize=(16,9))
-plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)')
+plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)\nLine is Ed+ (dissolution), dash is Ed- (precipitation)')
 for i_chi in range(len(chi_L)):
     for i_kappa_c in range(len(kappa_c_L)):
         i_subplot = i_chi*len(kappa_c_L) + i_kappa_c
@@ -339,7 +339,7 @@ plt.close()
 
 #times - distribution ed
 plt.figure(1,figsize=(16,9))
-plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)')
+plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)\nLine is Ed+ (dissolution), dash is Ed- (precipitation)')
 for i_overlap in range(len(overlap_L)):
     for i_kappa_c in range(len(kappa_c_L)):
         i_subplot = i_overlap*len(kappa_c_L) + i_kappa_c
@@ -438,7 +438,7 @@ plt.close()
 
 #times - distribution ed
 plt.figure(1,figsize=(16,9))
-plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)')
+plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)\nLine is Ed+ (dissolution), dash is Ed- (precipitation)')
 for i_overlap in range(len(overlap_L)):
     for i_chi in range(len(chi_L)):
         i_subplot = i_overlap*len(chi_L) + i_chi
