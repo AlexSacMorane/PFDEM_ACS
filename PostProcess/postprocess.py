@@ -238,6 +238,22 @@ for i_chi in range(len(chi_L)):
 plt.savefig('overlap_influence/times_ed_0_0.png')
 plt.close()
 
+#times - ed_mec/ed_che (at the center)
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Times (s) - Distribution energy Ed at (0,0) (e-12 J)\nLine is Ed_mec (dissolution), dash is Ed_che (precipitation)')
+for i_chi in range(len(chi_L)):
+    for i_kappa_c in range(len(kappa_c_L)):
+        i_subplot = i_chi*len(kappa_c_L) + i_kappa_c
+        plt.subplot(len(chi_L),len(kappa_c_L),i_subplot+1)
+        plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        for i_overlap in range(len(overlap_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_t[i_list][:-1], L_L_ed_mec[i_list], label='overlap = '+str(overlap_L[i_overlap]), color = color_L[i_overlap])
+            plt.plot(L_L_t[i_list][:-1], L_L_ed_che[i_list], color = color_L[i_overlap], linestyle = '-.')
+        plt.legend()
+plt.savefig('overlap_influence/times_ed_mec_che.png')
+plt.close()
+
 #times - distribution ed
 plt.figure(1,figsize=(16,9))
 plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)\nLine is Ed+ (dissolution), dash is Ed- (precipitation)')
@@ -337,6 +353,22 @@ for i_overlap in range(len(overlap_L)):
 plt.savefig('chi_influence/times_ed_0_0.png')
 plt.close()
 
+#times - ed_mec/ed_che (at the center)
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Times (s) - Distribution energy Ed at (0,0) (e-12 J)\nLine is Ed_mec (dissolution), dash is Ed_che (precipitation)')
+for i_overlap in range(len(overlap_L)):
+    for i_kappa_c in range(len(kappa_c_L)):
+        i_subplot = i_overlap*len(kappa_c_L) + i_kappa_c
+        plt.subplot(len(overlap_L),len(kappa_c_L),i_subplot+1)
+        plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
+        for i_chi in range(len(chi_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_t[i_list][:-1], L_L_ed_mec[i_list], label=r'$\chi$ = '+str(overlap_L[i_chi]), color = color_L[i_chi])
+            plt.plot(L_L_t[i_list][:-1], L_L_ed_che[i_list], color = color_L[i_chi], linestyle = '-.')
+        plt.legend()
+plt.savefig('chi_influence/times_ed_mec_che.png')
+plt.close()
+
 #times - distribution ed
 plt.figure(1,figsize=(16,9))
 plt.suptitle('Times (s) - Distribution integrated Ed (e-12 J)\nLine is Ed+ (dissolution), dash is Ed- (precipitation)')
@@ -434,6 +466,22 @@ for i_overlap in range(len(overlap_L)):
             plt.plot(L_L_t[i_list][:-1], L_L_ed[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]), color = color_L[i_kappa_c])
         plt.legend()
 plt.savefig('kappa_c_influence/times_ed_0_0.png')
+plt.close()
+
+#times - ed_mec/ed_che (at the center)
+plt.figure(1,figsize=(16,9))
+plt.suptitle('Times (s) - Distribution energy Ed at (0,0) (e-12 J)\nLine is Ed_mec (dissolution), dash is Ed_che (precipitation)')
+for i_overlap in range(len(overlap_L)):
+    for i_chi in range(len(chi_L)):
+        i_subplot = i_overlap*len(chi_L) + i_chi
+        plt.subplot(len(overlap_L),len(chi_L),i_subplot+1)
+        plt.title('overlap = '+str(overlap_L[i_overlap])+r' $\chi$ = '+str(chi_L[i_chi]))
+        for i_kappa_c in range(len(kappa_c_L)):
+            i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
+            plt.plot(L_L_t[i_list][:-1], L_L_ed_mec[i_list], label=r'$\kappa_c$ = '+str(kappa_c_L[i_kappa_c]), color = color_L[i_kappa_c])
+            plt.plot(L_L_t[i_list][:-1], L_L_ed_che[i_list], color = color_L[i_kappa_c], linestyle = '-.')
+        plt.legend()
+plt.savefig('kappa_c_influence/times_ed_mec_che.png')
 plt.close()
 
 #times - distribution ed
