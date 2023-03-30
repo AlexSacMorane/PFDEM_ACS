@@ -248,7 +248,7 @@ for i_chi in range(len(chi_L)):
         plt.title(r'$\chi$ = '+str(chi_L[i_chi])+r' $\kappa_c$ = '+str(kappa_c_L[i_kappa_c]))
         for i_overlap in range(len(overlap_L)):
             i_list = i_overlap*len(chi_L)*len(kappa_c_L) + i_chi*len(kappa_c_L) + i_kappa_c
-            plt.plot(L_L_t[i_list][:-1], L_L_ed_mec[i_list][:-1], label='overlap = '+str(overlap_L[i_overlap]), color = color_L[i_overlap])
+            plt.plot(L_L_t[i_list][:-1], L_L_ed_mec[i_list], label='overlap = '+str(overlap_L[i_overlap]), color = color_L[i_overlap])
             plt.plot(L_L_t[i_list][:-1], L_L_ed_che[i_list], color = color_L[i_overlap], linestyle = '-.')
         plt.legend()
 plt.savefig('overlap_influence/times_ed_mec_che.png')
