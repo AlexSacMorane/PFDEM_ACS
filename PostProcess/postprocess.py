@@ -66,7 +66,8 @@ i_figure = 0
 for overlap in overlap_L :
     for chi in chi_L :
         for kappa_c in kappa_c_L :
-            if Path('../../Data_2G_ACS_Parametric_Study/'+str(overlap)+'_'+str(int(100*chi))+'_'+str(kappa_c)+'_run_1').exists():
+            i_run = 1
+            while Path('../../Data_2G_ACS_Parametric_Study/'+str(overlap)+'_'+str(int(100*chi))+'_'+str(kappa_c)+'_run_'°str(i_run)).exists():
 
                 toload = open('../../Data_2G_ACS_Parametric_Study/'+str(overlap)+'_'+str(int(100*chi))+'_'+str(kappa_c)+'_run_1_save','rb')
                 dict_save = pickle.load(toload,encoding = 'bytes')
@@ -133,11 +134,13 @@ for overlap in overlap_L :
                     L_ed.append(L_ed_mec[i]-L_ed_che[i])
                 L_L_ed.append(L_ed)
 
+                i_run = i_run + 1
+
 #------------------------------------------------------------------------------
 # Data not available
 #------------------------------------------------------------------------------
 
-            else :
+            if i_run == 1 :
 
                 L_L_vertical_strain.append([])
                 L_L_t.append([])
@@ -154,6 +157,7 @@ for overlap in overlap_L :
                 L_L_width_to_length_ratio_sphericity_g0.append([])
                 L_L_int_ed_plus.append([])
                 L_L_int_ed_minus.append([])
+
 
 #------------------------------------------------------------------------------
 # Print data (influence of overlap)
